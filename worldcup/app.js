@@ -257,8 +257,9 @@ class Component extends DCLogic {
   // Inject the full How-it-works guide (raw HTML w/ SVG diagrams) — dc-mini escapes text, so we inject here.
   _syncGuide() {
     const el = document.querySelector('#dc-root [data-wc-guide]');
-    if (!el || this._guideHTML == null) return;
-    if (el.getAttribute('data-lang') !== this.state.lang) {
+    if (!el || !this._guideHTML) return;
+    // (re)inject whenever the container is empty (fresh render) or the language changed.
+    if (!el.firstChild || el.getAttribute('data-lang') !== this.state.lang) {
       el.innerHTML = this._guideHTML;
       el.setAttribute('data-lang', this.state.lang);
     }

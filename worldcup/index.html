@@ -720,25 +720,9 @@
 
       <!-- ============ TAB: HOW IT WORKS ============ -->
       <div style="display:{{ dispHow }}">
-        <!-- Annotated example (featured match) -->
-        <div style="border-radius:20px;padding:26px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08);margin-bottom:22px">
-          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin-bottom:16px">{{ annotatedLabel }}</div>
-          <div style="border-radius:14px;border:1px solid rgba(255,255,255,0.09);padding:20px;background:rgba(255,255,255,0.02)">
-            <div style="font-size:20px;font-weight:800;margin-bottom:16px">{{ feat.away }} <span style="color:#6f7897">@</span> {{ feat.home }}</div>
-            <sc-for list="{{ howRows }}" as="h" hint-placeholder-count="5">
-              <div style="display:flex;align-items:center;gap:14px;padding:9px 10px;border-radius:9px;margin-bottom:4px" style-hover="background:rgba(53,227,154,0.08)">
-                <div style="width:82px;font-size:13px;font-weight:700;color:{{ h.labelColor }};display:flex;align-items:center;gap:6px">{{ h.icon }} {{ h.label }}</div>
-                <div style="flex:1;font-family:var(--fm);font-size:13px;color:#c4c7d2">{{ h.value }}</div>
-              </div>
-            </sc-for>
-          </div>
-          <div style="display:flex;gap:10px;margin-top:16px">
-            <div style="flex:1;border:1px dashed rgba(53,227,154,0.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#8ff0c0"><b style="color:#c8ffe4">Elo</b> {{ eloExplain }}</div>
-            <div style="flex:1;border:1px dashed rgba(74,158,255,0.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#a9cbff"><b style="color:#d6e6ff">Form</b> {{ fipExplain }}</div>
-          </div>
-        </div>
-        <!-- Full guide, restored from the live dashboard modal — injected as raw HTML by _syncGuide() -->
-        <div style="border-radius:20px;padding:8px 30px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+        <!-- Full guide, restored from the live dashboard modal — injected as raw HTML by _syncGuide().
+             The old annotated-example (howRows) bullets were removed: How shows ONLY the full guide. -->
+        <div style="border-radius:20px;padding:8px 30px 22px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
           <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin:16px 0 2px">{{ guideLabel }}</div>
           <div class="guide" data-wc-guide></div>
         </div>
