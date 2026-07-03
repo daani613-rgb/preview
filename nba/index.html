@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NBA · Command Center · Prediction Engines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Heebo:wght@300;400;500;600;700;800;900&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#05060d;-webkit-font-smoothing:antialiased}
+  :focus-visible{outline:2px solid #7fb5ff;outline-offset:3px;border-radius:6px}
+  ::selection{background:rgba(74,158,255,0.45);color:#fff}
+  @keyframes livep{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.78)}}
+  @keyframes beacon{0%{box-shadow:0 0 0 0 rgba(53,227,154,0.5)}70%{box-shadow:0 0 0 14px rgba(53,227,154,0)}100%{box-shadow:0 0 0 0 rgba(53,227,154,0)}}
+  @keyframes dashpulse{0%,100%{opacity:.5}50%{opacity:1}}
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes tabIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<script type="text/dc-template" id="dc-template">
+<div dir="{{ dir }}" style="font-family:var(--f);position:relative;min-height:100vh;background:radial-gradient(1300px 720px at 74% -12%, rgba(74,158,255,0.16), transparent 60%),radial-gradient(1000px 640px at 4% 6%, rgba(53,227,154,0.08), transparent 58%),#05060d;color:#eef1f7;--f:'Sora','Heebo',sans-serif;--fm:'JetBrains Mono',monospace">
+  <div style="max-width:1200px;margin:0 auto;padding:26px 32px 80px">
+
+    <!-- TOPBAR -->
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:22px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:13px">
+        <div style="width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#f5b23d,#ff8a4c);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 26px rgba(245,178,61,0.45)">🏀</div>
+        <div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:3px;color:#6f7897;text-transform:uppercase">NBA · A+ PREDICTION ENGINE</div>
+          <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">{{ brand }}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(53,227,154,0.08);border:1px solid rgba(53,227,154,0.22)">
+          <span style="width:7px;height:7px;border-radius:50%;background:#35e39a;box-shadow:0 0 9px #35e39a;animation:livep 1.7s infinite"></span>
+          <span style="font-family:var(--fm);font-size:11px;color:#7fe3b0;font-weight:600">{{ liveLabel }} · {{ freshTs }}</span>
+        </div>
+        <div onClick="{{ toggleLang }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;padding:9px 15px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);font-family:var(--fm);font-size:12px;font-weight:600;color:#cfd3e2" style-hover="border-color:#4a9eff;color:#8fc4ff">{{ otherLang }}</div>
+      </div>
+    </div>
+
+    <!-- PERSISTENT 3D HERO -->
+    <div style="position:relative;border-radius:26px;overflow:hidden;border:1px solid rgba(255,255,255,0.09);box-shadow:0 40px 100px rgba(0,0,0,0.55);margin-bottom:26px;height:300px;background:linear-gradient(160deg,#080b16,#05060d)">
+      <canvas id="cc3d" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block"></canvas>
+      <div id="cc3d-fallback" style="position:absolute;inset:0;z-index:0;opacity:0;transition:opacity .4s;background:radial-gradient(460px 300px at 70% 46%, rgba(53,227,154,0.26), transparent 66%),radial-gradient(380px 280px at 72% 50%, rgba(74,158,255,0.2), transparent 70%)"></div>
+      <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to {{ scrimDir }}, rgba(5,6,13,0.94) 0%, rgba(5,6,13,0.72) 38%, rgba(5,6,13,0) 66%)"></div>
+      <div style="position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 46px;pointer-events:none">
+        <div style="font-size:44px;font-weight:800;letter-spacing:-1.5px;line-height:1.02;max-width:560px;background:linear-gradient(180deg,#fff,#bfe4ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">{{ heroTitle }}</div>
+        <div style="font-size:15px;color:#9aa2ba;margin-top:12px;max-width:440px;line-height:1.6">{{ heroSub }}</div>
+        <div style="display:flex;gap:22px;margin-top:22px;flex-wrap:wrap">
+          <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="3">
+            <div>
+              <div style="font-family:var(--fm);font-size:26px;font-weight:800;color:{{ s.color }};line-height:1">{{ s.v }}</div>
+              <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-top:4px">{{ s.k }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB NAV — data-driven (5 tabs) -->
+    <div style="display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap">
+      <sc-for list="{{ navTabs }}" as="nt" hint-placeholder-count="5">
+        <div onClick="{{ nt.onClick }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;display:flex;align-items:center;gap:9px;padding:12px 20px;border-radius:14px;font-size:14px;font-weight:600;border:1px solid {{ nt.border }};background:{{ nt.bg }};color:{{ nt.color }};transition:.18s" style-hover="border-color:rgba(255,255,255,0.28)"><span style="font-size:16px">{{ nt.icon }}</span>{{ nt.label }}</div>
+      </sc-for>
+    </div>
+
+    <div data-live-content style="min-height:520px;display:{{ dispLive }}">
+
+      <!-- ============ TAB: SIGNALS ============ -->
+      <div style="display:{{ dispSignals }}">
+        <sc-if value="{{ hasSignals }}">
+        <div>
+          <!-- featured signal -->
+          <div style="position:relative;border-radius:22px;padding:2px;background:linear-gradient(135deg,rgba(53,227,154,0.5),rgba(74,158,255,0.22),rgba(245,178,61,0.32));box-shadow:0 30px 80px rgba(0,0,0,0.45);margin-bottom:28px">
+            <div style="border-radius:20px;background:linear-gradient(160deg,#0b0f1c,#080a12);padding:34px 38px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px">
+              <div>
+                <div style="display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:999px;background:rgba(53,227,154,0.12);border:1px solid rgba(53,227,154,0.4);margin-bottom:18px;animation:beacon 2.4s infinite">
+                  <span style="width:8px;height:8px;border-radius:50%;background:#35e39a"></span>
+                  <span style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8ff0c0;font-weight:700">{{ signalKicker }}</span>
+                </div>
+                <div style="font-family:var(--fm);font-size:13px;color:#8791ab;letter-spacing:1px;margin-bottom:6px">{{ feat.away }} @ {{ feat.home }} · {{ feat.time }}</div>
+                <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:8px">
+                  <div style="font-size:66px;font-weight:800;letter-spacing:-2px;line-height:.85;background:linear-gradient(180deg,#fff,#bfe4ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">{{ feat.pick }}</div>
+                  <div style="font-family:var(--fm);font-size:24px;font-weight:700;color:#8791ab;padding-bottom:6px">{{ feat.line }}</div>
+                </div>
+                <div style="font-size:14px;color:#9aa2ba;margin-bottom:20px;max-width:400px;line-height:1.6">{{ feat.blurb }}</div>
+                <div style="margin-bottom:22px;max-width:400px">
+                  <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:10px">{{ driversHead }}</div>
+                  <div style="display:flex;flex-direction:column;gap:8px">
+                    <sc-for list="{{ drivers }}" as="d" hint-placeholder-count="3">
+                      <div style="display:flex;align-items:center;gap:10px">
+                        <span style="font-size:11px;color:{{ d.color }};font-weight:800;width:13px;text-align:center">{{ d.arrow }}</span>
+                        <span style="flex:1;font-size:13px;color:#c4c7d2">{{ d.label }}</span>
+                        <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:{{ d.color }}">{{ d.val }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="display:flex;gap:22px;flex-wrap:wrap">
+                  <div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">{{ edgeLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#35e39a;line-height:.9"><span data-count-target="{{ featEdgeTarget }}" data-count-prefix="{{ featEdgePrefix }}" data-count-suffix="%">{{ featEdge }}</span></div></div>
+                  <div style="width:1px;background:rgba(255,255,255,0.12)"></div>
+                  <div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">λ · {{ runsLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#eef1f7;line-height:.9">{{ feat.lambda }}</div></div>
+                  <div style="width:1px;background:rgba(255,255,255,0.12)"></div>
+                  <div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">{{ stageLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#eef1f7;line-height:.9">{{ feat.stage }}</div></div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <svg viewBox="0 0 340 210" style="width:100%;max-width:330px;overflow:visible">
+                  <defs>
+                    <linearGradient id="gg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#35e39a"></stop><stop offset="1" stop-color="#f5b23d"></stop></linearGradient>
+                    <filter id="gl" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+                  </defs>
+                  <path d="{{ gauge.full }}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="26" stroke-linecap="round"></path>
+                  <path d="{{ gauge.full }}" fill="none" stroke="url(#gg)" stroke-width="10" stroke-linecap="round" opacity="0.55"></path>
+                  <path d="{{ gauge.edge }}" fill="none" stroke="#35e39a" stroke-width="26" filter="url(#gl)" opacity="0.9"></path>
+                  <line x1="{{ gauge.cx }}" y1="{{ gauge.cy }}" x2="{{ gauge.mkt.x }}" y2="{{ gauge.mkt.y }}" stroke="rgba(255,255,255,0.55)" stroke-width="2.5" stroke-dasharray="4 4"></line>
+                  <line x1="{{ gauge.cx }}" y1="{{ gauge.cy }}" x2="{{ gauge.eng.x }}" y2="{{ gauge.eng.y }}" stroke="#35e39a" stroke-width="4.5" stroke-linecap="round" filter="url(#gl)"></line>
+                  <circle cx="{{ gauge.cx }}" cy="{{ gauge.cy }}" r="8" fill="#0b0f1c" stroke="#35e39a" stroke-width="3"></circle>
+                  <text x="30" y="205" fill="#35e39a" style="font:600 12px var(--fm)">{{ overWord }}</text>
+                  <text x="310" y="205" fill="#f5b23d" style="font:600 12px var(--fm);text-anchor:end">{{ underWord }}</text>
+                </svg>
+                <div style="display:flex;gap:20px;margin-top:8px;font-family:var(--fm);font-size:12px">
+                  <div style="display:flex;align-items:center;gap:7px"><span style="width:14px;height:4px;border-radius:2px;background:#35e39a;display:inline-block;box-shadow:0 0 8px #35e39a"></span><span style="color:#aeb4c8">{{ engineWord }} {{ feat.engUnder }}%</span></div>
+                  <div style="display:flex;align-items:center;gap:7px"><span style="width:14px;height:0;border-top:2px dashed rgba(255,255,255,0.6);display:inline-block"></span><span style="color:#aeb4c8">{{ marketWord }} {{ feat.mktUnder }}%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8791ab;margin-bottom:16px">{{ boardCounter }}</div>
+          <!-- board -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;align-items:start">
+            <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="4">
+              <div onClick="{{ t.toggle }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style-active="transform:scale(0.99)" style="grid-column:{{ t.span }};position:relative;border-radius:20px;padding:22px;background:{{ t.cardBg }};border:1px solid {{ t.cardBorder }};box-shadow:0 20px 46px rgba(0,0,0,0.34);overflow:hidden;cursor:pointer;transition:transform .3s cubic-bezier(.2,.8,.2,1)" style-hover="transform:translateY(-4px)">
+                <div style="position:absolute;top:0;bottom:0;inset-inline-start:0;width:4px;background:{{ t.accent }}"></div>
+                <div style="position:absolute;inset:0;opacity:{{ t.glowOpacity }};background:radial-gradient(360px 160px at 82% -10%, {{ t.glow }}, transparent 70%);pointer-events:none"></div>
+                <div style="position:relative">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:18px">
+                    <div style="min-width:0;flex:1"><div style="font-size:19px;font-weight:800;letter-spacing:-.2px;white-space:nowrap">{{ t.away }} <span style="color:#6f7897">@</span> {{ t.home }}</div><div style="font-size:11px;color:#8791ab;margin-top:5px;line-height:1.5">{{ homeWord }}: <b style="color:#c4c7d2">{{ t.home }}</b> · {{ awayWord }}: <b style="color:#c4c7d2">{{ t.away }}</b> <span style="font-family:var(--fm);color:#6f7897">· {{ t.time }}</span></div></div>
+                    <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-family:var(--fm);font-size:11px;font-weight:700;color:{{ t.badgeColor }};background:{{ t.badgeBg }};border:1px solid {{ t.badgeBorder }};white-space:nowrap">{{ t.badgeText }}</span>
+                  </div>
+                  <div dir="ltr" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+                    <div style="display:flex;align-items:center;gap:11px">
+                      <div style="width:52px;font-size:11px;color:#8791ab;font-weight:600">{{ engineWord }}</div>
+                      <div style="flex:1;display:flex;height:30px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:12px;font-weight:700">
+                        <div style="width:{{ t.engH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c">{{ t.home }}&#160;{{ t.engH }}%</div>
+                        <div style="width:{{ t.engA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020">{{ t.away }}&#160;{{ t.engA }}%</div>
+                      </div>
+                    </div>
+                    <div style="display:{{ t.mktDisp }};align-items:center;gap:11px">
+                      <div style="width:52px;font-size:11px;color:#8791ab;font-weight:600">{{ marketWord }}</div>
+                      <div style="flex:1;display:flex;height:30px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:12px;font-weight:700;opacity:.62">
+                        <div style="width:{{ t.mktH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c">{{ t.home }}&#160;{{ t.mktH }}%</div>
+                        <div style="width:{{ t.mktA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020">{{ t.away }}&#160;{{ t.mktA }}%</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="font-size:12.5px;color:#9aa2ba;padding:10px 13px;border-radius:9px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);margin-bottom:16px">{{ t.callNote }}</div>
+
+                  <!-- Fatigue tag (B2B) -->
+                  <sc-if value="{{ t.hasFatigue }}">
+                    <div style="margin-bottom:12px;padding:8px 12px;border-radius:9px;font-size:12px;line-height:1.4;border:1px solid {{ t.fatigue.border }};background:{{ t.fatigue.bg }};color:{{ t.fatigue.color }}">
+                      {{ t.fatigue.label }} · ~{{ t.fatigue.upset_pct }}% vs ~{{ t.fatigue.base_pct }}%
+                    </div>
+                  </sc-if>
+
+                  <!-- Surprise flag 🔥 -->
+                  <sc-if value="{{ t.hasSurprise }}">
+                    <div style="margin-bottom:12px;padding:8px 12px;border-radius:9px;font-size:12px;background:rgba(245,178,61,0.08);border:1px solid rgba(245,178,61,0.35);color:#f5b23d">
+                      {{ t.surprise.label }}<div style="font-size:11px;color:#9aa2ba;margin-top:3px">{{ t.surprise.honest }}</div>
+                    </div>
+                  </sc-if>
+
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07)">
+                    <div style="display:flex;align-items:center;gap:12px">
+                      <div style="position:relative;width:50px;height:50px;flex-shrink:0"><svg viewBox="0 0 52 52" style="width:50px;height:50px;transform:rotate(-90deg)"><circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="5"></circle><circle cx="26" cy="26" r="22" fill="none" stroke="{{ t.ringColor }}" stroke-width="5" stroke-linecap="round" stroke-dasharray="{{ t.ringArc }}"></circle></svg><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:13px;font-weight:700;color:#eef1f7">{{ t.callPct }}</div></div>
+                      <div style="white-space:nowrap">
+                        <div style="font-size:14px;font-weight:600">🏆 {{ callWord }} <b style="font-weight:800">{{ t.favCode }}</b></div>
+                        <!-- 9-stage badge with name -->
+                        <div style="font-family:var(--fm);font-size:11px;color:#6f7897;margin-top:2px">{{ stageWord }} {{ t.stage }} <span style="color:#f5b23d">{{ t.stgName }}</span></div>
+                      </div>
+                    </div>
+                    <div style="text-align:end">
+                      <!-- Cell accuracy -->
+                      <div style="font-family:var(--fm);font-size:10px;color:#8791ab;margin-bottom:2px">{{ t.cellAccDisp }}</div>
+                      <div style="font-family:var(--fm);font-size:11px;color:#8791ab;display:flex;align-items:center;gap:6px;white-space:nowrap;justify-content:flex-end">{{ detailsWord }} <span style="font-size:15px;display:inline-block;transition:transform .25s;transform:{{ t.chevron }}">⌄</span></div>
+                    </div>
+                  </div>
+
+                  <div style="display:{{ t.detailDisp }};margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.07)">
+                    <div style="font-family:var(--fm);font-size:12px;color:#8791ab;margin-bottom:12px">λ = {{ t.lambda }} {{ runsWord }} · 🔒 {{ lineWord }} {{ t.line }}</div>
+                    <div style="border-inline-start:3px solid #f5b23d;background:rgba(245,178,61,0.08);border-radius:8px;padding:10px 13px;margin-bottom:14px"><div style="font-size:12.5px;color:#f3d29a">🛌 {{ starterPrefix }} {{ t.starterAway }} · {{ t.starterHome }}</div><div style="font-family:var(--fm);font-size:11px;color:#7d8294;margin-top:4px">Elo {{ t.elo }}</div></div>
+                    <div dir="ltr" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+                      <div style="display:flex;align-items:center;gap:10px"><div style="width:54px;font-size:11px;color:#8791ab">{{ engineWord }}</div><div style="flex:1;display:flex;height:28px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:11px;font-weight:700"><div style="width:{{ t.engOver }}%;background:#35e39a;display:flex;align-items:center;justify-content:center;color:#062012">{{ overWord }}&#160;{{ t.engOver }}%</div><div style="width:{{ t.engUnder }}%;background:#f5b23d;display:flex;align-items:center;justify-content:center;color:#241a06">{{ underWord }}&#160;{{ t.engUnder }}%</div></div></div>
+                      <div style="display:{{ t.mktOverDisp }};align-items:center;gap:10px"><div style="width:54px;font-size:11px;color:#8791ab">{{ marketWord }}</div><div style="flex:1;display:flex;height:28px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:11px;font-weight:700;opacity:.72"><div style="width:{{ t.mktOver }}%;background:#35e39a;display:flex;align-items:center;justify-content:center;color:#062012">{{ overWord }}&#160;{{ t.mktOver }}%</div><div style="width:{{ t.mktUnder }}%;background:#f5b23d;display:flex;align-items:center;justify-content:center;color:#241a06">{{ underWord }}&#160;{{ t.mktUnder }}%</div></div></div>
+                    </div>
+                    <div style="display:{{ t.valueDisp }};border:1px dashed rgba(53,227,154,0.5);background:rgba(53,227,154,0.05);border-radius:10px;padding:11px 14px;margin-bottom:14px"><div style="font-size:14px;font-weight:700;color:#7fe3b0">💚 A+ {{ t.valueSide }} +{{ t.valuePct }}%</div></div>
+                    <div dir="ltr" style="display:flex;flex-direction:column;gap:7px">
+                      <sc-for list="{{ t.lines }}" as="ln" hint-placeholder-count="5">
+                        <div style="display:flex;align-items:center;gap:10px;font-family:var(--fm);font-size:11px"><div style="width:44px;color:{{ ln.lcolor }};font-weight:600">{{ ln.lock }}{{ ln.v }}</div><div style="flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden"><div style="height:100%;border-radius:4px;background:{{ ln.lfill }};width:{{ ln.over }}%"></div></div><div style="width:38px;text-align:right;color:#c4c7d2;font-weight:600">{{ ln.over }}%</div></div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ noSignals }}">
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:420px;padding:40px 24px">
+          <div style="position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:26px">
+            <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 50%, rgba(245,178,61,0.22), transparent 70%)"></div>
+            <div style="position:absolute;inset:32px;border-radius:50%;border:1.5px dashed rgba(245,178,61,0.4);animation:spin 16s linear infinite"></div>
+            <div style="position:relative;font-size:42px;line-height:1">{{ signalsEmptyIcon }}</div>
+          </div>
+          <div style="font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:12px">{{ signalsEmptyTitle }}</div>
+          <div style="font-size:14.5px;color:#9aa2ba;line-height:1.65;max-width:430px">{{ signalsEmptyBody }}</div>
+        </div>
+        </sc-if>
+      </div>
+
+      <!-- ============ TAB: RESULTS / HISTORY ============ -->
+      <div style="display:{{ dispResults }}">
+        <div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin-bottom:14px">{{ resultsHead }}</div>
+          <!-- Date nav pills -->
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+            <sc-for list="{{ resultsData.datePills }}" as="dp" hint-placeholder-count="7">
+              <div onClick="{{ dp.onClick }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;padding:7px 14px;border-radius:999px;font-family:var(--fm);font-size:12px;font-weight:600;border:1px solid {{ dp.border }};background:{{ dp.bg }};color:{{ dp.color }};transition:.15s" style-hover="border-color:rgba(255,255,255,0.3)">{{ dp.label }}</div>
+            </sc-for>
+          </div>
+          <!-- Games for selected date -->
+          <sc-if value="{{ resultsData.hasGames }}">
+            <div>
+              <div style="font-family:var(--fm);font-size:11px;color:#6f7897;margin-bottom:14px">{{ resultsData.summaryLabel }}</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
+                <sc-for list="{{ resultsData.gameCards }}" as="gc" hint-placeholder-count="4">
+                  <div style="border-radius:16px;padding:18px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                      <div style="font-size:15px;font-weight:800">{{ gc.home }} <span style="color:#6f7897;font-size:13px">vs</span> {{ gc.away }}</div>
+                      <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-family:var(--fm);font-size:11px;font-weight:700;color:{{ gc.outcomeColor }};background:{{ gc.outcomeBg }};border:1px solid {{ gc.outcomeBorder }}">{{ gc.outcomeIcon }} {{ gc.outcomeLabel }}</span>
+                    </div>
+                    <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:#eef1f7;margin-bottom:8px">{{ gc.score }}</div>
+                    <div style="font-size:12px;color:#8791ab">{{ gc.pickLabel }}: <b style="color:#c4c7d2">{{ gc.pick }}</b> · {{ gc.prob }}%</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ !resultsData.hasGames }}">
+            <div style="text-align:center;padding:40px 24px;color:#6f7897;font-size:14px">{{ resultsData.emptyMsg }}</div>
+          </sc-if>
+        </div>
+      </div>
+
+      <!-- ============ TAB: RANKINGS ============ -->
+      <div style="display:{{ dispRankings }}">
+        <div>
+          <!-- Rank sub-tabs: DATA DRIVEN, 7 cubes via sc-for -->
+          <div style="display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap">
+            <sc-for list="{{ rankTabs }}" as="rt" hint-placeholder-count="7">
+              <div onClick="{{ rt.onClick }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid {{ rt.border }};background:{{ rt.bg }};color:{{ rt.color }};transition:.15s" style-hover="border-color:rgba(255,255,255,0.3)"><span>{{ rt.icon }}</span>{{ rt.label }}</div>
+            </sc-for>
+          </div>
+          <div style="border-inline-start:3px solid #35e39a;background:rgba(53,227,154,0.05);border-radius:10px;padding:13px 16px;font-size:13.5px;line-height:1.55;color:#9aa2ba;margin-bottom:22px">{{ rankNote }}</div>
+
+          <!-- Empty state for day-dependent cubes in off-season -->
+          <sc-if value="{{ rankIsEmpty }}">
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;text-align:center;padding:32px;border-radius:18px;border:1px solid rgba(255,255,255,0.08);background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))">
+              <div style="font-size:32px;margin-bottom:14px">📅</div>
+              <div style="font-size:15px;font-weight:700;margin-bottom:8px;color:#eef1f7">{{ rankEmptyMsg }}</div>
+            </div>
+          </sc-if>
+
+          <!-- Table: each sub-tab is a genuinely different table -->
+          <sc-if value="{{ !rankIsEmpty }}">
+            <div style="border-radius:18px;border:1px solid rgba(255,255,255,0.08);overflow:hidden">
+              <!-- Column headers -->
+              <div style="display:grid;grid-template-columns:36px 1fr 120px 120px 80px;gap:10px;padding:12px 18px;font-family:var(--fm);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#6f7897;border-bottom:1px solid rgba(255,255,255,0.07)">
+                <div>#</div><div>{{ teamCol }}</div><div>{{ rankCH.c1 }}</div><div>{{ rankCH.c2 }}</div><div style="text-align:end">{{ rankCH.c3 }}</div>
+              </div>
+              <sc-for list="{{ rankRows }}" as="rr" hint-placeholder-count="7">
+                <div>
+                  <sc-if value="{{ rr.isTier }}">
+                    <div style="padding:12px 18px 6px;font-family:var(--fm);font-size:11px;font-weight:700;color:{{ rr.tierColor }};letter-spacing:.5px;text-transform:uppercase">{{ rr.tierLabel }}</div>
+                  </sc-if>
+                  <sc-if value="{{ rr.isRow }}">
+                    <div style="display:grid;grid-template-columns:36px 1fr 120px 120px 80px;gap:10px;padding:10px 18px;align-items:center;border-top:1px solid rgba(255,255,255,0.04)" style-hover="background:rgba(255,255,255,0.03)">
+                      <div style="font-family:var(--fm);font-size:13px;color:#6f7897">{{ rr.rank }}</div>
+                      <div style="min-width:0">
+                        <div style="font-size:14px;font-weight:800">{{ rr.team }}</div>
+                        <div style="flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden;margin-top:4px;max-width:120px"><div style="height:100%;border-radius:3px;background:{{ rr.tierColor }};width:{{ rr.barPct }}%;opacity:0.7"></div></div>
+                      </div>
+                      <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:#eef1f7">{{ rr.col1 }}</div>
+                      <div style="font-family:var(--fm);font-size:12px;color:#8791ab">{{ rr.col2 }}</div>
+                      <div style="font-family:var(--fm);font-size:12px;color:#6f7897;text-align:end">{{ rr.col3 }}</div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <!-- ============ TAB: TRACK RECORD ============ -->
+      <div style="display:{{ dispTrack }}">
+        <div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#6f7897;font-weight:600;margin-bottom:16px">{{ validatedHead }}</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px">
+            <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
+              <div style="position:relative;border-radius:18px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.08);overflow:hidden">
+                <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#35e39a,rgba(53,227,154,0))"></div>
+                <div style="display:flex;align-items:baseline;gap:3px"><span style="font-family:var(--fm);font-size:32px;font-weight:800;color:#35e39a;line-height:1;letter-spacing:-1px" data-count-target="{{ k.target }}" data-count-prefix="{{ k.prefix }}" data-count-suffix="{{ k.u }}" data-count-dec="{{ k.dec }}">{{ k.display }}</span><sc-if value="{{ k.tag }}" hint-placeholder-val="{{ true }}"><span style="margin-inline-start:8px;font-family:var(--fm);font-size:10px;font-weight:700;color:#3a2e12;background:#f5b23d;padding:3px 8px;border-radius:6px;white-space:nowrap">{{ k.tag }}</span></sc-if></div>
+                <div style="font-size:12.5px;line-height:1.5;color:#8791ab;margin-top:10px">{{ k.d }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- model integrity -->
+          <div style="border-radius:20px;padding:22px 24px;margin-bottom:20px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap">
+              <div style="font-size:16px;font-weight:700">{{ integrityHead }}</div>
+              <div style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;background:rgba(53,227,154,0.1);border:1px solid rgba(53,227,154,0.3)"><span style="font-size:12px;color:#35e39a">✓</span><span style="font-family:var(--fm);font-size:11px;font-weight:700;color:#8ff0c0">{{ verifiedBadge }}</span></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px">
+              <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1">{{ integrity.n }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ sampleLabel }}</div></div>
+              <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1;color:#ffb454">{{ integrity.drawdown }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ drawdownLabel }}</div></div>
+              <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1">{{ integrity.brier }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ brierLabel }}</div></div>
+              <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1;color:#35e39a">{{ integrity.hit }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ hitLabel }}</div></div>
+            </div>
+            <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:12px">{{ clvSegHead }}</div>
+            <div dir="ltr" style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ clvSeg }}" as="s" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:14px">
+                  <span style="width:132px;font-size:12px;color:#aeb4c8;flex-shrink:0;text-align:right">{{ s.label }}</span>
+                  <div style="flex:1;display:flex;align-items:center;height:16px">
+                    <div style="flex:1;display:flex;justify-content:flex-end"><sc-if value="{{ s.neg }}" hint-placeholder-val="{{ false }}"><div style="height:9px;border-radius:5px;background:linear-gradient(90deg,#ff6b6b,#ff8f8f);width:{{ s.widthPct }}%"></div></sc-if></div>
+                    <div style="width:1px;height:16px;background:rgba(255,255,255,0.22);flex-shrink:0"></div>
+                    <div style="flex:1;display:flex;justify-content:flex-start"><sc-if value="{{ s.pos }}" hint-placeholder-val="{{ true }}"><div style="height:9px;border-radius:5px;background:linear-gradient(90deg,#35e39a,#8ff0c0);width:{{ s.widthPct }}%"></div></sc-if></div>
+                  </div>
+                  <span style="width:50px;text-align:left;font-family:var(--fm);font-size:13px;font-weight:700;color:{{ s.color }};flex-shrink:0">{{ s.val }}</span>
+                </div>
+              </sc-for>
+              <div style="display:flex;align-items:center;gap:14px;margin-top:3px">
+                <span style="width:132px;flex-shrink:0"></span>
+                <div style="flex:1;display:flex;align-items:center;height:12px">
+                  <div style="flex:1"></div>
+                  <div style="width:0;flex-shrink:0;position:relative"><span style="position:absolute;left:50%;top:-1px;transform:translateX(-50%);font-family:var(--fm);font-size:10px;color:#9aa2ba">0</span></div>
+                  <div style="flex:1"></div>
+                </div>
+                <span style="width:50px;flex-shrink:0"></span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
+            <!-- CLV chart -->
+            <div style="border-radius:20px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+                <div style="font-size:16px;font-weight:700">{{ clvTitle }}</div>
+                <div style="font-family:var(--fm);font-size:20px;font-weight:800;color:#35e39a">{{ clvFinalStr }} <span style="font-size:12px;color:#6f7897">pts</span></div>
+              </div>
+              <svg viewBox="0 0 520 200" style="width:100%;height:auto">
+                <defs><linearGradient id="clvfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(53,227,154,0.35)"></stop><stop offset="1" stop-color="rgba(53,227,154,0)"></stop></linearGradient></defs>
+                <line x1="0" y1="{{ clv.baseY }}" x2="520" y2="{{ clv.baseY }}" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="4 5"></line>
+                <path d="{{ clv.area }}" fill="url(#clvfill)"></path>
+                <path id="clv-line" d="{{ clv.line }}" fill="none" stroke="#35e39a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle cx="{{ clv.dotX }}" cy="{{ clv.dotY }}" r="6" fill="#35e39a"></circle>
+                <circle cx="{{ clv.dotX }}" cy="{{ clv.dotY }}" r="11" fill="none" stroke="#35e39a" stroke-width="2" opacity="0.5"></circle>
+              </svg>
+              <div style="font-size:12px;color:#6f7897;margin-top:10px">{{ clvSub }}</div>
+            </div>
+            <!-- stage accuracy -->
+            <div style="border-radius:20px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+              <div style="font-size:16px;font-weight:700;margin-bottom:18px">{{ stageTitle }}</div>
+              <div style="display:flex;align-items:flex-start;gap:12px;padding:16px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">
+                <span style="font-size:18px;flex-shrink:0;margin-top:1px">📋</span>
+                <div style="font-size:13px;color:#8791ab;line-height:1.6">{{ stageNote }}</div>
+              </div>
+              <div style="font-size:12px;color:#6f7897;margin-top:16px;line-height:1.5">{{ stageSub }}</div>
+            </div>
+          </div>
+
+          <!-- CALIBRATION: real 4-band bars from engine -->
+          <div style="border-radius:20px;padding:24px;margin-top:20px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+            <div style="font-size:16px;font-weight:700;margin-bottom:4px">{{ calTitle }}</div>
+            <div style="font-size:12px;color:#6f7897;margin-bottom:20px">{{ calSub }}</div>
+            <sc-if value="{{ calData.noData }}">
+              <div style="font-size:13px;color:#8791ab;padding:14px;border-radius:9px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">{{ stageNote }}</div>
+            </sc-if>
+            <sc-if value="{{ !calData.noData }}">
+              <div style="display:flex;flex-direction:column;gap:14px;max-width:480px">
+                <sc-for list="{{ calData.bands }}" as="cb" hint-placeholder-count="4">
+                  <div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                      <span style="font-family:var(--fm);font-size:11px;color:#8791ab">{{ calPredLabel }} {{ cb.band }}</span>
+                      <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:{{ cb.color }}">{{ calActLabel }} {{ cb.actual }}% <span style="color:#6f7897;font-weight:400">({{ calSampleLabel }} {{ cb.nFormatted }})</span></span>
+                    </div>
+                    <div style="height:8px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden">
+                      <div style="height:100%;border-radius:4px;background:{{ cb.color }};width:{{ cb.barW }}px;max-width:100%;opacity:0.85"></div>
+                    </div>
+                  </div>
+                </sc-for>
+                <div style="font-size:12px;color:#6f7897;margin-top:4px">{{ calFoot }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ TAB: HOW IT WORKS ============ -->
+      <div style="display:{{ dispHow }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-bottom:28px">
+          <div style="border-radius:20px;padding:26px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+            <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin-bottom:16px">{{ annotatedLabel }}</div>
+            <div style="border-radius:14px;border:1px solid rgba(255,255,255,0.09);padding:20px;background:rgba(255,255,255,0.02)">
+              <div style="font-size:20px;font-weight:800;margin-bottom:16px">{{ feat.away }} <span style="color:#6f7897">@</span> {{ feat.home }}</div>
+              <sc-for list="{{ howRows }}" as="h" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:14px;padding:9px 10px;border-radius:9px;margin-bottom:4px" style-hover="background:rgba(53,227,154,0.08)">
+                  <div style="width:82px;font-size:13px;font-weight:700;color:{{ h.labelColor }};display:flex;align-items:center;gap:6px">{{ h.icon }} {{ h.label }}</div>
+                  <div style="flex:1;font-family:var(--fm);font-size:13px;color:#c4c7d2">{{ h.value }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:16px">
+              <div style="flex:1;border:1px dashed rgba(53,227,154,0.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#8ff0c0"><b style="color:#c8ffe4">Elo</b> {{ eloExplain }}</div>
+              <div style="flex:1;border:1px dashed rgba(74,158,255,0.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#a9cbff"><b style="color:#d6e6ff">Rest</b> {{ fipExplain }}</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ howBullets }}" as="b" hint-placeholder-count="7">
+              <div style="border-radius:16px;padding:18px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+                <div style="font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:9px"><span style="font-family:var(--fm);font-size:11px;font-weight:700;color:#3a2e12;background:{{ b.chip }};padding:3px 8px;border-radius:6px">{{ b.tag }}</span>{{ b.title }}</div>
+                <div style="font-size:13px;color:#9aa2ba;line-height:1.6">{{ b.body }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Explainers: Elo / Momentum / Composite / Off-Def / Caveat -->
+        <div style="border-radius:20px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin-bottom:18px">Power · Momentum · Composite · Off/Def</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+            <sc-for list="{{ howExplainers }}" as="ex" hint-placeholder-count="5">
+              <div style="padding:18px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">
+                <div style="font-size:20px;margin-bottom:8px">{{ ex.icon }}</div>
+                <div style="font-size:14px;font-weight:700;margin-bottom:6px;color:#eef1f7">{{ ex.title }}</div>
+                <div style="font-size:12.5px;color:#8791ab;line-height:1.6">{{ ex.body }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============ STATE: loading / empty / error ============ -->
+    <div style="display:{{ dispState }};min-height:520px">
+      <!-- LOADING skeleton -->
+      <div style="display:{{ dispSkeleton }}">
+        <div style="border-radius:22px;background:linear-gradient(160deg,#0b0f1c,#080a12);border:1px solid rgba(255,255,255,0.07);padding:34px 38px;margin-bottom:24px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px">
+            <div>
+              <div style="background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.12),rgba(255,255,255,0.05));background-size:200% 100%;animation:shimmer 1.5s linear infinite;width:150px;height:24px;border-radius:999px;margin-bottom:22px"></div>
+              <div style="background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.12),rgba(255,255,255,0.05));background-size:200% 100%;animation:shimmer 1.5s linear infinite;width:220px;height:13px;border-radius:6px;margin-bottom:16px"></div>
+              <div style="background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.12),rgba(255,255,255,0.05));background-size:200% 100%;animation:shimmer 1.5s linear infinite;width:290px;height:60px;border-radius:12px;margin-bottom:18px"></div>
+              <div style="display:flex;gap:18px">
+                <div style="background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.12),rgba(255,255,255,0.05));background-size:200% 100%;animation:shimmer 1.5s linear infinite;width:78px;height:46px;border-radius:10px"></div>
+                <div style="background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.12),rgba(255,255,255,0.05));background-size:200% 100%;animation:shimmer 1.5s linear infinite;width:78px;height:46px;border-radius:10px"></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:center">
+              <div style="background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.12),rgba(255,255,255,0.05));background-size:200% 100%;animation:shimmer 1.5s linear infinite;width:210px;height:150px;border-radius:16px"></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+          <sc-for list="{{ skTiles }}" as="s" hint-placeholder-count="4">
+            <div style="border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.07);padding:20px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+                <div style="background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.12),rgba(255,255,255,0.05));background-size:200% 100%;animation:shimmer 1.5s linear infinite;width:96px;height:15px;border-radius:6px"></div>
+                <div style="background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.12),rgba(255,255,255,0.05));background-size:200% 100%;animation:shimmer 1.5s linear infinite;width:46px;height:18px;border-radius:999px"></div>
+              </div>
+              <div style="background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.12),rgba(255,255,255,0.05));background-size:200% 100%;animation:shimmer 1.5s linear infinite;width:100%;height:10px;border-radius:999px;margin-bottom:10px"></div>
+              <div style="background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.12),rgba(255,255,255,0.05));background-size:200% 100%;animation:shimmer 1.5s linear infinite;width:100%;height:10px;border-radius:999px;margin-bottom:18px"></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <!-- EMPTY / ERROR message -->
+      <div style="display:{{ dispMessage }};flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:480px;padding:40px 24px">
+        <div style="position:relative;width:130px;height:130px;display:flex;align-items:center;justify-content:center;margin-bottom:28px">
+          <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 50%, {{ stateGlow }}, transparent 70%)"></div>
+          <div style="position:absolute;inset:18px;border-radius:50%;border:1px solid rgba(255,255,255,0.09)"></div>
+          <div style="position:absolute;inset:34px;border-radius:50%;border:1.5px dashed {{ stateRing }};animation:spin 16s linear infinite"></div>
+          <div style="position:relative;font-size:44px;line-height:1">{{ stateIcon }}</div>
+        </div>
+        <div style="font-size:25px;font-weight:800;letter-spacing:-.5px;margin-bottom:12px">{{ stateTitle }}</div>
+        <div style="font-size:14.5px;color:#9aa2ba;line-height:1.65;max-width:430px;margin-bottom:24px">{{ stateBody }}</div>
+        <div style="display:{{ dispStateChip }};align-items:center;gap:9px;padding:9px 16px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);font-family:var(--fm);font-size:12px;color:#aeb4c8">
+          <span style="width:7px;height:7px;border-radius:50%;background:{{ stateAccent }};box-shadow:0 0 9px {{ stateAccent }}"></span>{{ stateChip }}
+        </div>
+        <!-- Next scheduled game card (data-driven from REAL.nextGame) -->
+        <div style="display:{{ dispNextGame }};flex-direction:column;gap:8px;margin-top:22px;width:100%;max-width:420px;border-radius:16px;padding:18px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.09);text-align:start">
+          <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8791ab">{{ nextGameCard.tag }}</div>
+          <sc-if value="{{ nextGameCard.has }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:19px;font-weight:800;letter-spacing:-.3px">{{ nextGameCard.matchup }}</div>
+            <div style="font-size:13px;color:#c4c7d2">{{ nextGameCard.pick }}</div>
+            <div style="font-family:var(--fm);font-size:12px;color:#8791ab">{{ nextGameCard.stage }} · {{ nextGameCard.date }}</div>
+          </sc-if>
+          <sc-if value="{{ nextGameCard.hasNot }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:13.5px;color:#9aa2ba;line-height:1.6">{{ nextGameCard.msg }}</div>
+          </sc-if>
+        </div>
+        <div onClick="{{ retryClick }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="display:{{ showRetry }};cursor:pointer;align-items:center;gap:9px;padding:12px 26px;border-radius:12px;background:{{ stateAccent }};color:#05060d;font-weight:800;font-size:14px;box-shadow:0 14px 34px {{ stateGlow }}" style-hover="filter:brightness(1.08)"><span style="font-size:16px">↻</span>{{ retryLabel }}</div>
+      </div>
+    </div>
+
+
+    <div style="margin-top:44px;padding-top:22px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div style="font-size:12.5px;color:#6f7897">{{ disclaimer }}</div>
+      <div style="font-family:var(--fm);font-size:11px;color:#4f566e;letter-spacing:1px">PREDICTION ENGINES · 2026</div>
+    </div>
+
+  </div>
+</div>
+
+</script>
+<script src="../assets/dc-mini.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>

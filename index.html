@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Prediction Engines · Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;800;900&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#050509;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:rgba(124,109,255,0.4);color:#fff}
+  @keyframes flow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  @keyframes livep{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.82)}}
+  @keyframes shimmer{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}
+  @keyframes riseIn{0%{opacity:0;transform:translateY(24px)}100%{opacity:1;transform:translateY(0)}}
+  .eng-card:hover{transform:translateY(-8px)!important}
+  .eng-card:hover .eng-glow{opacity:1!important}
+  .cta-primary:hover{transform:translateY(-2px);box-shadow:0 16px 44px rgba(124,109,255,0.55)!important}
+  .cta-ghost:hover{border-color:rgba(255,255,255,0.5)!important;background:rgba(255,255,255,0.04)!important}
+  .langbtn:hover{border-color:rgba(124,109,255,0.7)!important;color:#c9c2ff!important}
+</style></head><body><div id="dc-root"></div>
+<script type="text/dc-template" id="dc-template">
+<div dir="{{ dir }}" style="font-family:var(--f);position:relative;min-height:100vh;background:radial-gradient(1200px 700px at 70% -10%, rgba(124,109,255,0.22), transparent 60%),radial-gradient(900px 600px at 10% 20%, rgba(34,211,238,0.12), transparent 55%),#050509;color:#f4f4f7;--f:'Sora','Heebo',sans-serif;--fm:'JetBrains Mono',monospace;overflow:hidden">
+
+  <!-- animated 3D canvas backdrop -->
+  <canvas id="pe-bg-canvas" style="position:absolute;top:0;left:0;width:100%;height:960px;z-index:0;opacity:0.92;pointer-events:none"></canvas>
+  <div style="position:absolute;top:0;left:0;right:0;height:960px;z-index:1;pointer-events:none;background:linear-gradient(180deg,transparent 62%,rgba(5,5,9,0.7) 86%,#050509 100%)"></div>
+
+  <!-- NAV -->
+  <div style="position:relative;z-index:5;max-width:1240px;margin:0 auto;padding:26px 40px;display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#7c6dff,#22d3ee);display:flex;align-items:center;justify-content:center;font-weight:800;color:#080814;font-size:17px;box-shadow:0 6px 20px rgba(124,109,255,0.5)">◈</div>
+      <div style="font-weight:700;font-size:16px;letter-spacing:.3px">{{ brand }}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px)">
+        <span style="width:7px;height:7px;border-radius:50%;background:#34e08a;box-shadow:0 0 10px #34e08a;animation:livep 1.8s infinite"></span>
+        <span style="font-family:var(--fm);font-size:11px;color:#a9f5cf;font-weight:600">{{ liveTag }}</span>
+      </div>
+      <div onClick="{{ toggleLang }}" class="langbtn" style="cursor:pointer;padding:8px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.16);font-family:var(--fm);font-size:12px;font-weight:600;color:#cfcfe0;transition:.2s;backdrop-filter:blur(10px)">{{ otherLang }}</div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div style="position:relative;z-index:5;max-width:1000px;margin:0 auto;padding:70px 40px 40px;text-align:center">
+    <div style="display:inline-flex;align-items:center;gap:9px;padding:8px 18px;border-radius:999px;background:rgba(124,109,255,0.1);border:1px solid rgba(124,109,255,0.32);margin-bottom:30px">
+      <span style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#c9c2ff;font-weight:600">{{ eyebrow }}</span>
+    </div>
+    <h1 style="margin:0 0 24px;font-weight:800;font-size:74px;line-height:1.02;letter-spacing:-2px">
+      <span style="display:block;color:#f7f7fb">{{ h1a }}</span>
+      <span style="display:block;background:linear-gradient(100deg,#7c6dff,#22d3ee,#34e08a,#7c6dff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:flow 6s linear infinite">{{ h1b }}</span>
+    </h1>
+    <p style="max-width:620px;margin:0 auto 38px;font-size:18px;line-height:1.7;color:#a7a7b8">{{ subtitle }}</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <div class="cta-primary" onClick="{{ goLive }}" style="cursor:pointer;padding:15px 30px;border-radius:12px;background:linear-gradient(135deg,#7c6dff,#6d5cf5);color:#fff;font-weight:600;font-size:15px;transition:.25s;box-shadow:0 10px 34px rgba(124,109,255,0.42)">{{ cta1 }}</div>
+      <div class="cta-ghost" onClick="{{ goGuide }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;padding:15px 30px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);color:#e6e6ef;font-weight:600;font-size:15px;transition:.25s;backdrop-filter:blur(10px)">{{ cta2 }}</div>
+    </div>
+  </div>
+
+  <!-- STATS BAND -->
+  <div style="position:relative;z-index:5;max-width:900px;margin:20px auto 0;padding:0 40px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+        <div style="text-align:center;padding:22px 12px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(12px)">
+          <div style="font-family:var(--fm);font-size:30px;font-weight:700;background:linear-gradient(120deg,#fff,#c9c2ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">{{ s.v }}</div>
+          <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#7a7a8c;margin-top:6px;font-weight:600">{{ s.k }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ENGINES -->
+  <div style="position:relative;z-index:5;max-width:1240px;margin:90px auto 0;padding:0 40px">
+    <div id="engines-section" style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:34px;flex-wrap:wrap;gap:12px;scroll-margin-top:24px">
+      <div>
+        <div style="font-family:var(--fm);font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#7c6dff;font-weight:600;margin-bottom:10px">{{ sectionKicker }}</div>
+        <h2 style="margin:0;font-size:38px;font-weight:700;letter-spacing:-1px">{{ sectionTitle }}</h2>
+      </div>
+      <div style="max-width:340px;font-size:14px;line-height:1.6;color:#8f8fa1">{{ sectionSub }}</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+      <sc-for list="{{ engines }}" as="e" hint-placeholder-count="5">
+        <div class="eng-card" onClick="{{ e.open }}" style="position:relative;border-radius:20px;padding:26px;background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(14px);box-shadow:0 20px 50px rgba(0,0,0,0.35);transition:transform .35s cubic-bezier(.2,.8,.2,1);overflow:hidden;cursor:pointer">
+          <div class="eng-glow" style="position:absolute;inset:0;opacity:0;transition:opacity .35s;background:radial-gradient(340px 200px at 80% -20%, {{ e.glow }}, transparent 70%);pointer-events:none"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,{{ e.c1 }},{{ e.c2 }})"></div>
+          <div style="position:relative">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+              <div style="display:flex;align-items:center;gap:13px">
+                <div style="width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;background:{{ e.chip }};border:1px solid {{ e.chipB }}">{{ e.emoji }}</div>
+                <div>
+                  <div style="font-size:20px;font-weight:700;letter-spacing:-.3px">{{ e.name }}</div>
+                  <div style="font-family:var(--fm);font-size:11px;color:#7a7a8c;margin-top:2px">{{ e.tag }}</div>
+                </div>
+              </div>
+              <sc-if value="{{ e.isLive }}" hint-placeholder-val="{{ true }}"><span style="width:9px;height:9px;border-radius:50%;background:#34e08a;box-shadow:0 0 12px #34e08a;animation:livep 1.8s infinite"></span></sc-if>
+            </div>
+            <div style="display:flex;align-items:flex-end;gap:10px;margin-bottom:6px">
+              <div style="font-family:var(--fm);font-size:44px;font-weight:700;line-height:.9;color:{{ e.c2 }}">{{ e.overall }}</div>
+              <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#7a7a8c;font-weight:600;padding-bottom:6px">{{ overallLabel }}</div>
+            </div>
+            <div style="height:5px;border-radius:3px;background:rgba(255,255,255,0.07);overflow:hidden;margin:12px 0 16px"><div style="height:100%;border-radius:3px;background:linear-gradient(90deg,{{ e.c1 }},{{ e.c2 }});width:{{ e.pct }}%"></div></div>
+            <div style="font-size:13.5px;line-height:1.6;color:#a2a2b4;margin-bottom:16px">{{ e.method }}</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07)">
+              <div style="font-size:12px;font-weight:600;color:{{ e.statusColor }}">{{ e.statusText }}</div>
+              <div style="font-family:var(--fm);font-size:12px;color:#8f8fa1;font-weight:600">{{ openLabel }} →</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="position:relative;z-index:5;max-width:1240px;margin:80px auto 0;padding:34px 40px 56px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+    <div style="font-size:13px;color:#6f6f80;max-width:620px;line-height:1.6">{{ footer }}</div>
+    <div style="font-family:var(--fm);font-size:11px;color:#5a5a6b;letter-spacing:1px">{{ brand }} · 2026</div>
+  </div>
+
+</div>
+</script>
+<script src="./assets/dc-mini.js"></script><script src="./hub.app.js"></script></body></html>
