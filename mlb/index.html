@@ -21,6 +21,42 @@
   @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
   @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes tabIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  /* ── How-it-works guide (restored full live guide, preview palette) ── */
+  .mlg{--line:rgba(255,255,255,0.09);--card:rgba(255,255,255,0.03);--mut:#8791ab;--txt:#eef1f7;--accent:#35e39a}
+  .mlg .l-he{display:none}.mlg .l-en{display:none}
+  .mlg[data-glang="he"] .l-he{display:inline}
+  .mlg[data-glang="en"] .l-en{display:inline}
+  .mlg .gv-sec{margin:0 0 18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .mlg .gv-sec:last-child{border-bottom:none}
+  .mlg .gv-ey{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+  .mlg .gv-num{background:rgba(53,227,154,0.14);color:#7fe3b0;font-family:var(--fm);font-weight:800;font-size:12px;border-radius:6px;padding:2px 8px}
+  .mlg .gv-sec h3{font-size:16px;margin:0;font-weight:800;color:var(--txt)}
+  .mlg .gv-sec p{margin:.4em 0;font-size:13.5px;color:#c4c7d2;line-height:1.6}
+  .mlg .gv-sec p b,.mlg .gv-sec li b{color:var(--txt);font-weight:700}
+  .mlg .gv-lead{font-weight:600;color:var(--txt)!important}
+  .mlg .gv-sec ul{margin:.4em 0;padding-inline-start:20px}
+  .mlg .gv-sec li{margin:.3em 0;font-size:13.5px;color:#c4c7d2;line-height:1.55}
+  .mlg .gv-chip{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;margin:2px 3px;color:#0f1419;font-weight:700}
+  .mlg .gv-chip.v{background:#4ade80}.mlg .gv-chip.w{background:#fbbf24}.mlg .gv-chip.c{background:#60a5fa}.mlg .gv-chip.n{background:#8b949e}
+  .mlg .gv-diagram{margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,0.02)}
+  .mlg .dgd-title{font-size:12.5px;font-weight:700;color:var(--txt);margin-bottom:10px}
+  .mlg .dgd-cube{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--card)}
+  .mlg .dgd-teams{font-weight:800;font-size:15px;margin-bottom:8px;color:var(--txt)}
+  .mlg .dgd-line{display:flex;align-items:center;gap:10px;margin:7px 0;flex-wrap:wrap}
+  .mlg .dgd-vis{flex:0 0 175px;display:flex;align-items:center;gap:6px}
+  .mlg .dgd-cap{font-size:10.5px;color:var(--mut);flex:0 0 60px}
+  .mlg .dgd-bar{flex:1;display:flex;height:20px;border-radius:6px;overflow:hidden;border:1px solid var(--line);min-width:80px}
+  .mlg .dgd-seg{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#04150c;white-space:nowrap}
+  .mlg .dgd-seg.h{background:#4ade80}.mlg .dgd-seg.a{background:#60a5fa;color:#041020}
+  .mlg .dgd-elo{font-size:12px;color:#7ec9a0;font-family:var(--fm)}
+  .mlg .dgd-call{font-size:12.5px;font-weight:700;color:var(--txt)}
+  .mlg .dgd-val{font-size:12.5px;color:#7fe3b0;font-weight:700}
+  .mlg .dgd-note{flex:1;min-width:150px;font-size:12px;color:var(--mut);line-height:1.45}
+  .mlg .dgd-keys{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .mlg .dgd-key{flex:1;min-width:160px;font-size:12px;background:rgba(53,227,154,0.06);border:1px dashed rgba(53,227,154,0.4);border-radius:8px;padding:8px 10px;color:#cfe7d8}
+  .mlg .howto-list{margin:.4em 0;padding-inline-start:18px}
+  .mlg .howto-list li{margin:.5em 0;font-size:13px;line-height:1.55;color:#c4c7d2}
+  .mlg .howto-sum{font-size:13.5px;background:rgba(255,255,255,0.03);border-radius:8px;padding:9px 12px;margin-top:8px;color:var(--txt)}
 </style>
 </head>
 <body>
@@ -236,76 +272,19 @@
           </div>
           <div style="border-inline-start:3px solid #35e39a;background:rgba(53,227,154,0.05);border-radius:10px;padding:13px 16px;font-size:13.5px;line-height:1.55;color:#9aa2ba;margin-bottom:22px">{{ rankNote }}</div>
 
-          <!-- Rankings table — columns depend on active sub-tab -->
-          <div style="border-radius:18px;border:1px solid rgba(255,255,255,0.08);overflow:hidden">
-            <div style="display:flex;gap:12px;padding:14px 20px;font-family:var(--fm);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#6f7897;border-bottom:1px solid rgba(255,255,255,0.07)">
-              <sc-for list="{{ rankColHeaders }}" as="ch" hint-placeholder-count="4">
-                <div style="flex:1">{{ ch }}</div>
-              </sc-for>
-            </div>
+          <!-- Rankings table — compact rkrow layout (live structure, preview palette) -->
+          <div style="border-radius:18px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;padding:6px 0">
             <sc-for list="{{ rankRows }}" as="r" hint-placeholder-count="7">
               <div>
                 <sc-if value="{{ r.isTier }}" hint-placeholder-val="{{ true }}">
-                  <div style="padding:14px 20px 8px;font-family:var(--fm);font-size:12px;font-weight:700;color:#35e39a;letter-spacing:.5px">{{ r.tierLabel }}</div>
+                  <div style="padding:14px 18px 5px;font-family:var(--fm);font-size:11px;font-weight:800;color:#f5c67a;letter-spacing:.5px;text-transform:uppercase">{{ r.tierLabel }}</div>
                 </sc-if>
                 <sc-if value="{{ r.isRow }}" hint-placeholder-val="{{ true }}">
-                  <div style="display:flex;gap:12px;padding:11px 20px;align-items:center;border-top:1px solid rgba(255,255,255,0.04)" style-hover="background:rgba(255,255,255,0.03)">
-                    <div style="flex:1;font-family:var(--fm);font-size:14px;color:#6f7897">{{ r.rank }}</div>
-                    <!-- Teams sub-tab columns -->
-                    <sc-if value="{{ r.team }}">
-                      <div style="flex:1;font-size:14px"><b style="font-weight:800;color:{{ r.teamColor }}">{{ r.team }}</b><sc-if value="{{ r.opp }}"> <span style="color:#6f7897;font-size:12px">vs {{ r.opp }}</span></sc-if><sc-if value="{{ r.game }}"> <span style="color:#6f7897;font-size:12px">{{ r.game }}</span></sc-if></div>
-                      <!-- pwin bar (teams/composite) -->
-                      <sc-if value="{{ r.pwin }}">
-                        <div style="flex:2;display:flex;align-items:center;gap:8px"><div style="flex:1;height:7px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden"><div style="height:100%;border-radius:4px;background:linear-gradient(90deg,#2fbf78,#35e39a);width:{{ r.pwinPct }}%"></div></div><span style="font-family:var(--fm);font-size:13px;font-weight:700;color:#35e39a;min-width:44px">{{ r.pwin }}%</span></div>
-                        <div style="flex:1;font-family:var(--fm);font-size:13px;color:#9aa2ba">{{ r.pdisplay }}%</div>
-                        <div style="flex:1;font-family:var(--fm);font-size:14px;font-weight:700;text-align:end;color:#eef1f7">{{ r.elo }}</div>
-                      </sc-if>
-                      <!-- Elo bar (power) -->
-                      <sc-if value="{{ r.barPct }}">
-                        <div style="flex:2;display:flex;align-items:center;gap:6px"><div style="flex:0 0 8px;height:8px;border-radius:4px;background:rgba(255,255,255,0.06);flex:1;overflow:hidden"><div style="height:100%;border-radius:4px;background:{{ r.barColor }};width:{{ r.barPct }}%"></div></div></div>
-                        <div style="flex:1;font-family:var(--fm);font-size:14px;font-weight:700;text-align:end;color:#eef1f7">{{ r.elo }}</div>
-                      </sc-if>
-                      <!-- Momentum: trend + last10 -->
-                      <sc-if value="{{ r.trend }}">
-                        <div style="flex:1;font-family:var(--fm);font-size:14px;font-weight:700;color:{{ r.trendColor }}">{{ r.trend }}</div>
-                        <div style="flex:1;font-family:var(--fm);font-size:13px;color:#9aa2ba">{{ r.last10 }}</div>
-                      </sc-if>
-                    </sc-if>
-                    <!-- Composite / Totals / Pitchers: game column -->
-                    <sc-if value="{{ r.game }}">
-                      <div style="flex:2;font-size:13px;color:#c4c7d2">{{ r.game }}</div>
-                      <sc-if value="{{ r.score }}">
-                        <div style="flex:1;font-family:var(--fm);font-size:14px;font-weight:700;color:#eef1f7">{{ r.score }}</div>
-                        <div style="flex:2;font-family:var(--fm);font-size:11px;color:#6f7897">{{ r.breakdown }}</div>
-                      </sc-if>
-                      <sc-if value="{{ r.lambda }}">
-                        <div style="flex:1;font-family:var(--fm);font-size:13px;font-weight:700;color:#f5b23d">{{ r.lambda }}</div>
-                        <div style="flex:1;font-family:var(--fm);font-size:12px;color:#9aa2ba">{{ r.line }}</div>
-                        <div style="flex:1;font-family:var(--fm);font-size:13px;font-weight:700;color:{{ r.sideColor }}">{{ r.side }} {{ r.sidePct }}</div>
-                      </sc-if>
-                    </sc-if>
-                    <!-- Pitchers: name + team + fip + opp -->
-                    <sc-if value="{{ r.name }}">
-                      <div style="flex:2;font-size:14px;color:{{ r.nameColor }}"><b>{{ r.name }}</b></div>
-                      <div style="flex:1;font-size:13px;color:#9aa2ba">{{ r.pteam }}</div>
-                      <div style="flex:1;font-family:var(--fm);font-size:14px;font-weight:700;color:#35e39a">{{ r.fip }}</div>
-                      <div style="flex:1;font-size:12px;color:#6f7897">vs {{ r.popp }}</div>
-                    </sc-if>
-                    <!-- Games: match + pick + mkt-gap + strength -->
-                    <sc-if value="{{ r.gmatch }}">
-                      <div style="flex:2;font-size:14px;color:#c4c7d2">{{ r.gmatch }}</div>
-                      <div style="flex:2;font-size:13px"><b style="font-weight:800;color:#eef1f7">{{ r.gfav }}</b> <span style="font-family:var(--fm);color:#35e39a;font-weight:700">{{ r.gconf }}</span></div>
-                      <div style="flex:1;font-family:var(--fm);font-size:13px;color:#9aa2ba">{{ r.ggap }}</div>
-                      <div style="flex:1;font-family:var(--fm);font-size:14px;font-weight:700;text-align:end;color:#eef1f7">{{ r.gstrength }}</div>
-                    </sc-if>
-                    <!-- Full Win-Prob: team(+SP-TBD) + full + pre-SP + elo + opp -->
-                    <sc-if value="{{ r.fpteam }}">
-                      <div style="flex:2;font-size:14px"><b style="font-weight:800;color:{{ r.fpteamColor }}">{{ r.fpteam }}</b><sc-if value="{{ r.fptbdTag }}"> <span style="font-size:11px;color:#8791ab">({{ r.fptbdTag }})</span></sc-if></div>
-                      <div style="flex:1;font-family:var(--fm);font-size:14px;font-weight:700;color:#35e39a">{{ r.full }}</div>
-                      <div style="flex:1;font-family:var(--fm);font-size:13px;color:#6f7897">{{ r.preSp }}</div>
-                      <div style="flex:1;font-family:var(--fm);font-size:14px;font-weight:700;color:#eef1f7">{{ r.fpelo }}</div>
-                      <div style="flex:1;font-size:12px;color:#6f7897">vs {{ r.fpopp }}</div>
-                    </sc-if>
+                  <div style="display:flex;align-items:center;gap:11px;padding:8px 18px;border-top:1px solid rgba(255,255,255,0.05)" style-hover="background:rgba(255,255,255,0.03)">
+                    <span style="flex:0 0 28px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:#6f7897">{{ r.rank }}</span>
+                    <sc-if value="{{ r.cHasBall }}" hint-placeholder-val="{{ true }}"><span style="flex:0 0 auto;font-family:var(--fm);font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:{{ r.cBallBg }};color:{{ r.cBallColor }};white-space:nowrap">{{ r.cBall }}</span></sc-if>
+                    <span style="flex:1;min-width:0;font-size:13.5px;color:#eef1f7"><b style="font-weight:800;color:{{ r.cMainColor }}">{{ r.cMain }}</b> <span style="color:#6f7897;font-weight:600;font-size:12px">{{ r.cSub }}</span></span>
+                    <span style="flex:0 0 auto;font-family:var(--fm);font-size:12px;font-weight:700;color:{{ r.cDetailColor }};white-space:nowrap">{{ r.cDetail }}</span>
                   </div>
                 </sc-if>
               </div>
@@ -438,40 +417,11 @@
 
       <!-- ============ TAB: HOW IT WORKS ============ -->
       <div style="display:{{ dispHow }}">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px">
-          <div style="border-radius:20px;padding:26px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
-            <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin-bottom:16px">{{ annotatedLabel }}</div>
-            <div style="border-radius:14px;border:1px solid rgba(255,255,255,0.09);padding:20px;background:rgba(255,255,255,0.02)">
-              <div style="font-size:20px;font-weight:800;margin-bottom:16px">{{ feat.away }} <span style="color:#6f7897">@</span> {{ feat.home }}</div>
-              <sc-for list="{{ howRows }}" as="h" hint-placeholder-count="5">
-                <div style="display:flex;align-items:center;gap:14px;padding:9px 10px;border-radius:9px;margin-bottom:4px" style-hover="background:rgba(53,227,154,0.08)">
-                  <div style="width:82px;font-size:13px;font-weight:700;color:{{ h.labelColor }};display:flex;align-items:center;gap:6px">{{ h.icon }} {{ h.label }}</div>
-                  <div style="flex:1;font-family:var(--fm);font-size:13px;color:#c4c7d2">{{ h.value }}</div>
-                </div>
-              </sc-for>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:16px">
-              <div style="flex:1;border:1px dashed rgba(53,227,154,0.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#8ff0c0"><b style="color:#c8ffe4">Elo</b> {{ eloExplain }}</div>
-              <div style="flex:1;border:1px dashed rgba(74,158,255,0.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#a9cbff"><b style="color:#d6e6ff">FIP</b> {{ fipExplain }}</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:14px">
-            <sc-for list="{{ howBullets }}" as="b" hint-placeholder-count="4">
-              <div style="border-radius:16px;padding:18px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
-                <div style="font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:9px"><span style="font-family:var(--fm);font-size:11px;font-weight:700;color:#3a2e12;background:{{ b.chip }};padding:3px 8px;border-radius:6px">{{ b.tag }}</span>{{ b.title }}</div>
-                <div style="font-size:13px;color:#9aa2ba;line-height:1.6">{{ b.body }}</div>
-              </div>
-            </sc-for>
-          </div>
-        </div>
-        <!-- Extended how-it-works: value zones, CLV arbiter, forward-only -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:20px">
-          <sc-for list="{{ howExtra }}" as="x" hint-placeholder-count="3">
-            <div style="border-radius:16px;padding:18px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.07)">
-              <div style="font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:9px"><span style="font-family:var(--fm);font-size:11px;font-weight:700;color:#3a2e12;background:{{ x.chip }};padding:3px 8px;border-radius:6px">{{ x.tag }}</span>{{ x.title }}</div>
-              <div style="font-size:13px;color:#9aa2ba;line-height:1.6">{{ x.body }}</div>
-            </div>
-          </sc-for>
+        <!-- Full guide, restored from the live baseball dashboard modal — injected as raw HTML by _syncGuide().
+             Bilingual (l-he/l-en toggled via data-glang). Old summary bullets removed. -->
+        <div style="border-radius:20px;padding:8px 30px 22px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin:16px 0 4px">{{ guideLabel }}</div>
+          <div class="mlg" data-mlb-guide></div>
         </div>
       </div>
 
