@@ -4,8 +4,19 @@ window.REAL = {"asOf": "2026-07-02", "freshness": {"updated": "2026-06-29 11:42"
 class Component extends DCLogic {
   state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'power', signalSub: 'upcoming', openTile: null, showPrivacy: false };
 
-  componentDidMount() { this.runCountUp(); this.ensureThree(); this.ensureChart(); this._initOpenTile(); }
-  componentDidUpdate(prevProps, prevState) { this.runCountUp(); this.ensureChart(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
+  componentDidMount() { this.runCountUp(); this.ensureThree(); this.ensureChart(); this._initOpenTile(); this._syncDateSelect(); }
+  componentDidUpdate(prevProps, prevState) { this.runCountUp(); this.ensureChart(); this._syncDateSelect(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
+  // Populate the date <select> with real <option> children after each render.
+  // (dc-mini can't loop <sc-for> inside <select> — the HTML parser ejects it — so we inject here.)
+  _syncDateSelect() {
+    const sel = document.querySelector('#dc-root select[data-date-select]');
+    if (!sel || this._dateSelectHTML == null) return;
+    if (sel.getAttribute('data-filled') !== this._dateSelectHTML) {
+      sel.innerHTML = this._dateSelectHTML;
+      sel.setAttribute('data-filled', this._dateSelectHTML);
+    }
+    if (this._dateSelVal != null) sel.value = this._dateSelVal;
+  }
   componentWillUnmount() {
     this._dead = true;
     [this._rafC, this._raf3].forEach(r => r && cancelAnimationFrame(r));
@@ -773,6 +784,10 @@ class Component extends DCLogic {
     const dateSel = this.state.dateSel || (_mDates[0] || '');
     const dateCards = allMatches.filter(m => m.date === dateSel).map(mapCard);
     const dateOptions = _mDates.map(d => ({ value: d, label: _fmtD(d), selected: d === dateSel }));
+    // Build real <option> HTML for imperative injection into the <select> (see _syncDateSelect).
+    const _esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    this._dateSelectHTML = dateOptions.map(o => `<option value="${_esc(o.value)}"${o.selected ? ' selected' : ''}>${_esc(o.label)}</option>`).join('');
+    this._dateSelVal = dateSel;
     const onDateSelect = (e) => { const v = e && e.target && e.target.value; if (v) this.setState({ dateSel: v }); };
     const dateSelLabel = he ? 'בחר תאריך' : 'Choose date';
 
