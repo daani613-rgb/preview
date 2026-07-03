@@ -399,19 +399,34 @@ class Component extends DCLogic {
       });
     }
     if (rankSub === 'calls') {
-      return (R.rankCalls || []).map((r, i) => ({
-        isTier: false, isRow: true,
-        rank: i + 1, team: r.team, teamFull: r.teamFull || r.team,
-        opp: r.opp || '', elo: r.elo || 0,
-        pwin: r.callPct != null ? r.callPct + '' : '—', pwinPct: r.callPct || 0,
-        trend: 0, trendVal: '—', trendColor: '#8791ab', trendLabel: '–',
-        composite: r.callPct != null ? r.callPct.toFixed(1) : '—',
-        compositePct: r.callPct || 0,
-        callPct: r.callPct || 0, isAplus: !!r.isAplus,
-        time: r.time || '',
-        eloNorm: Math.min(100, Math.max(0, (r.elo - 1500) / 6)),
-        eloBarPct: Math.min(100, Math.max(0, (r.elo - 1500) / 6)),
-      }));
+      // Strongest calls = real matches ranked by the engine's pick confidence (callPct),
+      // strongest → closest, top 12. Elo pulled from the real power ranking (no fabricated data).
+      const eloBy = {};
+      (R.rankPower || []).forEach(p => { if (p && p.team) eloBy[p.team] = p.elo || 0; });
+      const strongest = (R.matches || [])
+        .filter(m => (m.callPct || 0) > 0 && (m.favCode || (m.card && m.card.pickTeam)))
+        .slice()
+        .sort((a, b) => (b.callPct || 0) - (a.callPct || 0))
+        .slice(0, 12);
+      return strongest.map((m, i) => {
+        const team = m.favCode || (m.card && m.card.pickTeam) || m.home;
+        const teamFull = m.favCode === m.home ? (m.homeFull || team)
+          : (m.favCode === m.away ? (m.awayFull || team) : ((m.card && m.card.pickTeam) || team));
+        const opp = m.favCode === m.home ? (m.away || '') : (m.home || '');
+        const elo = eloBy[team] || m.elo || 0;
+        const eloNorm = elo ? Math.min(100, Math.max(0, (elo - 1500) / 6)) : 0;
+        return {
+          isTier: false, isRow: true,
+          rank: i + 1, team, teamFull, opp, elo,
+          pwin: m.callPct != null ? m.callPct + '' : '—', pwinPct: m.callPct || 0,
+          trend: 0, trendVal: '—', trendColor: '#8791ab', trendLabel: '–',
+          composite: m.callPct != null ? Number(m.callPct).toFixed(1) : '—',
+          compositePct: m.callPct || 0,
+          callPct: m.callPct || 0, isAplus: m.state === 'aplus' || !!m.isAplus,
+          time: m.time || '',
+          eloNorm, eloBarPct: eloNorm,
+        };
+      });
     }
     return [];
   }
@@ -770,7 +785,7 @@ class Component extends DCLogic {
       composite: { c1: L.teamCol, c2: L.eloCol, c3: L.trendCol, c4: L.compositeCol, showC4: true },
       today: { c1: L.teamCol, c2: L.eloCol, c3: L.trendCol, c4: L.compositeCol, showC4: true },
       todaymatches: { c1: L.teamCol, c2: L.eloCol, c3: L.trendCol, c4: L.confCol, showC4: true },
-      calls: { c1: L.teamCol, c2: L.pwinCol, c3: L.eloCol, c4: L.trendCol, showC4: false },
+      calls: { c1: L.teamCol, c2: L.eloCol, c3: L.trendCol, c4: L.confCol, showC4: true },
     };
     const colH = rankColHeaders[rankSub] || rankColHeaders.power;
 
