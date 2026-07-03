@@ -21,6 +21,46 @@
   @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
   @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes tabIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  /* ── How-it-works guide (restored full live guide, preview palette) ── */
+  .tng .l-he{display:none}.tng .l-en{display:none}
+  .tng[data-glang="he"] .l-he{display:inline}
+  .tng[data-glang="en"] .l-en{display:inline}
+  .tng .gtitle{font-size:18px;font-weight:800;color:#eef1f7;margin:6px 0 14px}
+  .tng .gsec{margin:16px 0;padding-top:15px;border-top:1px solid rgba(255,255,255,0.08)}
+  .tng .gsec.first{border-top:none;padding-top:4px}
+  .tng .gsec h3{font-size:15px;margin:0 0 6px;display:flex;align-items:center;gap:10px;font-weight:800;color:#eef1f7}
+  .tng .snum{display:inline-flex;width:24px;height:24px;border-radius:7px;background:#35e39a;color:#04110a;font-family:var(--fm);font-size:12px;font-weight:800;align-items:center;justify-content:center;flex:0 0 auto}
+  .tng .gsec .lead{font-size:13.5px;color:#eef1f7;margin:6px 0;line-height:1.55}
+  .tng .gsec p{font-size:13px;color:#9aa2ba;margin:6px 0;line-height:1.6}
+  .tng .gsec li{font-size:13px;color:#9aa2ba;margin:5px 0;line-height:1.55}
+  .tng .gsec ul{margin:6px 0;padding-inline-start:20px}
+  .tng .gsec b{color:#eef1f7}
+  .tng .gex{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:13px;margin:11px 0}
+  .tng .gex .exh{font-size:12px;color:#6f7897;margin-bottom:8px;font-style:italic}
+  .tng .barwrap{margin:9px 0;direction:ltr}
+  .tng .barlabel{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
+  .tng .row-label{font-size:11px;font-weight:800;color:#8791ab}
+  .tng .row-sub{font-size:10.5px;color:#6f7897;font-style:italic}
+  .tng .bar{display:flex;height:26px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:11px;font-weight:700}
+  .tng .seg{display:flex;align-items:center;justify-content:center;min-width:0;overflow:hidden;white-space:nowrap;padding:0 4px}
+  .tng .seg.pickseg{background:linear-gradient(90deg,#2fbf78,#35e39a);color:#04110a}
+  .tng .seg.oppseg{background:rgba(255,255,255,0.06);color:#8791ab}
+  .tng .seg.pickseg.mkt{background:linear-gradient(90deg,#4a9eff,#5aa9ff);color:#041020}
+  .tng .seg.oppseg.mkt{background:rgba(255,255,255,0.06);color:#8791ab}
+  .tng .axis{display:flex;justify-content:space-between;font-family:var(--fm);font-size:10.5px;color:#8791ab;margin-top:3px;direction:ltr}
+  .tng .axis span{max-width:48%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tng .vgap{border-radius:10px;padding:9px 12px;font-size:12.5px;margin-top:8px;border:1px solid}
+  .tng .vgap .big{font-weight:700}
+  .tng .vgap .cap{font-size:11px;color:#8791ab;margin-top:3px}
+  .tng .vgap.gray{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.09)}
+  .tng .vgap.gray .big{color:#8791ab}
+  .tng .vgap.green{background:rgba(53,227,154,0.1);border-color:rgba(53,227,154,0.4)}
+  .tng .vgap.green .big{color:#7fe3b0}
+  .tng .vgap.teal{background:rgba(125,143,196,0.12);border-color:rgba(125,143,196,0.4)}
+  .tng .vgap.teal .big{color:#aab8e0}
+  .tng .teams{font-weight:700;font-size:14px;color:#eef1f7}
+  .tng .teams .pick{color:#35e39a}
+  .tng .tail{border-top:1px dashed rgba(255,255,255,0.09);margin-top:10px;padding-top:8px;font-size:12px;color:#6f7897}
 </style>
 </head>
 <body>
@@ -87,7 +127,7 @@
             <sc-for list="{{ dateChips }}" as="dc" hint-placeholder-count="3">
               <div onClick="{{ dc.onClick }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;padding:7px 14px;border-radius:999px;font-family:var(--fm);font-size:12px;font-weight:600;border:1px solid {{ dc.border }};background:{{ dc.bg }};color:{{ dc.color }};transition:.15s">{{ dc.label }}</div>
             </sc-for>
-            <label style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-family:var(--fm);font-size:12px;font-weight:600;border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.03);color:#aeb4c8"><span style="font-size:11px">📅 {{ dateInputLabel }}</span><input type="date" min="{{ dateInputMin }}" max="{{ dateInputMax }}" value="{{ dateInputVal }}" onChange="{{ onDateInput }}" aria-label="{{ dateInputLabel }}" style="background:transparent;border:none;color:#e6e9f2;font-family:var(--fm);font-size:12px;color-scheme:dark;cursor:pointer;outline:none"></label>
+            <label style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-family:var(--fm);font-size:12px;font-weight:600;border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.03);color:#aeb4c8"><span style="font-size:11px">📅 {{ dateSelLabel }}</span><select data-tennis-dateselect onChange="{{ onDateSelect }}" aria-label="{{ dateSelLabel }}" style="background:transparent;border:none;color:#e6e9f2;font-family:var(--fm);font-size:12px;color-scheme:dark;cursor:pointer;outline:none"></select></label>
           </div>
 
           <!-- RESULTS VIEW (settled matches) -->
@@ -261,50 +301,20 @@
           <!-- Cube explainer note -->
           <div style="border-inline-start:3px solid #35e39a;background:rgba(53,227,154,0.05);border-radius:10px;padding:11px 16px;font-size:13px;line-height:1.55;color:#9aa2ba;margin-bottom:18px">{{ rankExplainer }}</div>
 
-          <!-- Ranking table (distinct per cube, switching on state.rankSub) -->
-          <div style="border-radius:18px;border:1px solid rgba(255,255,255,0.08);overflow:hidden">
-            <!-- rkWin columns: # | Player | Win % -->
-            <!-- rkMatch columns: # | Match | Score -->
-            <!-- rkOverall columns: # | Player | Score -->
-            <!-- rkSurface columns: # | Player | Elo | Overall -->
-            <div style="padding:12px 20px;font-family:var(--fm);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#6f7897;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;gap:12px">
-              <div style="width:36px">#</div>
-              <div style="flex:1">{{ rankColHeaders.1 }}</div>
-              <div style="width:80px;text-align:end">{{ rankColHeaders.2 }}</div>
-              <sc-if value="{{ rankColHeaders.3 }}" hint-placeholder-val="{{ '' }}">
-                <div style="width:80px;text-align:end">{{ rankColHeaders.3 }}</div>
-              </sc-if>
-            </div>
+          <!-- Ranking table — compact rkrow layout (live structure, preview palette) -->
+          <div style="border-radius:18px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;padding:6px 0">
             <sc-for list="{{ rankRows }}" as="r" hint-placeholder-count="7">
               <div>
                 <sc-if value="{{ r.isTier }}" hint-placeholder-val="{{ true }}">
-                  <div style="padding:12px 20px 7px;font-family:var(--fm);font-size:12px;font-weight:700;color:#35e39a;letter-spacing:.5px;background:rgba(53,227,154,0.04);border-top:1px solid rgba(53,227,154,0.12)">{{ r.tierLabel }}</div>
+                  <div style="padding:13px 18px 5px;font-family:var(--fm);font-size:11px;font-weight:800;color:#35e39a;letter-spacing:.5px;text-transform:uppercase">{{ r.tierLabel }}</div>
                 </sc-if>
                 <sc-if value="{{ r.isRow }}" hint-placeholder-val="{{ true }}">
-                  <div style="display:flex;gap:12px;padding:10px 20px;align-items:center;border-top:1px solid rgba(255,255,255,0.04)" style-hover="background:rgba(255,255,255,0.03)">
-                    <div style="width:36px;font-family:var(--fm);font-size:13px;color:#6f7897;flex-shrink:0">{{ r.rank }}</div>
-                    <div style="flex:1;font-size:13px;min-width:0">
-                      <b style="font-weight:800">{{ r.team }}</b>
-                      <sc-if value="{{ r.opp }}" hint-placeholder-val="{{ '' }}">
-                        <span style="color:#6f7897;font-size:11px"> {{ r.opp }}</span>
-                      </sc-if>
-                    </div>
-                    <!-- Win% bar for rkWin -->
-                    <sc-if value="{{ r.pwin }}" hint-placeholder-val="{{ '' }}">
-                      <div style="width:100px;display:flex;align-items:center;gap:6px">
-                        <div style="flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden"><div style="height:100%;border-radius:3px;background:linear-gradient(90deg,#2fbf78,#35e39a);width:{{ r.pwinPct }}%"></div></div>
-                        <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:#35e39a;width:40px;text-align:end">{{ r.pwin }}%</span>
-                      </div>
-                    </sc-if>
-                    <!-- Score for rkMatch / rkOverall -->
-                    <sc-if value="{{ r.scoreStr }}" hint-placeholder-val="{{ '' }}">
-                      <div style="width:80px;text-align:end;font-family:var(--fm);font-size:14px;font-weight:700;color:#f5b23d">{{ r.scoreStr }}</div>
-                    </sc-if>
-                    <!-- Surface Elo for rkSurface -->
-                    <sc-if value="{{ r.eloStr }}" hint-placeholder-val="{{ '' }}">
-                      <div style="width:70px;text-align:end;font-family:var(--fm);font-size:14px;font-weight:700;color:#eef1f7">{{ r.eloStr }}</div>
-                      <div style="width:70px;text-align:end;font-family:var(--fm);font-size:12px;color:#6f7897">{{ r.eloOverallStr }}</div>
-                    </sc-if>
+                  <div style="display:flex;align-items:center;gap:11px;padding:8px 18px;border-top:1px solid rgba(255,255,255,0.05)" style-hover="background:rgba(255,255,255,0.03)">
+                    <span style="flex:0 0 28px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:#6f7897">{{ r.rank }}</span>
+                    <sc-if value="{{ r.cHasBall }}" hint-placeholder-val="{{ true }}"><span style="flex:0 0 auto;font-family:var(--fm);font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:{{ r.cBallBg }};color:{{ r.cBallColor }};white-space:nowrap">{{ r.cBall }}</span></sc-if>
+                    <span style="flex:1;min-width:0;font-size:13.5px;font-weight:800;color:#eef1f7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.main }} <span style="color:#6f7897;font-weight:600;font-size:12px">{{ r.mainSub }}</span></span>
+                    <span style="flex:0 0 auto;font-family:var(--fm);font-size:12.5px;font-weight:700;color:{{ r.d1Color }};white-space:nowrap">{{ r.d1 }}</span>
+                    <span style="flex:0 0 auto;font-family:var(--fm);font-size:11px;color:{{ r.d2Color }};white-space:nowrap">{{ r.d2 }}</span>
                   </div>
                 </sc-if>
               </div>
@@ -419,31 +429,11 @@
 
       <!-- ============ TAB: HOW IT WORKS ============ -->
       <div style="display:{{ dispHow }}">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px">
-          <div style="border-radius:20px;padding:26px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
-            <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin-bottom:16px">{{ annotatedLabel }}</div>
-            <div style="border-radius:14px;border:1px solid rgba(255,255,255,0.09);padding:20px;background:rgba(255,255,255,0.02)">
-              <div style="font-size:20px;font-weight:800;margin-bottom:16px">Sinner <span style="color:#6f7897">vs</span> Alcaraz</div>
-              <sc-for list="{{ howRows }}" as="h" hint-placeholder-count="5">
-                <div style="display:flex;align-items:center;gap:14px;padding:9px 10px;border-radius:9px;margin-bottom:4px" style-hover="background:rgba(53,227,154,0.08)">
-                  <div style="width:82px;font-size:13px;font-weight:700;color:{{ h.labelColor }};display:flex;align-items:center;gap:6px">{{ h.icon }} {{ h.label }}</div>
-                  <div style="flex:1;font-family:var(--fm);font-size:13px;color:#c4c7d2">{{ h.value }}</div>
-                </div>
-              </sc-for>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:16px">
-              <div style="flex:1;border:1px dashed rgba(53,227,154,0.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#8ff0c0"><b style="color:#c8ffe4">Elo</b> {{ eloExplain }}</div>
-              <div style="flex:1;border:1px dashed rgba(47,224,176,0.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#8fe6cf"><b style="color:#c9f5e8">Surface</b> {{ fipExplain }}</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:14px">
-            <sc-for list="{{ howBullets }}" as="b" hint-placeholder-count="10">
-              <div style="border-radius:16px;padding:18px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
-                <div style="font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:9px"><span style="font-family:var(--fm);font-size:11px;font-weight:700;color:#3a2e12;background:{{ b.chip }};padding:3px 8px;border-radius:6px">{{ b.tag }}</span>{{ b.title }}</div>
-                <div style="font-size:13px;color:#9aa2ba;line-height:1.6">{{ b.body }}</div>
-              </div>
-            </sc-for>
-          </div>
+        <!-- Full guide, restored from the live tennis dashboard modal — injected as raw HTML by _syncGuide().
+             Bilingual (l-he/l-en toggled via data-glang). Old summary bullets removed. -->
+        <div style="border-radius:20px;padding:8px 30px 24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin:16px 0 6px">{{ guideLabel }}</div>
+          <div class="tng" data-tennis-guide></div>
         </div>
       </div>
 
