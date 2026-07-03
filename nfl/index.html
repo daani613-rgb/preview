@@ -21,6 +21,17 @@
   @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
   @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes tabIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  /* ── How-it-works guide (restored full live guide, preview palette) ── */
+  .nflg .l-he{display:none}.nflg .l-en{display:none}
+  .nflg[data-glang="he"] .l-he{display:inline}
+  .nflg[data-glang="en"] .l-en{display:inline}
+  .nflg .sec{margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.07)}
+  .nflg .sec:last-child{border-bottom:none}
+  .nflg .sec .num{display:flex;gap:9px;align-items:baseline;font-size:15px;font-weight:800;color:#eef1f7}
+  .nflg .sec .num i{color:#c8bfff;font-style:normal;font-family:var(--fm);font-size:12px;font-weight:800;background:rgba(143,123,255,0.14);border-radius:6px;padding:2px 8px}
+  .nflg .sec p{font-size:13.5px;color:#c4c7d2;margin-top:7px;line-height:1.6}
+  .nflg .sec p b,.nflg .excard b{color:#eef1f7;font-weight:700}
+  .nflg .excard{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:11px 13px;margin-top:9px;font-size:12.5px;color:#9aa2ba;line-height:1.55}
 </style>
 </head>
 <body>
@@ -253,22 +264,21 @@
           </div>
           <!-- cube note -->
           <div style="border-inline-start:3px solid #35e39a;background:rgba(53,227,154,0.05);border-radius:10px;padding:11px 14px;font-size:13px;line-height:1.5;color:#9aa2ba;margin-bottom:18px">{{ rankNote2 }}</div>
-          <!-- ranking table -->
-          <div style="border-radius:18px;border:1px solid rgba(255,255,255,0.08);overflow:hidden">
-            <div style="display:grid;grid-template-columns:40px 1fr 140px 120px;gap:10px;padding:12px 18px;font-family:var(--fm);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#6f7897;border-bottom:1px solid rgba(255,255,255,0.07)">
-              <div>#</div><div>{{ rankColHeaders.c1 }}</div><div>{{ rankColHeaders.c2 }}</div><div>{{ rankColHeaders.c3 }}</div>
-            </div>
+          <!-- ranking table — compact rkrow layout (live structure, preview palette) -->
+          <div style="border-radius:18px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;padding:6px 0">
             <sc-for list="{{ rankRows }}" as="r" hint-placeholder-count="10">
               <div>
                 <sc-if value="{{ r.isTier }}" hint-placeholder-val="{{ true }}">
-                  <div style="padding:12px 18px 6px;font-family:var(--fm);font-size:11px;font-weight:700;letter-spacing:.5px;color:{{ r.tierColor }};display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:2px;background:currentColor;display:inline-block;flex-shrink:0"></span>{{ r.tierLabel }}</div>
+                  <div style="padding:14px 18px 5px;font-family:var(--fm);font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:{{ r.tierColor }};display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:2px;background:currentColor;display:inline-block;flex-shrink:0"></span>{{ r.tierLabel }}</div>
                 </sc-if>
                 <sc-if value="{{ r.isRow }}" hint-placeholder-val="{{ true }}">
-                  <div style="display:grid;grid-template-columns:40px 1fr 140px 120px;gap:10px;padding:9px 18px;align-items:center;border-top:1px solid rgba(255,255,255,0.04)" style-hover="background:rgba(255,255,255,0.03)">
-                    <div style="font-family:var(--fm);font-size:13px;color:#6f7897">{{ r.rank }}</div>
-                    <div style="font-size:13.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.label }}</div>
-                    <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:{{ r.v1Color }}">{{ r.v1 }}</div>
-                    <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:{{ r.v2Color }}">{{ r.v2 }}</div>
+                  <div style="display:flex;align-items:center;gap:11px;padding:8px 18px;border-top:1px solid rgba(255,255,255,0.05)" style-hover="background:rgba(255,255,255,0.03)">
+                    <span style="flex:0 0 28px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:#6f7897">{{ r.rank }}</span>
+                    <sc-if value="{{ r.cHasBall }}" hint-placeholder-val="{{ true }}"><span style="flex:0 0 auto;font-family:var(--fm);font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:{{ r.cBallBg }};color:{{ r.cBallColor }};white-space:nowrap">{{ r.cBall }}</span></sc-if>
+                    <span style="flex:1;min-width:0;font-size:13.5px;font-weight:800;color:#eef1f7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.label }}</span>
+                    <span style="flex:0 0 auto;font-family:var(--fm);font-size:12.5px;font-weight:700;color:{{ r.d1Color }};white-space:nowrap">{{ r.d1 }}</span>
+                    <span style="flex:0 0 auto;font-family:var(--fm);font-size:12px;color:{{ r.d2Color }};white-space:nowrap">{{ r.d2 }}</span>
+                    <span style="flex:0 0 auto;font-family:var(--fm);font-size:11px;color:{{ r.d3Color }};white-space:nowrap">{{ r.d3 }}</span>
                   </div>
                 </sc-if>
               </div>
@@ -360,31 +370,11 @@
 
       <!-- ============ TAB: HOW IT WORKS ============ -->
       <div style="display:{{ dispHow }}">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px">
-          <div style="border-radius:20px;padding:26px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
-            <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin-bottom:16px">{{ annotatedLabel }}</div>
-            <div style="border-radius:14px;border:1px solid rgba(255,255,255,0.09);padding:20px;background:rgba(255,255,255,0.02)">
-              <div style="font-size:20px;font-weight:800;margin-bottom:16px">{{ feat.away }} <span style="color:#6f7897">@</span> {{ feat.home }}</div>
-              <sc-for list="{{ howRows }}" as="h" hint-placeholder-count="5">
-                <div style="display:flex;align-items:center;gap:14px;padding:9px 10px;border-radius:9px;margin-bottom:4px" style-hover="background:rgba(53,227,154,0.08)">
-                  <div style="width:82px;font-size:13px;font-weight:700;color:{{ h.labelColor }};display:flex;align-items:center;gap:6px">{{ h.icon }} {{ h.label }}</div>
-                  <div style="flex:1;font-family:var(--fm);font-size:13px;color:#c4c7d2">{{ h.value }}</div>
-                </div>
-              </sc-for>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:16px">
-              <div style="flex:1;border:1px dashed rgba(53,227,154,0.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#8ff0c0"><b style="color:#c8ffe4">Elo</b> {{ eloExplain }}</div>
-              <div style="flex:1;border:1px dashed rgba(74,158,255,0.4);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#a9cbff"><b style="color:#d6e6ff">EPA</b> {{ fipExplain }}</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:14px">
-            <sc-for list="{{ howBullets }}" as="b" hint-placeholder-count="8">
-              <div style="border-radius:16px;padding:18px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
-                <div style="font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:9px"><span style="font-family:var(--fm);font-size:11px;font-weight:700;color:#3a2e12;background:{{ b.chip }};padding:3px 8px;border-radius:6px">{{ b.tag }}</span>{{ b.title }}</div>
-                <div style="font-size:13px;color:#9aa2ba;line-height:1.6">{{ b.body }}</div>
-              </div>
-            </sc-for>
-          </div>
+        <!-- Full guide, restored from the live NFL dashboard modal — injected as raw HTML by _syncGuide().
+             Bilingual (l-he/l-en toggled via data-glang). Old summary bullets removed. -->
+        <div style="border-radius:20px;padding:8px 30px 24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin:16px 0 8px">{{ guideLabel }}</div>
+          <div class="nflg" data-nfl-guide></div>
         </div>
       </div>
 
