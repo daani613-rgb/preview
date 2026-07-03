@@ -1042,7 +1042,33 @@ class Component extends DCLogic {
     const dateSelLabel = he ? 'בחר תאריך' : 'Choose date';
 
     // Rankings rows — depends on state.rankSub
-    const rankRows = this._buildRankRows(rankSub, he, L);
+    const rawRankRows = this._buildRankRows(rankSub, he, L);
+    // Decorate rows for the compact "rkrow" layout (live style, preview palette):
+    //  · match tabs (today / todaymatches / calls): rank · confidence-ball · pick · matchup
+    //  · power/composite: rank · team · Elo · trend-chip · tier separators
+    const _matchTab = { today: 1, todaymatches: 1, calls: 1 };
+    const _isMatch = !!_matchTab[rankSub];
+    const _confStyle = (p) => p >= 65 ? { bg: 'rgba(53,227,154,0.14)', color: '#7fe3b0' }
+      : (p >= 50 ? { bg: 'rgba(245,178,61,0.15)', color: '#f5c67a' }
+      : { bg: 'rgba(255,255,255,0.06)', color: '#8791ab' });
+    const rankRows = rawRankRows.map(r => {
+      if (r.isTier) return r;
+      const o = Object.assign({}, r);
+      if (_isMatch) {
+        const p = Math.round(r.compositePct || 0);
+        const cs = _confStyle(p);
+        o.isMatch = true; o.isPower = false;
+        o.confPct = p; o.confBg = cs.bg; o.confColor = cs.color;
+        o.opp = String(r.opp || '').replace(/^\s*vs\s+/i, '');   // some feeds prefix "vs " — strip so vsWord isn't doubled
+        o.whenLabel = rankSub === 'calls' ? (r.time || '') : '';
+      } else {
+        o.isMatch = false; o.isPower = true;
+        o.trendChip = r.trendLabel === '–' ? '–' : (r.trendLabel + (r.trendVal || ''));
+        o.trendBg = r.trendLabel === '▲' ? 'rgba(53,227,154,0.12)'
+          : (r.trendLabel === '▼' ? 'rgba(255,143,143,0.12)' : 'rgba(255,255,255,0.05)');
+      }
+      return o;
+    });
 
     // Column headers per cube
     const rankColHeaders = {
