@@ -5,16 +5,22 @@ class Component extends DCLogic {
   setCanvas = (el) => { this.canvasEl = el; };
 
   componentDidMount() {
+    this._alive = true;
+    this._dirty = true;                               // force a size pass on the first frame
+    this._onResize = () => { this._dirty = true; };   // window resize / rotate → re-size next frame
+    window.addEventListener('resize', this._onResize);
     const build = () => {
-      const cvs = document.getElementById('pe-bg-canvas');
-      if (!cvs || !cvs.clientWidth) { this._raf = requestAnimationFrame(build); return; }
-      this.canvasEl = cvs;
-      const ctx = cvs.getContext('2d');
-      let W = 0, H = 0, DPR = 1;
-      const ensureSize = () => {
+      const cvs0 = document.getElementById('pe-bg-canvas');
+      if (!cvs0 || !cvs0.clientWidth) { this._raf = requestAnimationFrame(build); return; }
+      this.canvasEl = cvs0;
+      let W = 0, H = 0, DPR = 1, curCvs = null;
+      // Re-sizes when: resize flagged, the canvas element changed (a language toggle
+      // makes dc-mini rebuild the DOM → a fresh #pe-bg-canvas), or the client box changed.
+      const ensureSize = (cvs, ctx) => {
         const cw = cvs.clientWidth || cvs.parentElement.clientWidth || 900;
-        const ch = cvs.clientHeight || 960;
-        if (cw === W && ch === H) return;
+        const ch = cvs.clientHeight || cvs.parentElement.clientHeight || 700;
+        if (!this._dirty && cvs === curCvs && cw === W && ch === H) return;
+        this._dirty = false; curCvs = cvs;
         DPR = Math.min(window.devicePixelRatio || 1, 2);
         W = cw; H = ch;
         cvs.width = W * DPR; cvs.height = H * DPR;
@@ -63,12 +69,17 @@ class Component extends DCLogic {
       };
 
       const loop = () => {
-        if (!this.canvasEl) return;
-        ensureSize();
+        if (!this._alive) return;
+        // Always draw to the CURRENT canvas — after a language toggle dc-mini rebuilds
+        // the DOM, so the captured node is detached; re-fetch the live one each frame.
+        const cvs = document.getElementById('pe-bg-canvas');
+        if (!cvs || !cvs.clientWidth) { this._raf = requestAnimationFrame(loop); return; }
+        const ctx = cvs.getContext('2d');
+        ensureSize(cvs, ctx);
         ay += 0.0012;
         const cosY = Math.cos(ay), sinY = Math.sin(ay);
         const R = Math.min(W, H) * 0.42;
-        const cx = W * 0.5, cy = 430;
+        const cx = W * 0.5, cy = H * 0.45;    // relative → adapts to responsive canvas height
         ctx.clearRect(0, 0, W, H);
 
         // central core glow — the hub all engines connect to
@@ -134,7 +145,9 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
+    this._alive = false;
     if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._onResize) window.removeEventListener('resize', this._onResize);
     this.canvasEl = null;
   }
 
