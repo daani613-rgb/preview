@@ -45,6 +45,20 @@
   .guide .callout{background:#14171e;border:1px solid var(--gold);border-inline-end:4px solid var(--gold);border-radius:10px;padding:12px 14px;margin:13px 0;font-size:14px;color:var(--ink2);line-height:1.55}
   .guide .callout.warn{border-color:var(--red);border-inline-end-color:var(--red)}
   .guide .callout b{color:var(--ink)}
+  /* ── mobile (≤640px) — pure layout; desktop unchanged ── */
+  @media (max-width:640px){
+    body{overflow-x:hidden}
+    /* outer page: 32px → 14px horizontal (reclaim width) */
+    [style*="max-width: 1200px"]{padding-left:14px!important;padding-right:14px!important}
+    /* panels: featured signal + track (34px 38px), guide (8px 30px 22px), modal (28px 30px) */
+    [style*="padding: 34px 38px"]{padding-left:16px!important;padding-right:16px!important}
+    [style*="padding: 8px 30px 22px"]{padding-left:16px!important;padding-right:16px!important}
+    [style*="padding: 28px 30px"]{padding-left:18px!important;padding-right:18px!important}
+    /* card grids → single full-width column (minmax 330/300 won't cramp/overflow) */
+    [style*="minmax(330px"],[style*="minmax(300px"]{grid-template-columns:1fr!important}
+    /* featured pick 66px is oversized on phones */
+    [style*="font-size: 66px"]{font-size:46px!important}
+  }
 </style>
 </head>
 <body>
