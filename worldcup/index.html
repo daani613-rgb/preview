@@ -45,18 +45,21 @@
   .guide .callout{background:#14171e;border:1px solid var(--gold);border-inline-end:4px solid var(--gold);border-radius:10px;padding:12px 14px;margin:13px 0;font-size:14px;color:var(--ink2);line-height:1.55}
   .guide .callout.warn{border-color:var(--red);border-inline-end-color:var(--red)}
   .guide .callout b{color:var(--ink)}
-  /* ── mobile (≤640px) — pure layout; desktop unchanged ── */
+  /* ── mobile (≤640px) — pure layout, LANGUAGE-INDEPENDENT · desktop unchanged ──
+     Inline layout values are identical in he/en (only text differs), so these
+     rules apply to both languages. Selectors use robust substrings, not exact
+     normalized values: any `repeat(auto-fit` grid collapses regardless of its
+     minmax; padding matched by the value substring (no `padding: ` prefix). */
   @media (max-width:640px){
-    body{overflow-x:hidden}
-    /* outer page: 32px → 14px horizontal (reclaim width) */
-    [style*="max-width: 1200px"]{padding-left:14px!important;padding-right:14px!important}
-    /* panels: featured signal + track (34px 38px), guide (8px 30px 22px), modal (28px 30px) */
-    [style*="padding: 34px 38px"]{padding-left:16px!important;padding-right:16px!important}
-    [style*="padding: 8px 30px 22px"]{padding-left:16px!important;padding-right:16px!important}
-    [style*="padding: 28px 30px"]{padding-left:18px!important;padding-right:18px!important}
-    /* card grids → single full-width column (minmax 330/300 won't cramp/overflow) */
-    [style*="minmax(330px"],[style*="minmax(300px"]{grid-template-columns:1fr!important}
-    /* featured pick 66px is oversized on phones */
+    /* hard safety net against horizontal scroll, both LTR & RTL */
+    html,body{overflow-x:hidden!important;max-width:100%!important}
+    /* EVERY responsive card/KPI grid → one full-width column (any minmax value) */
+    [style*="repeat(auto-fit"]{grid-template-columns:1fr!important}
+    /* page wrapper + panels: reclaim oversized horizontal padding
+       (padding-inline = logical → correct in both LTR and RTL) */
+    [style*="max-width: 1200px"]{padding-inline:14px!important}
+    [style*="34px 38px"],[style*="8px 30px 22px"],[style*="28px 30px"]{padding-inline:16px!important}
+    /* oversized hero type on phones */
     [style*="font-size: 66px"]{font-size:46px!important}
   }
 </style>
