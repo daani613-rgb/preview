@@ -59,8 +59,16 @@
        (padding-inline = logical → correct in both LTR and RTL) */
     [style*="max-width: 1200px"]{padding-inline:14px!important}
     [style*="34px 38px"],[style*="8px 30px 22px"],[style*="28px 30px"]{padding-inline:16px!important}
-    /* oversized hero type on phones */
-    [style*="font-size: 66px"]{font-size:46px!important}
+    /* oversized display type on phones → shrink so big headings never clip */
+    [style*="font-size: 66px"]{font-size:34px!important;letter-spacing:-1px!important}
+    [style*="font-size: 44px"]{font-size:26px!important;letter-spacing:-.5px!important}
+    [style*="font-size: 34px"]{font-size:24px!important}
+    [style*="font-size: 32px"]{font-size:24px!important}
+    /* top 3D hero: grow with its text instead of clipping the title at a fixed 300px */
+    [style*="height: 300px"]{height:auto!important;min-height:300px!important}
+    [style*="padding: 0px 46px"]{padding:24px 20px!important}
+    /* hero copy: allow it to use the full mobile width (headings wrap; pills keep nowrap) */
+    [style*="max-width: 560px"],[style*="max-width: 440px"]{max-width:100%!important}
   }
 </style>
 </head>
