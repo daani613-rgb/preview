@@ -61,6 +61,27 @@
   .tng .teams{font-weight:700;font-size:14px;color:#eef1f7}
   .tng .teams .pick{color:#35e39a}
   .tng .tail{border-top:1px dashed rgba(255,255,255,0.09);margin-top:10px;padding-top:8px;font-size:12px;color:#6f7897}
+  @media (max-width:640px){
+    /* hard safety net against horizontal scroll, both LTR & RTL */
+    html,body{overflow-x:hidden!important;max-width:100%!important}
+    /* EVERY responsive card/KPI grid → one full-width column (any minmax value) */
+    [style*="repeat(auto-fit"]{grid-template-columns:1fr!important}
+    /* page wrapper + oversized panels: reclaim horizontal padding (logical → LTR & RTL) */
+    [style*="max-width: 1200px"]{padding-inline:14px!important}
+    [style*="34px 38px"],[style*="28px 30px"]{padding-inline:16px!important}
+    /* oversized display type on phones → shrink so big headings never clip */
+    [style*="font-size: 66px"]{font-size:34px!important;letter-spacing:-1px!important}
+    [style*="font-size: 44px"]{font-size:26px!important;letter-spacing:-.5px!important}
+    [style*="font-size: 34px"]{font-size:24px!important}
+    [style*="font-size: 32px"]{font-size:24px!important}
+    /* top 3D hero: grow with its text instead of clipping the title at a fixed 300px */
+    [style*="height: 300px"]{height:auto!important;min-height:300px!important}
+    [style*="padding: 0px 46px"]{padding:24px 20px!important}
+    /* hero copy: use the full mobile width (headings wrap; compact pills keep nowrap) */
+    [style*="max-width: 560px"],[style*="max-width: 440px"],[style*="max-width: 620px"]{max-width:100%!important}
+    /* date-select + chips row: wrap instead of overflowing on narrow screens */
+    [data-tennis-dateselect]{max-width:150px!important}
+  }
 </style>
 </head>
 <body>

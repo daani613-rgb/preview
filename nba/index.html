@@ -31,6 +31,26 @@
   .ngd .ngd-num{position:absolute;inset-inline-start:0;top:0;font-family:var(--fm);font-weight:800;font-size:12px;color:#7fe3b0;background:rgba(53,227,154,0.14);border-radius:6px;padding:2px 8px;min-width:20px;text-align:center}
   .ngd .ngd-demo{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:12px 14px;margin:4px 0 16px 30px;font-size:13px;line-height:1.55;color:#9aa2ba}
   .ngd .ngd-p a,.ngd .ngd-demo a{color:#8fc4ff;word-break:break-word}
+  @media (max-width:640px){
+    /* hard safety net against horizontal scroll, both LTR & RTL */
+    html,body{overflow-x:hidden!important;max-width:100%!important}
+    /* EVERY responsive card/KPI grid → one full-width column (any minmax value) */
+    [style*="repeat(auto-fit"]{grid-template-columns:1fr!important}
+    /* page wrapper + oversized panels: reclaim horizontal padding (logical → LTR & RTL) */
+    [style*="max-width: 1200px"]{padding-inline:14px!important}
+    [style*="34px 38px"],[style*="40px 24px"]{padding-inline:16px!important}
+    /* oversized display type on phones → shrink so big headings never clip */
+    [style*="font-size: 66px"]{font-size:34px!important;letter-spacing:-1px!important}
+    [style*="font-size: 44px"]{font-size:26px!important;letter-spacing:-.5px!important}
+    [style*="font-size: 42px"]{font-size:26px!important;letter-spacing:-.5px!important}
+    [style*="font-size: 34px"]{font-size:24px!important}
+    [style*="font-size: 32px"]{font-size:24px!important}
+    /* top 3D hero: grow with its text instead of clipping the title at a fixed 300px */
+    [style*="height: 300px"]{height:auto!important;min-height:300px!important}
+    [style*="padding: 0px 46px"]{padding:24px 20px!important}
+    /* hero copy: use the full mobile width (headings wrap; compact pills keep nowrap) */
+    [style*="max-width: 560px"],[style*="max-width: 440px"]{max-width:100%!important}
+  }
 </style>
 </head>
 <body>
