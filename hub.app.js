@@ -1,6 +1,6 @@
 /* hub portal */
 class Component extends DCLogic {
-  state = { lang: 'he' };
+  state = { lang: 'en' };
 
   setCanvas = (el) => { this.canvasEl = el; };
 

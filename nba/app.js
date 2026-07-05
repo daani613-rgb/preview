@@ -98,6 +98,10 @@ class Component extends DCLogic {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(48, W / H, 0.1, 100);
     camera.position.set(0, 0, 6.6);
+    // Fit the whole globe (offset ±2.6, radius ~2.86) into any aspect ratio: pull the camera
+    // back on narrow viewports (phones), no-op on wide desktop where 6.6 already frames it.
+    const fitCam = () => { const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h) return; camera.aspect = w / h; camera.position.z = Math.max(6.6, 9.6 / (w / h)); camera.updateProjectionMatrix(); };
+    fitCam();
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
@@ -146,7 +150,7 @@ class Component extends DCLogic {
     let mx = 0, my = 0;
     this._onMove = (e) => { mx = e.clientX / window.innerWidth - 0.5; my = e.clientY / window.innerHeight - 0.5; };
     window.addEventListener('mousemove', this._onMove);
-    this._onResize = () => { const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h) return; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h, false); composer.setSize(w, h); };
+    this._onResize = () => { const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h) return; fitCam(); renderer.setSize(w, h, false); composer.setSize(w, h); };
     window.addEventListener('resize', this._onResize);
     let t = 0;
     const animate = () => {
