@@ -745,11 +745,13 @@ class Component extends DCLogic {
     // Real freshness banner from data file mtime
     const freshness = R.freshness || null;
     const asOfRaw = R.asOf || '';
+    // Display asOf as YYYY-MM-DD, consistent with the other engines. Robust: only reformat
+    // a bare YYYYMMDD; anything already dashed (or a future format) passes through untouched.
     let asOfLabel = '';
-    if (asOfRaw && asOfRaw.length === 8) {
-      const y = asOfRaw.slice(0, 4), m = asOfRaw.slice(4, 6), d = asOfRaw.slice(6, 8);
-      const mNames = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      asOfLabel = `${parseInt(d, 10)} ${mNames[+m]} ${y}`;
+    if (/^\d{8}$/.test(asOfRaw)) {
+      asOfLabel = `${asOfRaw.slice(0, 4)}-${asOfRaw.slice(4, 6)}-${asOfRaw.slice(6, 8)}`;
+    } else {
+      asOfLabel = asOfRaw;
     }
     // Freshness display: real mtime preferred, else asOf
     const freshnessLabel = freshness
