@@ -48,7 +48,7 @@ const GUIDE_MLB=`
   <div class="gv-sec"><div class="gv-ey"><span class="gv-num">05</span><h3><span class="l-he">הוכרעו — דיוק over/under</span><span class="l-en">Decided — over/under accuracy</span></h3></div>
     <p><span class="l-he">לכל משחק שהוכרע: הסך-בפועל + ✓/✗. דיוק-הכיוון הגולמי קרוב ל-50% — <b>תקין</b> בשוק יעיל; הערך הוא בכיול וב-A+, לא בכיוון.</span><span class="l-en">For each decided game: the actual total + ✓/✗. Raw direction accuracy ~50% is <b>healthy</b> in an efficient market; the edge is in calibration/A+, not raw direction.</span></p></div>
   <div class="gv-sec"><div class="gv-ey"><span class="gv-num">06</span><h3><span class="l-he">CLV — מבחן-השוק</span><span class="l-en">CLV — the market test</span></h3></div>
-    <p><span class="l-he">השוואת המנוע לקו-הסגירה <b>על הקו-הנעול</b> (forward-only). הקובייה-המצטברת למעלה מציג CLV ממוצע למשחק על משחקים-שנסגרו; עד אז, "צובר".</span><span class="l-en">Compares the engine to the closing line <b>on the locked line</b> (forward-only). The cumulative KPI cube above shows the average CLV per game over closed games; until then, "collecting".</span></p></div>
+    <p><span class="l-he">השוואת המנוע לקו-הסגירה <b>על הקו-הנעול</b> (forward-only). הקובייה-המצטברת למעלה מציגה CLV ממוצע למשחק על משחקים-שנסגרו; עד אז, "צובר".</span><span class="l-en">Compares the engine to the closing line <b>on the locked line</b> (forward-only). The cumulative KPI cube above shows the average CLV per game over closed games; until then, "collecting".</span></p></div>
 `;
 
 class Component extends DCLogic {
@@ -280,7 +280,7 @@ class Component extends DCLogic {
       heroTitle: 'The MLB engine, live.', heroSub: 'Two models per game, winner and total runs. Updated several times a day. Scheduled runs are often delayed or skipped.',
       signalKicker: kickEn, edgeLabel: 'Edge vs market', runsLabel: 'expected runs', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'HIGH', underWord: 'LOW', homeWord: 'Home', awayWord: 'Away', starterPrefix: 'starter-aware:',
-      validatedHead: 'BACKTEST', backtestText: backtestEn,
+      validatedHead: 'BACKTEST ACCURACY · HOLDOUT', backtestText: backtestEn,
       sepLabel: 'Live record is not the backtest', liveHead: 'LIVE RECORD', liveText: liveEn,
       guideNote: 'Example values, illustration only',
       clvTitle: 'Totals CLV, running average', clvSub: `${clvTextEn} No-vig, vs the closing line. ${dash(CV.pos)} of ${clvN} games positive.`,
@@ -346,7 +346,7 @@ class Component extends DCLogic {
       heroTitle: 'מנוע החיזוי של MLB', heroSub: 'שני מודלים לכל משחק, מנצח וסך ריצות. מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.',
       signalKicker: kickHe, edgeLabel: 'Edge מול השוק', runsLabel: 'ריצות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ', starterPrefix: 'מודע-פותח:',
-      validatedHead: 'בדיקה לאחור', backtestText: backtestHe,
+      validatedHead: 'דיוק בבדיקה לאחור · HOLDOUT', backtestText: backtestHe,
       sepLabel: 'השיא החי אינו הבדיקה לאחור', liveHead: 'שיא חי', liveText: liveHe,
       guideNote: 'ערכים לדוגמה, להמחשה בלבד',
       clvTitle: 'CLV טוטאלים, ממוצע מצטבר', clvSub: `${clvTextHe} ללא vig, מול קו הסגירה. ${dash(CV.pos)} מתוך ${clvN} משחקים חיוביים.`,

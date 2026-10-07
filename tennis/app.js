@@ -318,10 +318,10 @@ class Component extends DCLogic {
 
     const en = {
       dir: 'ltr', brand: 'Command Center', liveLabel: 'LIVE',
-      heroTitle: 'The tennis engine, live.', heroSub: 'Two models per match — the winner and total games — validated on held-out data and recalibrated every morning. Edges are measured against Pinnacle.',
+      heroTitle: 'The tennis engine, live.', heroSub: 'Two models per match, the winner and total games. Updated several times a day. Scheduled runs are often delayed or skipped. Edges are measured against Pinnacle.',
       signalKicker: 'The A+ call · today', edgeLabel: 'Edge vs Pinnacle', runsLabel: 'expected games', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Pinnacle', callWord: 'Call', stageWord: 'stage', overWord: 'OVER', underWord: 'UNDER', homeWord: 'Fav', awayWord: 'Dog', starterPrefix: 'surface · Elo blend:',
-      validatedHead: 'VALIDATED ACCURACY · HOLDOUT TEST',
+      validatedHead: 'BACKTEST ACCURACY · HOLDOUT',
       clvTitle: 'Cumulative CLV', clvSub: `No-vig, vs Pinnacle's closing line · ${RC.n} closed-line matches (${RC.pos} positive). >0 = engine beat the market's move.`,
       calTitle: 'Calibration', calSub: 'Reference diagonal shown. Engine curve not displayed — per-stage calibration is computed in the full holdout report and is not exposed in this live feed.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy & calibration are computed in the full holdout report — not exposed in this live feed.',
@@ -332,7 +332,7 @@ class Component extends DCLogic {
       eloExplain: '= who wins (the call).', fipExplain: '= how sure (calibrates it).',
       disclaimer: 'For information and entertainment only · Not betting advice · Play responsibly · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
       driversHead: 'Why this signal · top drivers', integrityHead: 'Model integrity', verifiedBadge: 'Verified vs Pinnacle close',
-      sampleLabel: 'signals validated', drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate', clvSegHead: 'CLV by segment · > 0 beats the close',
+      sampleLabel: 'signals', drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate', clvSegHead: 'CLV by segment · > 0 beats the close',
       navTabs: [ {id:'signals',icon:'⚡',label:'Signals'}, {id:'rankings',icon:'📊',label:'Rankings'}, {id:'track',icon:'🎯',label:'Track record'}, {id:'how',icon:'📖',label:'How it works'} ],
       // 4 distinct ranking cube tabs (data-driven)
       rankTabs: [
@@ -355,7 +355,7 @@ class Component extends DCLogic {
       heroStats: [ {v: overallAcc.toFixed(1) + '%', k:'overall', color:'#35e39a'}, {v: aplusAcc.toFixed(1) + '%', k:'A+ calls', color:'#35e39a'}, {v:hcl, k:'CLV games', color:'#f5b23d'} ],
       kpis: [
         {display: aplusAcc.toFixed(1), target: aplusAcc, dec:1, prefix:'', u:'%', tag:'A+', d:`A+ calls — stage 8/9 + confidence ≥62% · holdout test · ${matchN.toLocaleString()} matches.`},
-        {display: stageAcc.toFixed(1), target: stageAcc, dec:1, prefix:'', u:'%', d:'High-stage (8/9) accuracy · holdout validated.'},
+        {display: stageAcc.toFixed(1), target: stageAcc, dec:1, prefix:'', u:'%', d:'High-stage (8/9) accuracy · holdout.'},
         {display: overallAcc.toFixed(1), target: overallAcc, dec:1, prefix:'', u:'%', d:`Overall winner hit rate · beats the favourite baseline · ${matchN.toLocaleString()} matches.`},
         {display:'—', target:null, dec:0, prefix:'', u:'', d:'Totals over/under — INDICATIVE only · step-6b (<200 settled) · no value-zone yet.'},
         {display:cf, target:RC.final, dec:2, prefix:(RC.final>=0?'+':''), u:'', d:`Cumulative CLV · ${RC.n} closed-line matches (${RC.pos}+) · vs Pinnacle closing line.`},
@@ -378,10 +378,10 @@ class Component extends DCLogic {
     };
     const he = {
       dir: 'rtl', brand: 'מרכז שליטה', liveLabel: 'חי',
-      heroTitle: 'מנוע החיזוי של הטניס', heroSub: 'שני מודלים לכל משחק — מנצח וסך גיימים — מאומתים על נתונים שלא נראו ומכוילים מדי בוקר. ה-Edge נמדד מול Pinnacle.',
+      heroTitle: 'מנוע החיזוי של הטניס', heroSub: 'שני מודלים לכל משחק, מנצח וסך גיימים. מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות. ה-Edge נמדד מול Pinnacle.',
       signalKicker: 'קריאת ה-A+ · היום', edgeLabel: 'Edge מול Pinnacle', runsLabel: 'גיימים צפויים', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'Pinnacle', callWord: 'קריאה', stageWord: 'שלב', overWord: 'מעל', underWord: 'מתחת', homeWord: 'מועדף', awayWord: 'מוחלש', starterPrefix: 'משטח · שילוב-Elo:',
-      validatedHead: 'דיוק מאומת · מבחן HOLDOUT',
+      validatedHead: 'דיוק בבדיקה לאחור · HOLDOUT',
       clvTitle: 'CLV מצטבר', clvSub: `ללא-vig, מול קו הסגירה של Pinnacle · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים). מעל 0 = המנוע ניצח את תנועת השוק.`,
       calTitle: 'כיול (Calibration)', calSub: 'מוצג האלכסון כקו ייחוס. עקומת המנוע אינה מוצגת — כיול לפי שלב מחושב בדוח ה-holdout המלא ואינו חשוף בפיד החי.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'Per-stage accuracy & calibration are computed in the full holdout report — not exposed in this live feed.',
@@ -392,7 +392,7 @@ class Component extends DCLogic {
       eloExplain: '= מי מנצח (הקריאה).', fipExplain: '= כמה בטוח (מכייל).',
       disclaimer: 'למידע ובידור בלבד · אינו ייעוץ הימורים · שחק באחריות · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
       driversHead: 'למה הסיגנל הזה · הגורמים המובילים', integrityHead: 'שלמות המודל', verifiedBadge: 'מאומת מול סגירת Pinnacle',
-      sampleLabel: 'סיגנלים מאומתים', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+', clvSegHead: 'CLV לפי פילוח · מעל 0 מנצח את הסגירה',
+      sampleLabel: 'סיגנלים', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+', clvSegHead: 'CLV לפי פילוח · מעל 0 מנצח את הסגירה',
       navTabs: [ {id:'signals',icon:'⚡',label:'סיגנלים'}, {id:'rankings',icon:'📊',label:'דירוגים'}, {id:'track',icon:'🎯',label:'ביצועים'}, {id:'how',icon:'📖',label:'איך זה עובד'} ],
       rankTabs: [
         {id:'rkWin',    icon:'🎯', label:'סיכוי-ניצחון', explainer:'סיכוי-הניצחון של המנוע לכל שחקן במשחקי-היום. פשוט, ללא-שקלול. מיון יורד.'},
@@ -414,7 +414,7 @@ class Component extends DCLogic {
       heroStats: [ {v: overallAcc.toFixed(1) + '%', k:'כללי', color:'#35e39a'}, {v: aplusAcc.toFixed(1) + '%', k:'קריאות A+', color:'#35e39a'}, {v:hcl, k:'CLV גיימים', color:'#f5b23d'} ],
       kpis: [
         {display: aplusAcc.toFixed(1), target: aplusAcc, dec:1, prefix:'', u:'%', tag:'A+', d:`קריאות A+ — שלב 8/9 + ביטחון ≥62% · מבחן holdout · ${matchN.toLocaleString()} מאצ'ים.`},
-        {display: stageAcc.toFixed(1), target: stageAcc, dec:1, prefix:'', u:'%', d:'דיוק בשלב גבוה (8/9) · מאומת holdout.'},
+        {display: stageAcc.toFixed(1), target: stageAcc, dec:1, prefix:'', u:'%', d:'דיוק בשלב גבוה (8/9) · holdout.'},
         {display: overallAcc.toFixed(1), target: overallAcc, dec:1, prefix:'', u:'%', d:`דיוק כללי · מנצח את בסיס המועדף · ${matchN.toLocaleString()} מאצ'ים.`},
         {display:'—', target:null, dec:0, prefix:'', u:'', d:'מעל/מתחת לגיימים — אינדיקטיבי בלבד · step-6b (<200 מסולקים) · אין value-zone עדיין.'},
         {display:cf, target:RC.final, dec:2, prefix:(RC.final>=0?'+':''), u:'', d:`CLV מצטבר · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים) · מול קו הסגירה של Pinnacle.`},
@@ -1018,7 +1018,7 @@ class Component extends DCLogic {
       stateIcon: stIcon, stateAccent: stAccent, stateGlow: stAccent + '2b', stateRing: stAccent + '66',
       stateTitle: stMsg.t || '', stateBody: stMsg.b || '',
       dispStateChip: V === 'empty' ? 'inline-flex' : 'none',
-      stateChip: he ? 'העדכון הבא · 06:00' : 'Next update · 06:00',
+      stateChip: he ? 'מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.' : 'Updated several times a day. Scheduled runs are often delayed or skipped.',
       showRetry: V === 'error' ? 'inline-flex' : 'none',
       retryLabel: he ? 'נסה שוב' : 'Retry',
       onKey: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } },

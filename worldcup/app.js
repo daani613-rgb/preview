@@ -455,11 +455,11 @@ class Component extends DCLogic {
     const en = {
       dir: 'ltr', brand: 'Command Center', liveLabel: 'LIVE', asOf,
       freshnessLabel: 'Data updated', freshnessStr,
-      heroTitle: 'The World Cup engine, live.', heroSub: 'Two models per match — the 1X2 result and total goals — validated on held-out data and recalibrated every morning.',
+      heroTitle: 'The World Cup engine, live.', heroSub: 'Two models per match, the 1X2 result and total goals. Updated once a day. Scheduled runs are often delayed or skipped.',
       signalKicker: 'The A+ call · group stage', edgeLabel: 'Edge vs market', runsLabel: 'expected goals', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'OVER', underWord: 'UNDER', homeWord: 'Home', awayWord: 'Away', drawWord: 'Draw', starterPrefix: 'form-aware:',
       vsWord: 'vs', groupStageWord: 'Group stage', engSubWord: "what it's worth", mktSubWord: 'what it costs',
-      validatedHead: 'VALIDATED ACCURACY · HOLDOUT TEST',
+      validatedHead: 'BACKTEST ACCURACY · HOLDOUT',
       clvTitle: 'Threshold edge (not CLV)', clvSub: `Edge vs 62% call threshold · ${clvN} A+ calls (${clvPos} correct). No closing-line market feed — this is NOT market CLV.`,
       calTitle: 'Calibration', calSub: 'Predicted probability vs what actually happened. On the diagonal = perfectly calibrated.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'The engine hugs the diagonal — slightly conservative at the high end, which is exactly what you want.',
@@ -476,7 +476,7 @@ class Component extends DCLogic {
       guideLabel: 'The full guide — how to read this page',
       eloExplain: '= who wins (the call).', fipExplain: '= how sure (calibrates it).',
       disclaimer: 'For information and entertainment only · Not betting advice · Play responsibly · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
-      driversHead: 'Why this signal · top drivers', integrityHead: 'Model integrity', verifiedBadge: 'Verified holdout test',
+      driversHead: 'Why this signal · top drivers', integrityHead: 'Model integrity',
       sampleLabel: 'A+ calls tracked', drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate', clvSegHead: 'Threshold edge by month · > 0 beats 62% call threshold (no closing-line market)',
       navTabs: [ {id:'signals',icon:'⚡',label:'Signals'}, {id:'rankings',icon:'📊',label:'Rankings'}, {id:'track',icon:'🎯',label:'Track record'}, {id:'how',icon:'📖',label:'How it works'} ],
       rankTabs: [
@@ -490,7 +490,7 @@ class Component extends DCLogic {
       heroStats: [ {v: aplusAcc + '%', k:'A+ accuracy', color:'#35e39a'}, {v: nCalled + '', k:'calls tracked', color:'#35e39a'}, {v: clvPos + '/' + nCalled, k:'A+ correct', color:'#35e39a'} ],
       kpis: [
         {display: aplusAcc, target: parseFloat(aplusAcc), dec:1, prefix:'', u:'%', tag:'A+', d:`A+ calls (verdict=call) accuracy · ${nCalled} calls tracked · ${clvPos} correct.`},
-        {display:'60.4',target:60.4,dec:1,prefix:'',u:'%',d:'Validated holdout accuracy — all 3 outcomes (Home / Draw / Away) · international results ≥2019 · holdout_test.py (HOLDOUT accAll).'},
+        {display:'60.4',target:60.4,dec:1,prefix:'',u:'%',d:'Holdout accuracy, all 3 outcomes (Home / Draw / Away) · international results ≥2019 · holdout_test.py (HOLDOUT accAll).'},
         {display:'78.3',target:78.3,dec:1,prefix:'',u:'%',d:'2-way skill (predicting which side wins, excluding draws) · holdout_test.py · 5,597 decisive matches ≥2019.'},
         {display: clvPos + '/' + nCalled, target: null, dec:0, prefix:'', u:'', noCount:true, d:`A+ correct calls: ${clvPos} correct out of ${nCalled} A+ calls tracked. No closing-line market — real CLV not available.`},
       ],
@@ -521,11 +521,11 @@ class Component extends DCLogic {
     const he = {
       dir: 'rtl', brand: 'מרכז שליטה', liveLabel: 'חי', asOf,
       freshnessLabel: 'נתונים עודכנו', freshnessStr,
-      heroTitle: 'מנוע החיזוי של המונדיאל', heroSub: 'שני מודלים לכל משחק — תוצאה (1X2) וסך שערים — מאומתים על נתונים שלא נראו ומכוילים מדי בוקר.',
+      heroTitle: 'מנוע החיזוי של המונדיאל', heroSub: 'שני מודלים לכל משחק, תוצאה (1X2) וסך שערים. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.',
       signalKicker: 'קריאת ה-A+ · שלב הבתים', edgeLabel: 'Edge מול השוק', runsLabel: 'שערים צפויים', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'מעל', underWord: 'מתחת', homeWord: 'בית', awayWord: 'חוץ', drawWord: 'תיקו', starterPrefix: 'מודע-כושר:',
       vsWord: 'נגד', groupStageWord: 'שלב הבתים', engSubWord: 'מה שווה', mktSubWord: 'מה עולה',
-      validatedHead: 'דיוק מאומת · מבחן HOLDOUT',
+      validatedHead: 'דיוק בבדיקה לאחור · HOLDOUT',
       clvTitle: 'יתרון ביחס לסף (לא CLV)', clvSub: `Edge מול סף 62% · ${clvN} קריאות A+ (${clvPos} נכונות). אין קו-שוק חי — זה אינו CLV אמיתי.`,
       calTitle: 'כיול (Calibration)', calSub: 'הסתברות חזויה מול מה שקרה בפועל. על האלכסון = מכויל בול.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'המנוע צמוד לאלכסון — מעט שמרני בקצה הגבוה, בדיוק כפי שרוצים.',
@@ -542,7 +542,7 @@ class Component extends DCLogic {
       guideLabel: 'המדריך המלא — איך לקרוא את הדף',
       eloExplain: '= מי מנצח (הקריאה).', fipExplain: '= כמה בטוח (מכייל).',
       disclaimer: 'למידע ובידור בלבד · אינו ייעוץ הימורים · שחק באחריות · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
-      driversHead: 'למה הסיגנל הזה · הגורמים המובילים', integrityHead: 'שלמות המודל', verifiedBadge: 'מאומת מבחן הולד-אאוט',
+      driversHead: 'למה הסיגנל הזה · הגורמים המובילים', integrityHead: 'שלמות המודל',
       sampleLabel: 'קריאות A+ שנוטרו', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+', clvSegHead: 'יתרון לפי חודש · מעל 0 מנצח סף 62% (אין קו-שוק חי)',
       navTabs: [ {id:'signals',icon:'⚡',label:'סיגנלים'}, {id:'rankings',icon:'📊',label:'דירוגים'}, {id:'track',icon:'🎯',label:'ביצועים'}, {id:'how',icon:'📖',label:'איך זה עובד'} ],
       rankTabs: [
@@ -556,7 +556,7 @@ class Component extends DCLogic {
       heroStats: [ {v: aplusAcc + '%', k:'דיוק A+', color:'#35e39a'}, {v: nCalled + '', k:'קריאות שנוטרו', color:'#35e39a'}, {v: clvPos + '/' + nCalled, k:'קריאות נכונות', color:'#35e39a'} ],
       kpis: [
         {display: aplusAcc, target: parseFloat(aplusAcc), dec:1, prefix:'', u:'%', tag:'A+', d:`דיוק קריאות A+ · ${nCalled} קריאות שנוטרו · ${clvPos} נכונות.`},
-        {display:'60.4',target:60.4,dec:1,prefix:'',u:'%',d:'דיוק הולד-אאוט מאומת — כל 3 תוצאות (בית / תיקו / חוץ) · תוצאות בינלאומיות מ-2019 · holdout_test.py (HOLDOUT accAll).'},
+        {display:'60.4',target:60.4,dec:1,prefix:'',u:'%',d:'דיוק holdout, כל 3 תוצאות (בית / תיקו / חוץ) · תוצאות בינלאומיות מ-2019 · holdout_test.py (HOLDOUT accAll).'},
         {display:'78.3',target:78.3,dec:1,prefix:'',u:'%',d:'כישרון 2-דרכי (ניבוי הצד המנצח, ללא תיקו) · holdout_test.py · 5,597 משחקים מוכרעים מ-2019.'},
         {display: clvPos + '/' + nCalled, target: null, dec:0, prefix:'', u:'', noCount:true, d:`קריאות A+ נכונות: ${clvPos} נכונות מתוך ${nCalled} קריאות. אין קו-שוק — CLV אמיתי אינו זמין.`},
       ],
@@ -1109,12 +1109,10 @@ class Component extends DCLogic {
     const holdoutKpis = [
       { label: he ? 'דיוק-מנצח (holdout)' : 'Winner acc (holdout)', val: (_hk.accWin || '—') + '%', color: '#35e39a' },
       { label: he ? 'כולל תיקו' : 'Incl. draws', val: (_hk.accAll || '—') + '%', color: '#eef1f7' },
-      { label: 'Brier', val: _hk.brier || '—', color: '#eef1f7' },
-      { label: 'RPS', val: _hk.rps || '—', color: '#eef1f7' },
       { label: he ? 'בסיס "תמיד בית"' : 'Base "always home"', val: (_hk.baseWin || '—') + '%', color: '#8791ab' },
     ];
     const trackKpisHead = he ? 'ביצועי-טורניר חיים (קריאות שהוכרעו)' : 'Live tournament (decided calls)';
-    const holdoutHead = he ? 'דיוק מאומת (holdout · סטטי)' : 'Validated accuracy (holdout · static)';
+    const holdoutHead = he ? 'דיוק בבדיקה לאחור (holdout · סטטי)' : 'Backtest accuracy (holdout · static)';
     // Global chrome: back-to-top + Disclaimer & Privacy modal (mirrors live #backToTop + discModal)
     const backToTop = () => { if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' }); };
     const onOpenPrivacy = () => this.setState({ showPrivacy: true });
@@ -1186,7 +1184,7 @@ class Component extends DCLogic {
       stateIcon: stIcon, stateAccent: stAccent, stateGlow: stAccent + '2b', stateRing: stAccent + '66',
       stateTitle: stMsg.t || '', stateBody: stMsg.b || '',
       dispStateChip: V === 'empty' ? 'inline-flex' : 'none',
-      stateChip: he ? 'העדכון הבא · 06:00' : 'Next update · 06:00',
+      stateChip: he ? 'מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.' : 'Updated once a day. Scheduled runs are often delayed or skipped.',
       showRetry: V === 'error' ? 'inline-flex' : 'none',
       retryLabel: he ? 'נסה שוב' : 'Retry',
       onKey: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } },
