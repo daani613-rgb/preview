@@ -130,16 +130,17 @@
                 <div style="position:relative;border-radius:12px;padding:14px 18px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:14px;flex-wrap:wrap">
                   <div style="position:absolute;top:0;bottom:0;inset-inline-start:0;width:3px;background:{{ g.accent }}"></div>
                   <div style="flex:1;min-width:150px"><div style="font-size:15px;font-weight:800">{{ g.matchup }} <sc-if value="{{ g.aplus }}"><span style="font-family:var(--fm);font-size:10px;font-weight:700;color:#8f7bff;border:1px solid rgba(143,123,255,0.4);border-radius:5px;padding:1px 5px;margin-inline-start:6px">{{ g.aplusTag }}</span></sc-if></div><div style="font-family:var(--fm);font-size:11px;color:#6f7897;margin-top:4px">{{ g.when }}</div></div>
-                  <div style="font-size:13px;color:#c4c7d2;min-width:150px">{{ g.pick }} <span style="color:#6f7897">· {{ g.stageStr }}</span></div>
+                  <div style="font-size:13px;color:#c4c7d2;min-width:150px">{{ g.pick }} <span style="color:#6f7897">{{ g.stageStr }}</span></div>
                   <div style="font-family:var(--fm);font-size:12px;color:#9aa2ba;min-width:80px">{{ g.totalStr }} <span style="color:#f5b23d">{{ g.windTag }}</span></div>
-                  <div style="font-family:var(--fm);font-size:11px;color:#8791ab;min-width:130px;text-align:end">{{ g.tail }}</div>
+                  <div style="font-family:var(--fm);font-size:11px;color:#8791ab;min-width:130px;text-align:end">{{ g.tail }}<sc-if value="{{ g.verdict }}"><div style="font-weight:700;color:{{ g.verdictColor }};margin-top:3px">{{ g.verdict }}</div></sc-if></div>
                 </div>
               </sc-for>
             </div>
           </div>
           <!-- board (This week) -->
           <div style="display:{{ dispBoard }}">
-          <!-- featured signal -->
+          <!-- featured signal (unplayed A+ only) -->
+          <sc-if value="{{ featHas }}">
           <div style="position:relative;border-radius:22px;padding:2px;background:linear-gradient(135deg,rgba(53,227,154,0.5),rgba(74,158,255,0.22),rgba(245,178,61,0.32));box-shadow:0 30px 80px rgba(0,0,0,0.45);margin-bottom:28px">
             <div style="border-radius:20px;background:linear-gradient(160deg,#0b0f1c,#080a12);padding:34px 38px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px">
               <div>
@@ -173,6 +174,7 @@
                   <div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">{{ stageLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#eef1f7;line-height:.9">{{ feat.stage }}</div></div>
                 </div>
               </div>
+              <sc-if value="{{ featHasGauge }}">
               <div style="display:flex;flex-direction:column;align-items:center;justify-content:center">
                 <svg viewBox="0 0 340 210" style="width:100%;max-width:330px;overflow:visible">
                   <defs>
@@ -193,8 +195,17 @@
                   <div style="display:flex;align-items:center;gap:7px"><span style="width:14px;height:0;border-top:2px dashed rgba(255,255,255,0.6);display:inline-block"></span><span style="color:#aeb4c8">{{ marketWord }} {{ feat.mktUnder }}%</span></div>
                 </div>
               </div>
+              </sc-if>
             </div>
           </div>
+          </sc-if>
+          <sc-if value="{{ featEmpty }}">
+            <div style="border-radius:22px;padding:30px 34px;margin-bottom:28px;background:rgba(255,255,255,0.025);border:1px dashed rgba(255,255,255,0.14)">
+              <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8791ab;margin-bottom:10px">{{ signalKicker }}</div>
+              <div style="font-size:22px;font-weight:800;margin-bottom:8px">{{ featEmptyTitle }}</div>
+              <div style="font-size:14px;color:#9aa2ba;line-height:1.6;max-width:620px">{{ featEmptyBody }}</div>
+            </div>
+          </sc-if>
           <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8791ab;margin-bottom:16px">{{ boardCounter }}</div>
           <!-- board -->
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;align-items:start">
@@ -232,11 +243,11 @@
                     <div style="font-family:var(--fm);font-size:11px;color:#8791ab;display:flex;align-items:center;gap:6px;white-space:nowrap">{{ detailsWord }} <span style="font-size:15px;display:inline-block;transition:transform .25s;transform:{{ t.chevron }}">⌄</span></div>
                   </div>
 
-                  <!-- result tail: final score + CLV -->
-                  <sc-if value="{{ t.resultCollecting }}" hint-placeholder-val="{{ true }}">
-                    <div style="margin-top:12px;padding:8px 12px;border-radius:9px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.02);display:flex;align-items:center;gap:8px">
-                      <span style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897">CLV</span>
-                      <span style="font-family:var(--fm);font-size:12px;color:#6f7897;font-style:italic">{{ t.resultTag }}</span>
+                  <!-- result tail: final score + verdict (decided games only) -->
+                  <sc-if value="{{ t.hasResult }}">
+                    <div style="margin-top:12px;padding:8px 12px;border-radius:9px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:var(--fm);font-size:12px">
+                      <span style="color:#c4c7d2">{{ t.resultText }}</span>
+                      <span style="font-weight:700;color:{{ t.verdictColor }}">{{ t.verdict }}</span>
                     </div>
                   </sc-if>
                   <div style="display:{{ t.detailDisp }};margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.07)">
@@ -309,6 +320,20 @@
       <!-- ============ TAB: TRACK RECORD ============ -->
       <div style="display:{{ dispTrack }}">
         <div>
+          <!-- this season (live, forward-only) — kept apart from the holdout block -->
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#6f7897;font-weight:600;margin-bottom:16px">{{ seasonHead }}</div>
+          <div style="border-radius:20px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08);margin-bottom:30px">
+            <sc-if value="{{ seasonEmptyFlag }}"><div style="font-size:14px;color:#9aa2ba">{{ seasonEmpty }}</div></sc-if>
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <sc-for list="{{ seasonRows }}" as="r">
+                <div>
+                  <div style="font-size:12px;color:#8791ab;margin-bottom:4px">{{ r.k }}</div>
+                  <div style="font-family:var(--fm);font-size:24px;font-weight:800;color:#eef1f7">{{ r.v }}</div>
+                  <div style="font-size:12px;color:#8791ab;margin-top:4px">{{ r.d }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
           <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#6f7897;font-weight:600;margin-bottom:16px">{{ validatedHead }}</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px">
             <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
@@ -324,7 +349,7 @@
           <div style="border-radius:20px;padding:22px 24px;margin-bottom:20px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap">
               <div style="font-size:16px;font-weight:700">{{ integrityHead }}</div>
-              <div style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;background:rgba(53,227,154,0.1);border:1px solid rgba(53,227,154,0.3)"><span style="font-size:12px;color:#35e39a">✓</span><span style="font-family:var(--fm);font-size:11px;font-weight:700;color:#8ff0c0">{{ verifiedBadge }}</span></div>
+
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px">
               <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1">{{ integrity.n }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ sampleLabel }}</div></div>
@@ -332,46 +357,13 @@
               <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1">{{ integrity.brier }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ brierLabel }}</div></div>
               <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1;color:#35e39a">{{ integrity.hit }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ hitLabel }}</div></div>
             </div>
-            <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:12px">{{ clvSegHead }}</div>
-            <div dir="ltr" style="display:flex;flex-direction:column;gap:11px">
-              <sc-for list="{{ clvSeg }}" as="s" hint-placeholder-count="4">
-                <div style="display:flex;align-items:center;gap:14px">
-                  <span style="width:132px;font-size:12px;color:#aeb4c8;flex-shrink:0;text-align:right">{{ s.label }}</span>
-                  <div style="flex:1;display:flex;align-items:center;height:16px">
-                    <div style="flex:1;display:flex;justify-content:flex-end"><sc-if value="{{ s.neg }}" hint-placeholder-val="{{ false }}"><div style="height:9px;border-radius:5px;background:linear-gradient(90deg,#ff6b6b,#ff8f8f);width:{{ s.widthPct }}%"></div></sc-if></div>
-                    <div style="width:1px;height:16px;background:rgba(255,255,255,0.22);flex-shrink:0"></div>
-                    <div style="flex:1;display:flex;justify-content:flex-start"><sc-if value="{{ s.pos }}" hint-placeholder-val="{{ true }}"><div style="height:9px;border-radius:5px;background:linear-gradient(90deg,#35e39a,#8ff0c0);width:{{ s.widthPct }}%"></div></sc-if></div>
-                  </div>
-                  <span style="width:50px;text-align:left;font-family:var(--fm);font-size:13px;font-weight:700;color:{{ s.color }};flex-shrink:0">{{ s.val }}</span>
-                </div>
-              </sc-for>
-              <div style="display:flex;align-items:center;gap:14px;margin-top:3px">
-                <span style="width:132px;flex-shrink:0"></span>
-                <div style="flex:1;display:flex;align-items:center;height:12px">
-                  <div style="flex:1"></div>
-                  <div style="width:0;flex-shrink:0;position:relative"><span style="position:absolute;left:50%;top:-1px;transform:translateX(-50%);font-family:var(--fm);font-size:10px;color:#9aa2ba">0</span></div>
-                  <div style="flex:1"></div>
-                </div>
-                <span style="width:50px;flex-shrink:0"></span>
-              </div>
-            </div>
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
-            <!-- CLV chart -->
+            <!-- CLV: no source -> no chart, no number; message only -->
             <div style="border-radius:20px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-                <div style="font-size:16px;font-weight:700">{{ clvTitle }}</div>
-                <div style="font-family:var(--fm);font-size:15px;font-weight:700;color:#6f7897">{{ clvFinalStr }}</div>
-              </div>
-              <svg viewBox="0 0 520 200" style="width:100%;height:auto">
-                <defs><linearGradient id="clvfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(53,227,154,0.35)"></stop><stop offset="1" stop-color="rgba(53,227,154,0)"></stop></linearGradient></defs>
-                <line x1="0" y1="{{ clv.baseY }}" x2="520" y2="{{ clv.baseY }}" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="4 5"></line>
-                <path d="{{ clv.area }}" fill="url(#clvfill)"></path>
-                <path id="clv-line" d="{{ clv.line }}" fill="none" stroke="#35e39a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-                <circle cx="{{ clv.dotX }}" cy="{{ clv.dotY }}" r="6" fill="#35e39a"></circle>
-                <circle cx="{{ clv.dotX }}" cy="{{ clv.dotY }}" r="11" fill="none" stroke="#35e39a" stroke-width="2" opacity="0.5"></circle>
-              </svg>
-              <div style="font-size:12px;color:#6f7897;margin-top:10px">{{ clvSub }}</div>
+              <div style="font-size:16px;font-weight:700;margin-bottom:10px">{{ clvTitle }}</div>
+              <div style="font-size:13px;color:#9aa2ba;line-height:1.6;margin-bottom:8px">{{ clvWhy }}</div>
+              <div style="font-size:13px;color:#8791ab;line-height:1.6">{{ clvNeed }}</div>
             </div>
             <!-- stage accuracy -->
             <div style="border-radius:20px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
