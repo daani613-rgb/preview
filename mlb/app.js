@@ -48,7 +48,7 @@ const GUIDE_MLB=`
   <div class="gv-sec"><div class="gv-ey"><span class="gv-num">05</span><h3><span class="l-he">הוכרעו — דיוק over/under</span><span class="l-en">Decided — over/under accuracy</span></h3></div>
     <p><span class="l-he">לכל משחק שהוכרע: הסך-בפועל + ✓/✗. דיוק-הכיוון הגולמי קרוב ל-50% — <b>תקין</b> בשוק יעיל; הערך הוא בכיול וב-A+, לא בכיוון.</span><span class="l-en">For each decided game: the actual total + ✓/✗. Raw direction accuracy ~50% is <b>healthy</b> in an efficient market; the edge is in calibration/A+, not raw direction.</span></p></div>
   <div class="gv-sec"><div class="gv-ey"><span class="gv-num">06</span><h3><span class="l-he">CLV — מבחן-השוק</span><span class="l-en">CLV — the market test</span></h3></div>
-    <p><span class="l-he">השוואת המנוע לקו-הסגירה <b>על הקו-הנעול</b> (forward-only). הקובייה-המצטברת למעלה מסכמת CLV ממוצע על משחקים-שנסגרו; עד אז — "צובר".</span><span class="l-en">Compares the engine to the closing line <b>on the locked line</b> (forward-only). The cumulative KPI cube above sums average CLV over closed games; until then — "collecting".</span></p></div>
+    <p><span class="l-he">השוואת המנוע לקו-הסגירה <b>על הקו-הנעול</b> (forward-only). הקובייה-המצטברת למעלה מציג CLV ממוצע למשחק על משחקים-שנסגרו; עד אז, "צובר".</span><span class="l-en">Compares the engine to the closing line <b>on the locked line</b> (forward-only). The cumulative KPI cube above shows the average CLV per game over closed games; until then, "collecting".</span></p></div>
 `;
 
 class Component extends DCLogic {
@@ -284,15 +284,15 @@ class Component extends DCLogic {
       sepLabel: 'Live record is not the backtest', liveHead: 'LIVE RECORD', liveText: liveEn,
       guideNote: 'Example values, illustration only',
       clvTitle: 'Totals CLV, running average', clvSub: `${clvTextEn} No-vig, vs the closing line. ${dash(CV.pos)} of ${clvN} games positive.`,
-      calTitle: 'Calibration', calSub: 'Predicted vs observed — computed in the full holdout report, not exposed in this live feed.',
-      predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy & calibration curve are in the full holdout report — not in this live feed.',
+      calTitle: 'Calibration', calSub: 'Predicted vs observed. The calibration curve is not part of this live feed.',
+      predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy and the calibration curve are not part of this live feed.',
       detailsWord: 'Total runs', runsWord: 'runs', lineWord: 'line',
       stageTitle: 'Accuracy by stage group', stageSub: backtestEn,
       rankNote: 'Teams playing today, ranked by win probability and grouped into strength tiers by Elo.',
       teamCol: 'Team', pwinCol: 'p_win', annotatedLabel: 'Annotated example — one card', guideLabel: 'The full guide — how to read the board',
       eloExplain: '= who wins (the call).', fipExplain: '= how sure (calibrates it).',
       disclaimer: 'For information and entertainment only · Not betting advice · Play responsibly · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
-      driversHead: 'Why this signal · top drivers', integrityHead: 'Model integrity', verifiedBadge: 'Verified vs Pinnacle close',
+      driversHead: FT.isAplus ? 'Why this signal · top drivers' : 'What the models see', integrityHead: 'Model integrity',
       sampleLabel: 'backtest games', drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate, backtest', clvSegHead: 'CLV by segment · > 0 beats the close',
       navTabs: [ {id:'signals',icon:'⚡',label:'Signals'}, {id:'rankings',icon:'📊',label:'Rankings'}, {id:'track',icon:'🎯',label:'Track record'}, {id:'how',icon:'📖',label:'How it works'} ],
       rankTabs: [
@@ -350,15 +350,15 @@ class Component extends DCLogic {
       sepLabel: 'השיא החי אינו הבדיקה לאחור', liveHead: 'שיא חי', liveText: liveHe,
       guideNote: 'ערכים לדוגמה, להמחשה בלבד',
       clvTitle: 'CLV טוטאלים, ממוצע מצטבר', clvSub: `${clvTextHe} ללא vig, מול קו הסגירה. ${dash(CV.pos)} מתוך ${clvN} משחקים חיוביים.`,
-      calTitle: 'כיול (Calibration)', calSub: 'חזוי מול נצפה — מחושב בדוח הולד-אאוט המלא, לא חשוף בפיד החי הזה.',
-      predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'דיוק לפי שלב בודד ועקומת כיול נמצאים בדוח הולד-אאוט המלא — לא בפיד החי הזה.',
+      calTitle: 'כיול (Calibration)', calSub: 'חזוי מול נצפה. עקומת הכיול אינה חלק מהפיד החי הזה.',
+      predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'דיוק לפי שלב בודד ועקומת הכיול אינם חלק מהפיד החי הזה.',
       detailsWord: 'סך ריצות', runsWord: 'ריצות', lineWord: 'קו',
       stageTitle: 'דיוק לפי קבוצת שלב', stageSub: backtestHe,
       rankNote: 'הקבוצות שמשחקות היום, מדורגות לפי הסתברות ניצחון ומקובצות לטירים לפי Elo.',
       teamCol: 'קבוצה', pwinCol: 'הסתברות', annotatedLabel: 'דוגמה מבוארת — כרטיס אחד', guideLabel: 'המדריך המלא — איך לקרוא את הלוח',
       eloExplain: '= מי מנצח (הקריאה).', fipExplain: '= כמה בטוח (מכייל).',
       disclaimer: 'למידע ובידור בלבד · אינו ייעוץ הימורים · שחק באחריות · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
-      driversHead: 'למה הסיגנל הזה · הגורמים המובילים', integrityHead: 'שלמות המודל', verifiedBadge: 'מאומת מול סגירת Pinnacle',
+      driversHead: FT.isAplus ? 'למה הסיגנל הזה · הגורמים המובילים' : 'מה המודלים רואים', integrityHead: 'שלמות המודל',
       sampleLabel: 'משחקי בדיקה לאחור', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+, בדיקה לאחור', clvSegHead: 'CLV לפי פילוח · מעל 0 מנצח את הסגירה',
       navTabs: [ {id:'signals',icon:'⚡',label:'סיגנלים'}, {id:'rankings',icon:'📊',label:'דירוגים'}, {id:'track',icon:'🎯',label:'ביצועים'}, {id:'how',icon:'📖',label:'איך זה עובד'} ],
       rankTabs: [
