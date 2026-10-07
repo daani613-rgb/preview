@@ -518,7 +518,11 @@ class Component extends DCLogic {
 
     const R = window.REAL || {};
     const rf = R.feat || {};
-    const fEng = rf.engPick != null ? rf.engPick : 64;
+    // Featured card only for a real featured game; otherwise an explained empty state (no number, no name).
+    const featHas = !!(R.feat && rf.away && rf.home && rf.pickCode && rf.engPick != null);
+    const fEng = rf.engPick != null ? rf.engPick : null;
+    const slateMsg = (R.slate && R.slate.note && (he ? R.slate.note.he : R.slate.note.en))
+      || (he ? 'אין היום משחקים בלוח.' : 'There are no games on today\'s slate.');
     const fMkt = rf.mktPick != null ? rf.mktPick : null;
     const feat = {
       away: rf.away || '', home: rf.home || '', time: rf.time || '',
@@ -733,12 +737,12 @@ class Component extends DCLogic {
     const howExtra = L.howExtra || [];
     const fx2 = (R.extra || {})[rf.id] || {};
     const howRows = [
-      { icon:'📊', label: he?'מנוע':'Engine', value: `${feat.engUnder}% / ${100-feat.engUnder}% — Elo + FIP`, labelColor:'#c4c7d2' },
+      { icon:'📊', label: he?'מנוע':'Engine', value: featHas ? `${feat.engUnder}% / ${100-feat.engUnder}% — Elo + FIP` : '—', labelColor:'#c4c7d2' },
       (feat.hasMkt
         ? { icon:'🏦', label: he?'שוק':'Market', value: `${feat.mktUnder}% / ${100-feat.mktUnder}% — ${he?'מה שהבוקי חושב':'what the book thinks'}`, labelColor:'#c4c7d2' }
         : { icon:'🏦', label: he?'שוק':'Market', value: (he?'אין קו כרגע':'no line yet'), labelColor:'#8791ab' }),
       { icon:'⚾', label:'Elo', value: (fx2.elo ? ('Elo '+fx2.elo) : (he?'דירוג':'rating')), labelColor:'#8ff0c0' },
-      { icon:'🏆', label: he?'קריאה':'Call', value: `${feat.pick} · ${feat.engUnder}%`, labelColor:'#f5d27a' },
+      { icon:'🏆', label: he?'קריאה':'Call', value: featHas ? `${feat.pick} · ${feat.engUnder}%` : '—', labelColor:'#f5d27a' },
       { icon:'💚', label: he?'ערך':'Value', value: `${feat.edgeStr} — ${he?'מנוע מול שוק':'engine vs market'}`, labelColor:'#8ff0c0' },
     ];
 
@@ -769,9 +773,10 @@ class Component extends DCLogic {
     return {
       ...L, navTabs, rankTabs, nav, feat, tiles, rankRows, rankNote, rankColHeaders, stageBars,
       howBullets, howExtra, howRows,
-      featEdge: feat.edgeStr, featEdgeTarget: (feat.edge != null ? Math.abs(feat.edge) : 0),
+      featHas, featEmpty: !featHas, slateMsg,
+      featEdge: feat.edgeStr, featEdgeTarget: (feat.edge != null ? Math.abs(feat.edge) : ''),
       featEdgePrefix: (feat.edge != null && feat.edge < 0 ? '−' : '+'), clvFinalStr,
-      gauge: this.gauge(feat.mktUnder, feat.engUnder), clv: this.clvChart(), cal: this.cal(), drivers, integrity, clvSeg,
+      gauge: featHas ? this.gauge(feat.mktUnder, feat.engUnder) : {}, clv: this.clvChart(), cal: this.cal(), drivers, integrity, clvSeg,
       freshness, scannedN, scannedText,
       totalsDecidedRows, totalsDecidedHead, totalsDecidedEmpty, hasTotalsDecided, noTotalsDecided: !hasTotalsDecided,
       scannedLine: (scannedN != null ? (he ? `נסרקו ${scannedN} משחקים היום` : `Scanned ${scannedN} games today`) : ''),
