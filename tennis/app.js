@@ -307,14 +307,12 @@ class Component extends DCLogic {
 
   labels() {
     const R = window.REAL || {};
-    const RC = R.clv || { final: -0.10, n: 24, pos: 9 };
-    const hcl = R.heroCLV || '-0.10';
-    const cf = (RC.final >= 0 ? '+' : '') + Number(RC.final).toFixed(2);
-    const acc = R.accuracy || {};
-    const overallAcc = acc.overall || 63.7;
-    const aplusAcc = acc.aplus || 77.3;
-    const stageAcc = acc.stage || 77.4;
-    const matchN = acc.matches || 61182;
+    const RC = R.clv || { final: null, n: '—', pos: '—' };
+    const hcl = R.heroCLV || '—';
+    const cf = (RC.final == null) ? '—' : (RC.final >= 0 ? '+' : '') + Number(RC.final).toFixed(2);
+    // 63.7 / 77.3 / 77.4 / 61,182 (R.accuracy) have no script that produces them -> not shown
+    const NOBT_EN = 'No backtest figure is published for tennis yet. The earlier number could not be reproduced from the data.';
+    const NOBT_HE = 'לא מתפרסם מספר בדיקה לאחור לטניס. את המספר הקודם לא הצלחנו לשחזר מהנתונים.';
 
     const en = {
       dir: 'ltr', brand: 'Command Center', liveLabel: 'LIVE',
@@ -326,7 +324,7 @@ class Component extends DCLogic {
       calTitle: 'Calibration', calSub: 'Reference diagonal shown. The engine curve and per-stage calibration are not part of this live feed.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy and calibration are not part of this live feed.',
       detailsWord: 'Total games', runsWord: 'games', lineWord: 'line',
-      stageTitle: 'Accuracy by stage', stageSub: 'Per-stage accuracy is not part of this live feed. Overall: 63.7% · A+ (stage 8/9): 77.3% · source: holdout test, 61,182 matches.',
+      stageTitle: 'Accuracy by stage', stageSub: 'Per-stage accuracy is not part of this live feed. No backtest figure is published for tennis yet. The earlier number could not be reproduced from the data.',
       rankNote: 'Players in action today, ranked by engine win probability and grouped into blended-Elo tiers.',
       teamCol: 'Player', pwinCol: 'p_win', annotatedLabel: 'Annotated example — one match', guideLabel: 'The full guide — how to read this page', dateSelLabel: 'Pick date',
       eloExplain: '= who wins (the call).', fipExplain: '= how sure (calibrates it).',
@@ -352,12 +350,10 @@ class Component extends DCLogic {
         {id:'all',   label:'All players'},
       ],
       dateLabels: ['Today', 'Results', 'By date'],
-      heroStats: [ {v: overallAcc.toFixed(1) + '%', k:'overall', color:'#35e39a'}, {v: aplusAcc.toFixed(1) + '%', k:'A+ calls', color:'#35e39a'}, {v:hcl, k:'CLV games', color:'#f5b23d'} ],
+      heroStats: [ {v:'—', k:NOBT_EN, color:'#8791ab'}, {v:hcl, k:'CLV games', color:'#f5b23d'} ],
       kpis: [
-        {display: aplusAcc.toFixed(1), target: aplusAcc, dec:1, prefix:'', u:'%', tag:'A+', d:`A+ calls — stage 8/9 + confidence ≥62% · holdout test · ${matchN.toLocaleString()} matches.`},
-        {display: stageAcc.toFixed(1), target: stageAcc, dec:1, prefix:'', u:'%', d:'High-stage (8/9) accuracy · holdout.'},
-        {display: overallAcc.toFixed(1), target: overallAcc, dec:1, prefix:'', u:'%', d:`Overall winner hit rate · beats the favourite baseline · ${matchN.toLocaleString()} matches.`},
-        {display:'—', target:null, dec:0, prefix:'', u:'', d:'Totals over/under — INDICATIVE only · step-6b (<200 settled) · no value-zone yet.'},
+        {display:'—', target:null, dec:0, prefix:'', u:'', d:NOBT_EN},
+        {display:'—', target:null, dec:0, prefix:'', u:'', d:'Totals over/under — INDICATIVE only · step-6b · no value-zone yet.'},
         {display:cf, target:RC.final, dec:2, prefix:(RC.final>=0?'+':''), u:'', d:`Cumulative CLV · ${RC.n} closed-line matches (${RC.pos}+) · vs Pinnacle closing line.`},
       ],
       stageBars: [],
@@ -371,7 +367,7 @@ class Component extends DCLogic {
         {tag:'06', chip:'#5aa9ff', title:'Surface ratings', body:'The "Rankings" tab opens 4 cubes — Win prob, Match score, Overall, By surface. By-surface blends 60% surface / 40% overall Elo. A player can dominate clay but be average on grass; the blend captures that.'},
         {tag:'07', chip:'#f5b23d', title:'CLV is the arbiter', body:'High accuracy is not edge — it reflects that clear favorites win. The only edge is a better price than the closing line, over time. We record every call at Pinnacle\'s opening price and settle it against the closing line. A prediction is not a profit.'},
         {tag:'08', chip:'#8791ab', title:'Forward-only, no backfill', body:'Every row in the journal is recorded forward-only, in real time. Results appear only after a match settles — with won/lost, whether the engine was right, and the CLV against the closing line.'},
-        {tag:'09', chip:'#20c997', title:'Platt calibration', body:'Win probabilities are Platt-scaled (logistic recalibration, backtest holdout ECE 0.042→0.028) so the engine bar reflects true probability, not raw model output.'},
+        {tag:'09', chip:'#20c997', title:'Platt calibration', body:'Win probabilities are Platt-scaled (logistic recalibration) so the engine bar reflects true probability, not raw model output.'},
         {tag:'10', chip:'#8791ab', title:'Total games — indicative', body:'The totals model (over/under games) is at step-6b: <200 settled totals, no value-zone yet. Lambda (expected games) and the line are shown as a descriptive lean only. The arbiter, as always, is CLV.'},
       ],
       howRows: [],
@@ -386,7 +382,7 @@ class Component extends DCLogic {
       calTitle: 'כיול (Calibration)', calSub: 'מוצג האלכסון כקו ייחוס. עקומת המנוע וכיול לפי שלב אינם חלק מהפיד החי הזה.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
       detailsWord: 'סך גיימים', runsWord: 'גיימים', lineWord: 'קו',
-      stageTitle: 'דיוק לפי שלב', stageSub: 'דיוק לפי שלב אינו חלק מהפיד החי הזה. כללי: 63.7% · A+ (שלב 8/9): 77.3% · מקור: holdout, 61,182 מאצ\'ים.',
+      stageTitle: 'דיוק לפי שלב', stageSub: 'דיוק לפי שלב אינו חלק מהפיד החי הזה. לא מתפרסם מספר בדיקה לאחור לטניס. את המספר הקודם לא הצלחנו לשחזר מהנתונים.',
       rankNote: 'השחקנים שמשחקים היום, מדורגים לפי הסתברות ניצחון ומקובצים לטירות Elo משולב.',
       teamCol: 'שחקן', pwinCol: 'הסתברות', annotatedLabel: 'דוגמה מבוארת — משחק אחד', guideLabel: 'המדריך המלא — איך לקרוא את הדף', dateSelLabel: 'בחר תאריך',
       eloExplain: '= מי מנצח (הקריאה).', fipExplain: '= כמה בטוח (מכייל).',
@@ -411,12 +407,10 @@ class Component extends DCLogic {
         {id:'all',   label:'כל-השחקנים'},
       ],
       dateLabels: ['היום', 'תוצאות', 'לפי תאריך'],
-      heroStats: [ {v: overallAcc.toFixed(1) + '%', k:'כללי', color:'#35e39a'}, {v: aplusAcc.toFixed(1) + '%', k:'קריאות A+', color:'#35e39a'}, {v:hcl, k:'CLV גיימים', color:'#f5b23d'} ],
+      heroStats: [ {v:'—', k:NOBT_HE, color:'#8791ab'}, {v:hcl, k:'CLV גיימים', color:'#f5b23d'} ],
       kpis: [
-        {display: aplusAcc.toFixed(1), target: aplusAcc, dec:1, prefix:'', u:'%', tag:'A+', d:`קריאות A+ — שלב 8/9 + ביטחון ≥62% · מבחן holdout · ${matchN.toLocaleString()} מאצ'ים.`},
-        {display: stageAcc.toFixed(1), target: stageAcc, dec:1, prefix:'', u:'%', d:'דיוק בשלב גבוה (8/9) · holdout.'},
-        {display: overallAcc.toFixed(1), target: overallAcc, dec:1, prefix:'', u:'%', d:`דיוק כללי · מנצח את בסיס המועדף · ${matchN.toLocaleString()} מאצ'ים.`},
-        {display:'—', target:null, dec:0, prefix:'', u:'', d:'מעל/מתחת לגיימים — אינדיקטיבי בלבד · step-6b (<200 מסולקים) · אין value-zone עדיין.'},
+        {display:'—', target:null, dec:0, prefix:'', u:'', d:NOBT_HE},
+        {display:'—', target:null, dec:0, prefix:'', u:'', d:'מעל/מתחת לגיימים — אינדיקטיבי בלבד · step-6b · אין value-zone עדיין.'},
         {display:cf, target:RC.final, dec:2, prefix:(RC.final>=0?'+':''), u:'', d:`CLV מצטבר · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים) · מול קו הסגירה של Pinnacle.`},
       ],
       stageBars: [],
@@ -429,7 +423,7 @@ class Component extends DCLogic {
         {tag:'06', chip:'#5aa9ff', title:'דירוג-המשטח', body:'כרטיסיית "דירוגים" פותחת 4 קוביות — סיכוי-ניצחון, ציון-משחק, ציון-כללי, לפי-משטח. לפי-משטח משלב 60% משטח / 40% כללי. שחקן יכול להיות מעולה על חימר וממוצע על דשא.'},
         {tag:'07', chip:'#f5b23d', title:'CLV — הארביטר', body:'דיוק-גבוה אינו edge — הוא משקף שמועדפים-ברורים מנצחים. ה-edge היחיד הוא מחיר טוב-יותר מקו-הסגירה לאורך זמן. כל קריאה נרשמת במחיר-הפתיחה ונסגרת מול קו-הסגירה. ניבוי אינו רווח.'},
         {tag:'08', chip:'#8791ab', title:'forward-only, ללא backfill', body:'כל שורה נרשמת קדימה-בלבד, בזמן-אמת. תוצאות מופיעות רק אחרי שמשחק נסגר — עם ניצח/הפסיד, אם הקריאה צדקה, וה-CLV מול קו-הסגירה.'},
-        {tag:'09', chip:'#20c997', title:'כיול Platt', body:'הסתברויות הניצחון עוברות Platt-scaling (כיול-לוגיסטי, holdout ECE 0.042→0.028) כך שבר-המנוע משקף הסתברות-אמיתית ולא פלט-גלם של המודל.'},
+        {tag:'09', chip:'#20c997', title:'כיול Platt', body:'הסתברויות הניצחון עוברות Platt-scaling (כיול-לוגיסטי) כך שבר-המנוע משקף הסתברות-אמיתית ולא פלט-גלם של המודל.'},
         {tag:'10', chip:'#8791ab', title:'סך-גיימים — אינדיקטיבי', body:'מודל הטוטאלים (מעל/מתחת גיימים) בשלב-6ב: פחות מ-200 טוטאלים שנסגרו, אין value-zone עדיין. Lambda (גיימים-צפויים) והקו מוצגים כשיוך-תיאורי בלבד. הארביטר, כרגיל, הוא CLV.'},
       ],
       howRows: [],
@@ -849,10 +843,9 @@ class Component extends DCLogic {
         open, detailDisp: open ? 'block' : 'none', chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
         ringColor, ringArc: `${(CIRC * t.callPct / 100).toFixed(1)} ${CIRC.toFixed(1)}`,
         hasMktH, mktDisp: hasMktH ? 'flex' : 'none',
-        engOver: engOver != null ? engOver : 50,
-        engUnder: engUnder != null ? engUnder : 50,
-        mktOver: t.mktOver != null ? t.mktOver : 50,
-        mktUnder: t.mktOver != null ? 100 - t.mktOver : 50,
+        engOver: engOver, engUnder: engUnder, engOverDisp: engOver != null ? 'flex' : 'none',
+        mktOver: t.mktOver, mktUnder: t.mktOver != null ? 100 - t.mktOver : null,
+        mktOverDisp: t.mktOver != null ? 'flex' : 'none',   // no market totals price in the data -> row hidden (was a fixed 50/50)
         gap: gapPct,
         hasValue: false,
         valueDisp: 'none',
@@ -946,10 +939,10 @@ class Component extends DCLogic {
 
     const ig = R.integrity || {};
     const integrity = {
-      n: ig.n || '—',
+      n: '—',                 // was the 61,182 backtest count: no script produces it
       drawdown: he ? 'אוסף' : 'collecting',
       brier: ig.brier || (he ? 'אוסף' : 'collecting'),
-      hit: ig.aplusHit || '—',
+      hit: '—',               // was 77.3%: no script produces it
     };
 
     const monthName = (m) => {

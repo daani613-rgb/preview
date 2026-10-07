@@ -238,6 +238,7 @@ const GUIDE_HE=`
     <p class="lead"><b>גודל-הפער אינו התשובה — האם יש הסבר הוא התשובה.</b></p></div>
 `;
 
+function signedVal(v,d){const n=Number(v); if(v===null||v===undefined||v===''||!isFinite(n)) return '—'; const a=(d!=null)?Math.abs(n).toFixed(d):String(Math.abs(n)); const z=Number(a)===0; return (z?'':(n>0?'+':'-'))+a;}  // sign from the value, never a fixed '+'
 class Component extends DCLogic {
   state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'power', signalSub: 'upcoming', openTile: null, showPrivacy: false };
 
@@ -750,6 +751,9 @@ class Component extends DCLogic {
 
     const R = window.REAL || {};
     const rf = R.feat || {};
+    // featured card only for a real open match from today on; otherwise an explained empty state (no fallback numbers shown)
+    const featHas = !!(rf.home && rf.away && rf.engPick != null);
+    const featEmptyMsg = he ? 'אין בנתונים משחק פתוח מהיום והלאה.' : 'There is no open match from today on in the data.';
 
     const fEng = rf.engPick != null ? rf.engPick : 63;
     const fMkt = rf.mktPick != null ? rf.mktPick : null;
@@ -1104,7 +1108,7 @@ class Component extends DCLogic {
       { label: he ? '🔥 הפתעה' : '🔥 Surprise', val: _rate(_tk.fireHit, _tk.fireN), sub: _tk.fireN ? `${_tk.fireHit}/${_tk.fireN}` : _na, color: '#ff9a5c' },
       { label: he ? '⚖️ נטיית-תיקו' : '⚖️ Draw-lean', val: _rate(_tk.scaleHit, _tk.scaleN), sub: _tk.scaleN ? `${_tk.scaleHit}/${_tk.scaleN}` : _na, color: '#a855f7' },
       { label: he ? '🛑 זהירות' : '🛑 Caution', val: _rate(_tk.cautHit, _tk.cautN), sub: _tk.cautN ? `${_tk.cautHit}/${_tk.cautN}` : _na, color: '#ffb454' },
-      { label: he ? '💚 CLV' : '💚 CLV', val: _tk.clvAvg != null ? '+' + _tk.clvAvg + '%' : '—', sub: _tk.clvN ? `${_tk.clvN} ${he ? 'סטאפים' : 'staked'}` : _na, color: '#35e39a' },
+      { label: he ? '💚 CLV' : '💚 CLV', val: _tk.clvAvg != null ? signedVal(_tk.clvAvg) + '%' : '—', sub: _tk.clvN ? `${_tk.clvN} ${he ? 'סטאפים' : 'staked'}` : _na, color: '#35e39a' },
     ];
     const holdoutKpis = [
       { label: he ? 'דיוק-מנצח (holdout)' : 'Winner acc (holdout)', val: (_hk.accWin || '—') + '%', color: '#35e39a' },
@@ -1159,7 +1163,7 @@ class Component extends DCLogic {
     const freshStr = L.freshnessLabel + ': ' + L.freshnessStr;
 
     return {
-      ...L, navTabs, rankTabs, signalTabs, nav, feat, tiles, upcomingCards, completedTiles, allCards, dateCards, dateOptions, onDateSelect, dateSelLabel, rankRows, colH, stageBars, howBullets, howRows,
+      ...L, featHas, featEmpty: !featHas, featEmptyMsg, navTabs, rankTabs, signalTabs, nav, feat, tiles, upcomingCards, completedTiles, allCards, dateCards, dateOptions, onDateSelect, dateSelLabel, rankRows, colH, stageBars, howBullets, howRows,
       currentRankNote,
       featEdge: featEdgeStr, featEdgeTarget, featEdgePrefix, clvFinalStr,
       gauge: this.gauge(feat.engUnder, feat.mktUnder), clv: this.clvChart(), cal: this.cal(), drivers, integrity, clvSeg,

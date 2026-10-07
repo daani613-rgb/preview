@@ -129,6 +129,7 @@
       <div style="display:{{ dispSignals }}">
         <div>
           <!-- featured signal -->
+          <sc-if value="{{ featHas }}">
           <div style="position:relative;border-radius:22px;padding:2px;background:linear-gradient(135deg,rgba(53,227,154,0.5),rgba(74,158,255,0.22),rgba(245,178,61,0.32));box-shadow:0 30px 80px rgba(0,0,0,0.45);margin-bottom:28px">
             <div style="border-radius:20px;background:linear-gradient(160deg,#0b0f1c,#080a12);padding:34px 38px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px">
               <div>
@@ -184,6 +185,8 @@
               </div>
             </div>
           </div>
+          </sc-if>
+          <sc-if value="{{ featEmpty }}"><div style="border-radius:22px;padding:26px 30px;margin-bottom:28px;background:rgba(255,255,255,0.025);border:1px dashed rgba(255,255,255,0.14);font-size:15px;color:#c4c7d2;line-height:1.6">{{ featEmptyMsg }}</div></sc-if>
           <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8791ab;margin-bottom:14px">{{ boardCounter }}</div>
 
           <!-- Signal sub-tabs: Upcoming / Results / By date -->
