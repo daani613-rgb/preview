@@ -192,10 +192,10 @@ class Component extends DCLogic {
       sampleLabel: `held-out games · seasons ${hoSeasons}`, drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: `A+ hit rate · holdout · ${hoNAplus} calls`,
       navTabs: [ {id:'signals',icon:'⚡',label:'Signals'}, {id:'rankings',icon:'📊',label:'Rankings'}, {id:'track',icon:'🎯',label:'Track record'}, {id:'how',icon:'📖',label:'How it works'} ],
       rankTabs: [
-        {id:'teams_today',   group:'week',   icon:'🏙️', label:'Teams', depLabel:'this week'},
-        {id:'games',         group:'week',   icon:'🎲', label:'Games', depLabel:'this week'},
-        {id:'composite_today', group:'week', icon:'🔢', label:'Composite', depLabel:'this week'},
-        {id:'totals',        group:'week',   icon:'📈', label:'Totals', depLabel:'this week'},
+        {id:'teams_today',   group:'week',   icon:'🏙️', label:'Teams', depLabel:'upcoming'},
+        {id:'games',         group:'week',   icon:'🎲', label:'Games', depLabel:'upcoming'},
+        {id:'composite_today', group:'week', icon:'🔢', label:'Composite', depLabel:'upcoming'},
+        {id:'totals',        group:'week',   icon:'📈', label:'Totals', depLabel:'upcoming'},
         {id:'composite_overall', group:'season', icon:'⭐', label:'Composite', depLabel:'season-long'},
         {id:'elo_power',     group:'season', icon:'💪', label:'Power', depLabel:'season-long'},
         {id:'momentum',      group:'season', icon:'🔥', label:'Momentum', depLabel:'season-long'},
@@ -245,10 +245,10 @@ class Component extends DCLogic {
       sampleLabel: `משחקי holdout · עונות ${hoSeasons}`, drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: `דיוק A+ · holdout · ${hoNAplus} קריאות`,
       navTabs: [ {id:'signals',icon:'⚡',label:'סיגנלים'}, {id:'rankings',icon:'📊',label:'דירוגים'}, {id:'track',icon:'🎯',label:'ביצועים'}, {id:'how',icon:'📖',label:'איך זה עובד'} ],
       rankTabs: [
-        {id:'teams_today',   group:'week',   icon:'🏙️', label:'קבוצות', depLabel:'תלוי-שבוע'},
-        {id:'games',         group:'week',   icon:'🎲', label:'משחקים', depLabel:'תלוי-שבוע'},
-        {id:'composite_today', group:'week', icon:'🔢', label:'משולב', depLabel:'תלוי-שבוע'},
-        {id:'totals',        group:'week',   icon:'📈', label:'טוטאל', depLabel:'תלוי-שבוע'},
+        {id:'teams_today',   group:'week',   icon:'🏙️', label:'קבוצות', depLabel:'טרם שוחקו'},
+        {id:'games',         group:'week',   icon:'🎲', label:'משחקים', depLabel:'טרם שוחקו'},
+        {id:'composite_today', group:'week', icon:'🔢', label:'משולב', depLabel:'טרם שוחקו'},
+        {id:'totals',        group:'week',   icon:'📈', label:'טוטאל', depLabel:'טרם שוחקו'},
         {id:'composite_overall', group:'season', icon:'⭐', label:'משולב', depLabel:'כל-העונה'},
         {id:'elo_power',     group:'season', icon:'💪', label:'עוצמה', depLabel:'כל-העונה'},
         {id:'momentum',      group:'season', icon:'🔥', label:'מומנטום', depLabel:'כל-העונה'},
@@ -549,26 +549,26 @@ class Component extends DCLogic {
 
     if (rankSub === 'teams_today') {
       rankColHeaders = { c1: he ? 'קבוצה' : 'Team', c2: he ? 'הסתב\'' : 'p_win', c3: '' };
-      rankNote2 = he ? 'קבוצות-השבוע לפי הסתברות-ניצחון של המנוע (סיכוי המועדף). חמישה רבדים לפי קווינטיל.' : 'This week\'s teams by engine win probability (the favorite\'s chance). Five tiers by win-prob quintile.';
+      rankNote2 = he ? 'משחקי-השבוע שעוד לא שוחקו: המועדף בכל משחק לפי הסתברות-הניצחון של המנוע. חמישה רבדים לפי קווינטיל.' : 'This week\'s games not yet played: the favorite in each, by engine win probability. Five tiers by win-prob quintile.';
       rankRows = buildTiered(rankings.teams_today || [], r => r.team, r => (r.win_prob * 100).toFixed(1) + '%', null, null);
 
     } else if (rankSub === 'games') {
       rankColHeaders = { c1: he ? 'משחק' : 'Game', c2: he ? 'ביטחון' : 'Confidence', c3: he ? 'מועדף' : 'Favorite' };
-      rankNote2 = he ? 'משחקי-השבוע מהחד-משמעי לצמוד לפי ביטחון = |p − 0.5|.' : 'This week\'s games from most lopsided to closest by confidence = |p − 0.5|.';
+      rankNote2 = he ? 'משחקי-השבוע שעוד לא שוחקו, מהחד-משמעי לצמוד לפי ביטחון = |p − 0.5|.' : 'This week\'s games not yet played, from most lopsided to closest by confidence = |p − 0.5|.';
       rankRows = buildTiered(rankings.games || [], r => `${r.away} @ ${r.home}`,
         r => (r.confidence * 100).toFixed(0) + '%',
         r => `${r.favorite} ${(r.fav_prob * 100).toFixed(0)}%`, null);
 
     } else if (rankSub === 'composite_today') {
       rankColHeaders = { c1: he ? 'משחק' : 'Game', c2: he ? 'מנצח' : 'Winner', c3: he ? 'משולב' : 'Composite' };
-      rankNote2 = he ? 'ממוצע גאומטרי: מנצח 40% + Elo 30% + טוטאל 20% + נתונים 10%. חמישה רבדים לפי קווינטיל.' : 'Geometric mean: winner 40% + Elo 30% + totals 20% + data 10%. Five quintile tiers.';
+      rankNote2 = he ? 'משחקי-השבוע שעוד לא שוחקו. ממוצע גאומטרי: מנצח 40% + Elo 30% + טוטאל 20% + נתונים 10%. חמישה רבדים לפי קווינטיל.' : 'This week\'s games not yet played. Geometric mean: winner 40% + Elo 30% + totals 20% + data 10%. Five quintile tiers.';
       rankRows = buildTiered(rankings.composite_today || [], r => `${r.away} @ ${r.home}`,
         r => `${r.favorite} ${(r.fav_prob * 100).toFixed(0)}%`,
         r => r.composite.toFixed(1), null);
 
     } else if (rankSub === 'totals') {
       rankColHeaders = { c1: he ? 'משחק' : 'Game', c2: he ? 'נקודות צפויות' : 'Exp. total', c3: '' };
-      rankNote2 = he ? 'משחקי-השבוע לפי סך-הנקודות הצפוי, מהגבוה ביותר.' : 'This week\'s games by expected combined points, highest-scoring first.';
+      rankNote2 = he ? 'משחקי-השבוע שעוד לא שוחקו, לפי סך-הנקודות הצפוי, מהגבוה ביותר.' : 'This week\'s games not yet played, by expected combined points, highest-scoring first.';
       rankRows = buildTiered(rankings.totals || [], r => `${r.away} @ ${r.home}`,
         r => r.exp_total.toFixed(1), null, null);
 
@@ -625,6 +625,14 @@ class Component extends DCLogic {
       return o;
     });
 
+    const _weekCube = ['teams_today', 'games', 'composite_today', 'totals'].includes(rankSub);
+    const rankEmpty = _weekCube && rankRows.length === 0;
+    const rankEmptyMsg = he
+      ? 'אין כרגע משחקים שלפנינו — כל משחקי הלוח הנוכחי שוחקו או שלא נקבעו משחקים. התוצאות בכרטיסי המשחקים; הקובייה תתמלא כשייקבעו המשחקים הבאים.'
+      : 'No upcoming games right now — every game on the current slate has been played or none is scheduled. Results are on the game cards; this cube fills when the next games are set.';
+    const weekSecHead = he ? 'השבוע · משחקים שטרם שוחקו' : 'This week · games not yet played';
+    const seasonSecHead = he ? 'כל העונה · 32 הקבוצות' : 'Season-long · all 32 teams';
+
     const stageBars = L.stageBars.map(s => ({
       ...s,
       fill: s.pct >= 70 ? 'linear-gradient(90deg,#2fbf78,#35e39a)' : (s.pct >= 60 ? 'linear-gradient(90deg,#3d7fd0,#5aa9ff)' : 'rgba(255,255,255,0.22)'),
@@ -666,7 +674,7 @@ class Component extends DCLogic {
 
     return {
       ...L, navTabs, rankTabs, nav, rank, feat: feat || {}, tiles, rankRows, stageBars, howBullets,
-      rankColHeaders, rankNote2,
+      rankColHeaders, rankNote2, rankEmpty, rankEmptyMsg, weekSecHead, seasonSecHead,
       dateFilterTabs, freshnessLabel,
       gamesView, weekChips, showWeekChips, showGamesList, showBoard,
       gamesListEmpty, gamesListEmptyMsg, gamesCountLabel,
