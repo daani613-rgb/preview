@@ -1,11 +1,33 @@
 /* hub portal */
 class Component extends DCLogic {
-  state = { lang: 'en' };
+  state = { lang: 'en', st: {} };
+
+  // Status from data: the date of each engine's latest real game data, read from the payload it
+  // publishes (line 2 of <sport>/app.js = window.REAL). Within 7 days -> in season, else between seasons.
+  loadStatus() {
+    const pick = {
+      mlb: R => { const d = []; if (R.slate && R.slate.games > 0 && R.slate.date) d.push(R.slate.date);
+                  Object.entries(R.journalByDate || {}).forEach(([k, es]) => { if ((es || []).some(e => e.played)) d.push(k); }); return d; },
+      nba: R => (R.resultsHistory || []).map(r => r.date),
+      worldcup: R => (R.matches || []).filter(m => m.decided).map(m => m.date),
+      nfl: R => (R.games || []).filter(g => g.played).map(g => g.date),
+      tennis: R => (R.games || []).filter(g => g.played).map(g => String(g.date).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3')),
+    };
+    Object.keys(pick).forEach(sp => {
+      fetch(`./${sp}/app.js`, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject(r.status)).then(txt => {
+        const line = txt.split('\n')[1] || '';
+        const R = JSON.parse(line.slice(line.indexOf('=') + 1).trim().replace(/;$/, ''));
+        const ds = pick[sp](R).filter(x => /^\d{4}-\d{2}-\d{2}/.test(String(x))).map(x => String(x).slice(0, 10)).sort();
+        this.setState(s => ({ st: { ...s.st, [sp]: ds.length ? ds[ds.length - 1] : null } }));
+      }).catch(() => { this.setState(s => ({ st: { ...s.st, [sp]: null } })); });
+    });
+  }
 
   setCanvas = (el) => { this.canvasEl = el; };
 
   componentDidMount() {
     this._alive = true;
+    this.loadStatus();
     this._dirty = true;                               // force a size pass on the first frame
     this._onResize = () => { this._dirty = true; };   // window resize / rotate → re-size next frame
     window.addEventListener('resize', this._onResize);
@@ -158,7 +180,7 @@ class Component extends DCLogic {
       eyebrow: 'שיטת מסחר ממושמעת · ספורט',
       h1a: 'לא ניחוש.',
       h1b: 'חיזוי בשיטה.',
-      subtitle: 'חמישה מנועים חוזים תוצאות ספורט בשיטת מסחר ממושמעת — מדברים רק על קריאות בביטחון גבוה, ושותקים בשאר. כל בוקר, מכוילים מחדש.',
+      subtitle: 'חמישה מנועים חוזים תוצאות ספורט בשיטת מסחר ממושמעת, מדברים רק על קריאות בביטחון גבוה ושותקים בשאר. מתעדכן בין פעם ביום לכמה פעמים ביום, לפי המנוע. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.',
       cta1: 'צפה בקריאות של היום',
       cta2: 'איך זה עובד',
       sectionKicker: 'חמשת המנועים',
@@ -166,13 +188,13 @@ class Component extends DCLogic {
       sectionSub: 'חמישה מנועים, לכל אחד בדיקה לאחור משלו ושיא חי משלו. המספרים והתאריכים נמצאים בדף של כל מנוע.',
       overallLabel: 'דיוק כללי',
       openLabel: 'פתח מנוע',
-      footer: 'כל המנועים מכוילים על נתונים היסטוריים שלא נחשפו למודל. ה-tail, הטוטאל וה-CLV נסגרים על נתונים אמיתיים עם פתיחת העונות.',
+      footer: 'ה-tail, הטוטאל וה-CLV נסגרים על נתונים אמיתיים עם פתיחת העונות.',
       engines: [
-        { emoji:'🏀', name:'NBA', tag:'Elo + 9 שלבים', method:'Elo מותאם קצב עם קריאת תשעה שלבים.', status:'off', statusTextHe:'מחוץ לעונה · חוזר באוקטובר' },
-        { emoji:'⚽', name:'מונדיאל 2026', tag:'Elo בינלאומי', method:'דירוג נבחרות בינלאומי עם משמעת ביטחון. קריאות דו-כיווניות לכל משחק בטורניר.', status:'live', statusTextHe:'חי · הטורניר פעיל' },
-        { emoji:'⚾', name:'בייסבול MLB', tag:'Elo + שלבים', method:'Elo עם משמעת שלבים.', status:'season', statusTextHe:'בעונה · פעיל' },
-        { emoji:'🏈', name:'NFL', tag:'Elo מודע-מרווח', method:'Elo מודע-מרווח עם תשעה שלבים.', status:'off', statusTextHe:'מחוץ לעונה · פתיחה 9.9' },
-        { emoji:'🎾', name:'טניס ATP', tag:'Elo משטח-משוקלל', method:'Elo משוקלל-משטח עם שלבים. CLV נמדד קדימה.', status:'live', statusTextHe:'חי · מתעדכן יומית' },
+        { emoji:'🏀', name:'NBA', tag:'Elo + 9 שלבים', method:'Elo מותאם קצב עם קריאת תשעה שלבים.' },
+        { emoji:'⚽', name:'מונדיאל 2026', tag:'Elo בינלאומי', method:'דירוג נבחרות בינלאומי עם משמעת ביטחון. קריאות דו-כיווניות לכל משחק בטורניר.' },
+        { emoji:'⚾', name:'בייסבול MLB', tag:'Elo + שלבים', method:'Elo עם משמעת שלבים.' },
+        { emoji:'🏈', name:'NFL', tag:'Elo מודע-מרווח', method:'Elo מודע-מרווח עם תשעה שלבים.' },
+        { emoji:'🎾', name:'טניס ATP', tag:'Elo משטח-משוקלל', method:'Elo משוקלל-משטח עם שלבים. CLV נמדד קדימה.' },
       ],
     };
     const en = {
@@ -181,7 +203,7 @@ class Component extends DCLogic {
       eyebrow: 'A disciplined trading method · sports',
       h1a: 'Not a guess.',
       h1b: 'A method.',
-      subtitle: 'Five engines forecast sports outcomes with a disciplined trading method — speaking only on high-confidence calls, silent otherwise. Recalibrated every morning.',
+      subtitle: 'Five engines forecast sports outcomes with a disciplined trading method, speaking only on high-confidence calls and silent otherwise. Updated once to several times a day, depending on the engine. Scheduled runs are often delayed or skipped.',
       cta1: "See today's calls",
       cta2: 'How it works',
       sectionKicker: 'The five engines',
@@ -189,13 +211,13 @@ class Component extends DCLogic {
       sectionSub: 'Five engines, each with its own backtest and its own live record. Figures and dates are on each engine\u2019s page.',
       overallLabel: 'overall accuracy',
       openLabel: 'Open engine',
-      footer: 'All engines are calibrated on historical data never shown to the model. Tail, total and CLV settle on real data as the seasons open.',
+      footer: 'Tail, total and CLV settle on real data as the seasons open.',
       engines: [
-        { emoji:'🏀', name:'NBA', tag:'Elo + 9 stages', method:'Pace-adjusted Elo with a nine-stage read.', status:'off', statusTextHe:'Offseason · returns October' },
-        { emoji:'⚽', name:'World Cup 2026', tag:'International Elo', method:'International team rating with confidence discipline. Two-way calls on every tournament match.', status:'live', statusTextHe:'Live · tournament on' },
-        { emoji:'⚾', name:'MLB', tag:'Elo + stages', method:'Elo with stage discipline.', status:'season', statusTextHe:'In season · active' },
-        { emoji:'🏈', name:'NFL', tag:'Margin-aware Elo', method:'Margin-aware Elo with nine stages.', status:'off', statusTextHe:'Offseason · kicks off Sep 9' },
-        { emoji:'🎾', name:'ATP Tennis', tag:'Surface-blended Elo', method:'Surface-weighted Elo with stages. Forward CLV tracked.', status:'live', statusTextHe:'Live · updates daily' },
+        { emoji:'🏀', name:'NBA', tag:'Elo + 9 stages', method:'Pace-adjusted Elo with a nine-stage read.' },
+        { emoji:'⚽', name:'World Cup 2026', tag:'International Elo', method:'International team rating with confidence discipline. Two-way calls on every tournament match.' },
+        { emoji:'⚾', name:'MLB', tag:'Elo + stages', method:'Elo with stage discipline.' },
+        { emoji:'🏈', name:'NFL', tag:'Margin-aware Elo', method:'Margin-aware Elo with nine stages.' },
+        { emoji:'🎾', name:'ATP Tennis', tag:'Surface-blended Elo', method:'Surface-weighted Elo with stages. Forward CLV tracked.' },
       ],
     };
     return this.state.lang === 'he' ? he : en;
@@ -210,7 +232,18 @@ class Component extends DCLogic {
       '🏈': { c1:'#a78bfa', c2:'#c4b0ff', glow:'rgba(167,139,250,0.22)', chip:'rgba(167,139,250,0.12)', chipB:'rgba(167,139,250,0.3)' },
       '🎾': { c1:'#c4f542', c2:'#d9fa78', glow:'rgba(196,245,66,0.2)', chip:'rgba(196,245,66,0.12)', chipB:'rgba(196,245,66,0.3)' },
     };
-    const statusColors = { live:'#34e08a', season:'#3d9bff', off:'#8f8fa1' };
+    const statusColors = { season:'#34e08a', off:'#8f8fa1', none:'#8f8fa1' };
+    const he = this.state.lang === 'he';
+    const slug = { '🏀':'nba', '⚽':'worldcup', '⚾':'mlb', '🏈':'nfl', '🎾':'tennis' };
+    const today = new Date(); const todayUTC = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+    const statusOf = (sp) => {
+      const d = this.state.st[sp];
+      if (!d) return { status: 'none', text: '—' };
+      const age = (todayUTC - Date.parse(d + 'T00:00:00Z')) / 86400000;
+      const inSeason = age <= 7;
+      return { status: inSeason ? 'season' : 'off',
+               text: (inSeason ? (he ? 'בעונה' : 'In season') : (he ? 'בין עונות' : 'Between seasons')) + ' · ' + (he ? 'נתון אחרון ' : 'last data ') + d };
+    };
     const hrefs = {
       '🏀': './nba/',
       '⚽': './worldcup/',
@@ -221,9 +254,9 @@ class Component extends DCLogic {
     const engines = d.engines.map(e => ({
       ...e,
       ...palette[e.emoji],
-      isLive: e.status === 'live',
-      statusText: e.statusTextHe,
-      statusColor: statusColors[e.status],
+      isLive: statusOf(slug[e.emoji]).status === 'season',
+      statusText: statusOf(slug[e.emoji]).text,
+      statusColor: statusColors[statusOf(slug[e.emoji]).status],
       href: hrefs[e.emoji],
       open: () => { window.location.href = hrefs[e.emoji]; },
     }));

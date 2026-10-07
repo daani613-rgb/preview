@@ -78,8 +78,8 @@ const GUIDE_TENNIS=`
 
     <div class="gsec">
       <h3><span class="snum">8</span><span class="l-he">כיול ההסתברות</span><span class="l-en">Probability calibration</span></h3>
-      <p><span class="l-he">הסתברות-המנוע הגולמית נוטה לביטחון-יתר. שכבת-כיול (Platt) מכווצת אותה לשקף את <b>שיעור-הניצחון בפועל</b> (אומת: ECE ירד בחצי, הדיוק ללא-שינוי). הבר "מנוע" מציג את ההסתברות-המכוילת. ⚠️ ה<b>קריאה</b> ותג ה-<b>A+</b> נקבעים מ-Elo הגולמי — הכיול משפיע על התצוגה בלבד, לא על מי-שנבחר.</span>
-        <span class="l-en">The raw engine probability tends to be over-confident. A calibration layer (Platt) shrinks it to reflect the <b>actual win rate</b> (validated: ECE halved, accuracy unchanged). The "Engine" bar shows the calibrated probability. ⚠️ The <b>pick</b> and the <b>A+</b> tag are decided from the raw Elo — calibration affects the display only, not which side is chosen.</span></p>
+      <p><span class="l-he">הסתברות-המנוע הגולמית נוטה לביטחון-יתר. שכבת-כיול (Platt) מכווצת אותה לשקף את <b>שיעור-הניצחון בפועל</b> (בדיקה לאחור: ECE ירד בחצי, הדיוק ללא-שינוי). הבר "מנוע" מציג את ההסתברות-המכוילת. ⚠️ ה<b>קריאה</b> ותג ה-<b>A+</b> נקבעים מ-Elo הגולמי — הכיול משפיע על התצוגה בלבד, לא על מי-שנבחר.</span>
+        <span class="l-en">The raw engine probability tends to be over-confident. A calibration layer (Platt) shrinks it to reflect the <b>actual win rate</b> (backtest: ECE halved, accuracy unchanged). The "Engine" bar shows the calibrated probability. ⚠️ The <b>pick</b> and the <b>A+</b> tag are decided from the raw Elo — calibration affects the display only, not which side is chosen.</span></p>
     </div>
 
     <div class="gsec">
@@ -323,15 +323,15 @@ class Component extends DCLogic {
       engineWord: 'Engine', marketWord: 'Pinnacle', callWord: 'Call', stageWord: 'stage', overWord: 'OVER', underWord: 'UNDER', homeWord: 'Fav', awayWord: 'Dog', starterPrefix: 'surface · Elo blend:',
       validatedHead: 'BACKTEST ACCURACY · HOLDOUT',
       clvTitle: 'Cumulative CLV', clvSub: `No-vig, vs Pinnacle's closing line · ${RC.n} closed-line matches (${RC.pos} positive). >0 = engine beat the market's move.`,
-      calTitle: 'Calibration', calSub: 'Reference diagonal shown. Engine curve not displayed — per-stage calibration is computed in the full holdout report and is not exposed in this live feed.',
-      predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy & calibration are computed in the full holdout report — not exposed in this live feed.',
+      calTitle: 'Calibration', calSub: 'Reference diagonal shown. The engine curve and per-stage calibration are not part of this live feed.',
+      predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy and calibration are not part of this live feed.',
       detailsWord: 'Total games', runsWord: 'games', lineWord: 'line',
-      stageTitle: 'Accuracy by stage', stageSub: 'Per-stage accuracy is computed in the full holdout report — not exposed in this live feed. Overall: 63.7% · A+ (stage 8/9): 77.3% · source: holdout test, 61,182 matches.',
+      stageTitle: 'Accuracy by stage', stageSub: 'Per-stage accuracy is not part of this live feed. Overall: 63.7% · A+ (stage 8/9): 77.3% · source: holdout test, 61,182 matches.',
       rankNote: 'Players in action today, ranked by engine win probability and grouped into blended-Elo tiers.',
       teamCol: 'Player', pwinCol: 'p_win', annotatedLabel: 'Annotated example — one match', guideLabel: 'The full guide — how to read this page', dateSelLabel: 'Pick date',
       eloExplain: '= who wins (the call).', fipExplain: '= how sure (calibrates it).',
       disclaimer: 'For information and entertainment only · Not betting advice · Play responsibly · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
-      driversHead: 'Why this signal · top drivers', integrityHead: 'Model integrity', verifiedBadge: 'Verified vs Pinnacle close',
+      driversHead: 'Why this signal · top drivers', integrityHead: 'Model integrity',
       sampleLabel: 'signals', drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate', clvSegHead: 'CLV by segment · > 0 beats the close',
       navTabs: [ {id:'signals',icon:'⚡',label:'Signals'}, {id:'rankings',icon:'📊',label:'Rankings'}, {id:'track',icon:'🎯',label:'Track record'}, {id:'how',icon:'📖',label:'How it works'} ],
       // 4 distinct ranking cube tabs (data-driven)
@@ -371,7 +371,7 @@ class Component extends DCLogic {
         {tag:'06', chip:'#5aa9ff', title:'Surface ratings', body:'The "Rankings" tab opens 4 cubes — Win prob, Match score, Overall, By surface. By-surface blends 60% surface / 40% overall Elo. A player can dominate clay but be average on grass; the blend captures that.'},
         {tag:'07', chip:'#f5b23d', title:'CLV is the arbiter', body:'High accuracy is not edge — it reflects that clear favorites win. The only edge is a better price than the closing line, over time. We record every call at Pinnacle\'s opening price and settle it against the closing line. A prediction is not a profit.'},
         {tag:'08', chip:'#8791ab', title:'Forward-only, no backfill', body:'Every row in the journal is recorded forward-only, in real time. Results appear only after a match settles — with won/lost, whether the engine was right, and the CLV against the closing line.'},
-        {tag:'09', chip:'#20c997', title:'Platt calibration', body:'Win probabilities are Platt-scaled (logistic recalibration, validated holdout ECE 0.042→0.028) so the engine bar reflects true probability, not raw model output.'},
+        {tag:'09', chip:'#20c997', title:'Platt calibration', body:'Win probabilities are Platt-scaled (logistic recalibration, backtest holdout ECE 0.042→0.028) so the engine bar reflects true probability, not raw model output.'},
         {tag:'10', chip:'#8791ab', title:'Total games — indicative', body:'The totals model (over/under games) is at step-6b: <200 settled totals, no value-zone yet. Lambda (expected games) and the line are shown as a descriptive lean only. The arbiter, as always, is CLV.'},
       ],
       howRows: [],
@@ -383,15 +383,15 @@ class Component extends DCLogic {
       engineWord: 'מנוע', marketWord: 'Pinnacle', callWord: 'קריאה', stageWord: 'שלב', overWord: 'מעל', underWord: 'מתחת', homeWord: 'מועדף', awayWord: 'מוחלש', starterPrefix: 'משטח · שילוב-Elo:',
       validatedHead: 'דיוק בבדיקה לאחור · HOLDOUT',
       clvTitle: 'CLV מצטבר', clvSub: `ללא-vig, מול קו הסגירה של Pinnacle · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים). מעל 0 = המנוע ניצח את תנועת השוק.`,
-      calTitle: 'כיול (Calibration)', calSub: 'מוצג האלכסון כקו ייחוס. עקומת המנוע אינה מוצגת — כיול לפי שלב מחושב בדוח ה-holdout המלא ואינו חשוף בפיד החי.',
-      predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'Per-stage accuracy & calibration are computed in the full holdout report — not exposed in this live feed.',
+      calTitle: 'כיול (Calibration)', calSub: 'מוצג האלכסון כקו ייחוס. עקומת המנוע וכיול לפי שלב אינם חלק מהפיד החי הזה.',
+      predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
       detailsWord: 'סך גיימים', runsWord: 'גיימים', lineWord: 'קו',
-      stageTitle: 'דיוק לפי שלב', stageSub: 'דיוק לפי שלב מחושב בדוח ה-holdout המלא — אינו חשוף בפיד החי. כללי: 63.7% · A+ (שלב 8/9): 77.3% · מקור: holdout, 61,182 מאצ\'ים.',
+      stageTitle: 'דיוק לפי שלב', stageSub: 'דיוק לפי שלב אינו חלק מהפיד החי הזה. כללי: 63.7% · A+ (שלב 8/9): 77.3% · מקור: holdout, 61,182 מאצ\'ים.',
       rankNote: 'השחקנים שמשחקים היום, מדורגים לפי הסתברות ניצחון ומקובצים לטירות Elo משולב.',
       teamCol: 'שחקן', pwinCol: 'הסתברות', annotatedLabel: 'דוגמה מבוארת — משחק אחד', guideLabel: 'המדריך המלא — איך לקרוא את הדף', dateSelLabel: 'בחר תאריך',
       eloExplain: '= מי מנצח (הקריאה).', fipExplain: '= כמה בטוח (מכייל).',
       disclaimer: 'למידע ובידור בלבד · אינו ייעוץ הימורים · שחק באחריות · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
-      driversHead: 'למה הסיגנל הזה · הגורמים המובילים', integrityHead: 'שלמות המודל', verifiedBadge: 'מאומת מול סגירת Pinnacle',
+      driversHead: 'למה הסיגנל הזה · הגורמים המובילים', integrityHead: 'שלמות המודל',
       sampleLabel: 'סיגנלים', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+', clvSegHead: 'CLV לפי פילוח · מעל 0 מנצח את הסגירה',
       navTabs: [ {id:'signals',icon:'⚡',label:'סיגנלים'}, {id:'rankings',icon:'📊',label:'דירוגים'}, {id:'track',icon:'🎯',label:'ביצועים'}, {id:'how',icon:'📖',label:'איך זה עובד'} ],
       rankTabs: [

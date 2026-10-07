@@ -233,7 +233,7 @@ class Component extends DCLogic {
       heroTitle: 'The NBA engine, live.', heroSub: `Two models per game, winner and total points. Updated once a day. Scheduled runs are often delayed or skipped. Off-season now, next season tips off October 2026.`,
       signalKicker: 'The A+ call · season signals', edgeLabel: 'Edge vs market', runsLabel: 'expected points', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'HIGH', underWord: 'LOW', homeWord: 'Home', awayWord: 'Away', starterPrefix: 'rest-aware:',
-      validatedHead: 'BACKTEST ACCURACY · HOLDOUT',
+      validatedHead: 'WALK-FORWARD RECONSTRUCTION',
       clvTitle: 'Cumulative CLV', clvSub: 'No-vig, vs closing line · collecting — settles as the season plays out from October. No closing-line journal exists yet for current season.',
       calTitle: 'Calibration', calSub: 'Predicted probability vs what actually happened. On the diagonal = perfectly calibrated.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'The engine hugs the diagonal — slightly conservative at the high end, which is exactly what you want.',
@@ -271,11 +271,10 @@ class Component extends DCLogic {
       ],
       howBullets: [
         {tag:'01', chip:'#35e39a', title:'Engine vs market is the whole point', body:'The engine bar is our most accurate probability per team; the market bar is what the book thinks. The comparison is the signal.'},
-        {tag:'02', chip:'#f5b23d', title:'Elo picks, rest calibrates', body:'Elo decides who wins; rest and schedule spots (B2B fatigue: +6.7pp surprise, z=4.02) tune how confident we are. Each does what it\'s best at.'},
+        {tag:'02', chip:'#f5b23d', title:'Elo picks, rest calibrates', body:'Elo decides who wins; rest and schedule spots tune how confident we are. Each does what it\'s best at.'},
         {tag:'03', chip:'#f5b23d', title:'A+ = gap + cushion + calibrated', body:'A signal only fires when the edge clears a cushion and sits in a calibrated zone. A huge gap alone is usually model error.'},
         {tag:'04', chip:'#8791ab', title:'Quiet is part of the method', body:'When the engine agrees with the market, the card dims and stays quiet. In-line with market is fine — not every game is a call.'},
-        {tag:'05', chip:'#f5b23d', title:'B2B fatigue — real edge (+6.7pp)', body:'Back-to-back games create a measurable fatigue advantage for the rested team. The engine tags B2B situations and up-weights the upset probability accordingly (z=4.02, validated on historical data).'},
-        {tag:'06', chip:'#8791ab', title:'Calibration — the diagonal test', body:'A well-calibrated model means: when it says 70%, the team wins ~70% of the time. The engine passes this test across 4 confidence bands on 2,643 held-out games.'},
+        {tag:'06', chip:'#8791ab', title:'Calibration — the diagonal test', body:'A well-calibrated model means: when it says 70%, the team wins ~70% of the time. The engine passes this test across 4 confidence bands (walk-forward reconstruction over 6,333 games, seasons 2021-22 to 2025-26; not a held-out split).'},
         {tag:'07', chip:'#35e39a', title:'Composite score = Elo + momentum', body:'Power rankings blend two signals geometrically: Elo (who won over the season) and 10-game momentum (recent direction). A rising team overtakes a fading one with the same Elo.'},
       ],
       howExplainers: [
@@ -291,14 +290,14 @@ class Component extends DCLogic {
         {v: 'collecting', k:'CLV', color:'#f5b23d'},
       ],
       kpis: [
-        {display: String(aplusAcc), target: aplusAcc, dec:0, prefix:'', u:'%', tag:'A+', d:`A+ calls, stage 8/9 + confidence, ${aplusN} predictions.`},
-        {display: overall.toFixed(1), target: overall, dec:1, prefix:'', u:'%', d:`Overall accuracy · ${(acc.allN||2643).toLocaleString()} settled games · beats always-home baseline.`},
+        {display: String(aplusAcc), target: aplusAcc, dec:0, prefix:'', u:'%', tag:'A+', d:`Walk-forward reconstruction over ${aplusN} games (engine confidence ≥80%), seasons 2021-22 to 2025-26. Not a held-out split.`},
+        {display: overall.toFixed(1), target: overall, dec:1, prefix:'', u:'%', d:`Walk-forward reconstruction over ${acc.allN != null ? acc.allN.toLocaleString() : '—'} games, 2024-10-22 to 2026-06-13. Not a held-out split.`},
         {display:'collecting', target:'', u:'', d:'Totals over/under direction · collecting — settles from October 2026.'},
         {display:'collecting', target:'', u:'', d:'Cumulative CLV · vs closing line · collecting from October 2026.'},
       ],
       stageBars: [],
-      stageNote: 'Per-stage accuracy & calibration are computed in the full holdout report — not exposed in this live feed.',
-      stageNoteHe: 'דיוק לפי שלב וכיול מחושבים בדוח ה-holdout המלא — לא חשופים בפיד החי.',
+      stageNote: 'Per-stage accuracy and calibration are not part of this live feed.',
+      stageNoteHe: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
       howRows: [],
       freshTs,
     };
@@ -307,7 +306,7 @@ class Component extends DCLogic {
       heroTitle: 'מנוע החיזוי של NBA', heroSub: `שני מודלים לכל משחק, מנצח וסך נקודות. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות. עונת הפסקה כעת, העונה הבאה נפתחת באוקטובר 2026.`,
       signalKicker: 'קריאות A+ · אות העונה', edgeLabel: 'Edge מול השוק', runsLabel: 'נקודות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ', starterPrefix: 'מודע-מנוחה:',
-      validatedHead: 'דיוק בבדיקה לאחור · HOLDOUT',
+      validatedHead: 'שחזור WALK-FORWARD',
       clvTitle: 'CLV מצטבר', clvSub: 'ללא-vig, מול קו הסגירה · נצבר — נסגר ככל שהעונה מתקדמת מאוקטובר. אין יומן קו-סגירה לעונה הנוכחית.',
       calTitle: 'כיול (Calibration)', calSub: 'הסתברות חזויה מול מה שקרה בפועל. על האלכסון = מכויל בול.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'המנוע צמוד לאלכסון — מעט שמרני בקצה הגבוה, בדיוק כפי שרוצים.',
@@ -345,11 +344,10 @@ class Component extends DCLogic {
       ],
       howBullets: [
         {tag:'01', chip:'#35e39a', title:'מנוע מול שוק — זה כל העניין', body:'בר המנוע הוא ההסתברות המדויקת ביותר לכל קבוצה; בר השוק הוא מה שהבוקי חושב. ההשוואה ביניהם היא הסיגנל.'},
-        {tag:'02', chip:'#f5b23d', title:'Elo בוחר, מנוחה מכייל', body:'Elo מחליט מי מנצח; מנוחה ולוח-משחקים (B2B עייפות: +6.7 נק׳ הפתעה, z=4.02) מכווננים כמה אנחנו בטוחים. כל אחד עושה את מה שהוא הכי טוב בו.'},
+        {tag:'02', chip:'#f5b23d', title:'Elo בוחר, מנוחה מכייל', body:'Elo מחליט מי מנצח; מנוחה ולוח-משחקים מכווננים כמה אנחנו בטוחים. כל אחד עושה את מה שהוא הכי טוב בו.'},
         {tag:'03', chip:'#f5b23d', title:'A+ = פער + כרית + מכויל', body:'סיגנל נורה רק כשה-Edge עובר כרית ביטחון ויושב באזור מכויל. פער ענק לבדו הוא בדרך כלל טעות מודל.'},
         {tag:'04', chip:'#8791ab', title:'שקט הוא חלק מהשיטה', body:'כשהמנוע מסכים עם השוק, הכרטיס מתעמעם ושותק. להיות בקו עם השוק זה בסדר — לא כל משחק הוא קריאה.'},
-        {tag:'05', chip:'#f5b23d', title:'עייפות B2B — edge אמיתי (+6.7pp)', body:'משחקים גב-אל-גב יוצרים יתרון מנוחה מדיד לקבוצה הנחה. המנוע מתייג מצבי B2B ומגדיל את הסתברות-ההפתעה בהתאם (z=4.02, אומת על נתונים היסטוריים).'},
-        {tag:'06', chip:'#8791ab', title:'כיול — מבחן האלכסון', body:'מודל מכויל היטב אומר: כשהוא אומר 70%, הקבוצה מנצחת ~70% מהזמן. המנוע עובר מבחן זה על 4 רצועות-ביטחון על 2,643 משחקי holdout.'},
+        {tag:'06', chip:'#8791ab', title:'כיול — מבחן האלכסון', body:'מודל מכויל היטב אומר: כשהוא אומר 70%, הקבוצה מנצחת ~70% מהזמן. המנוע עובר מבחן זה על 4 רצועות-ביטחון (שחזור walk-forward על 6,333 משחקים, עונות 2021-22 עד 2025-26; לא חלוקת holdout).'},
         {tag:'07', chip:'#35e39a', title:'ציון-משולב = Elo + מומנטום', body:'דירוגי-עוצמה ממזגים שני אותות גאומטרית: Elo (מי ניצח לאורך העונה) ומומנטום-10-משחקים (כיוון אחרון). קבוצה בעלייה עוקפת דועכת עם אותו Elo.'},
       ],
       howExplainers: [
@@ -365,14 +363,14 @@ class Component extends DCLogic {
         {v: 'נצבר', k:'CLV', color:'#f5b23d'},
       ],
       kpis: [
-        {display: String(aplusAcc), target: aplusAcc, dec:0, prefix:'', u:'%', tag:'A+', d:`קריאות A+, שלב 8/9 + ביטחון, ${aplusN} ניבויים.`},
-        {display: overall.toFixed(1), target: overall, dec:1, prefix:'', u:'%', d:`דיוק כללי · ${(acc.allN||2643).toLocaleString()} משחקים שהוכרעו · מנצח את בסיס "תמיד-בית".`},
+        {display: String(aplusAcc), target: aplusAcc, dec:0, prefix:'', u:'%', tag:'A+', d:`שחזור walk-forward על ${aplusN} משחקים (ביטחון מנוע ≥80%), עונות 2021-22 עד 2025-26. לא חלוקת holdout.`},
+        {display: overall.toFixed(1), target: overall, dec:1, prefix:'', u:'%', d:`שחזור walk-forward על ${acc.allN != null ? acc.allN.toLocaleString() : '—'} משחקים, 2024-10-22 עד 2026-06-13. לא חלוקת holdout.`},
         {display:'נצבר', target:'', u:'', d:'כיוון מעל/מתחת · נצבר — נסגר מאוקטובר 2026.'},
         {display:'נצבר', target:'', u:'', d:'CLV מצטבר · מול קו הסגירה · נצבר מאוקטובר 2026.'},
       ],
       stageBars: [],
-      stageNote: 'Per-stage accuracy & calibration are computed in the full holdout report — not exposed in this live feed.',
-      stageNoteHe: 'דיוק לפי שלב וכיול מחושבים בדוח ה-holdout המלא — לא חשופים בפיד החי.',
+      stageNote: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
+      stageNoteHe: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
       howRows: [],
       freshTs,
     };
@@ -564,16 +562,19 @@ class Component extends DCLogic {
     const fEngPick = rf.engPick != null ? rf.engPick : 60;
     const fMktPick = rf.mktPick != null ? rf.mktPick : null;
     const fEdge    = (rf.edge != null && !isOffseason) ? rf.edge : null;
+    // A historical winner-pick card (rf.kind === 'historical'): the % is the engine's WIN probability for
+    // rf.pickCode, not a totals %; totals fields are '—' (no value for that game in the data).
+    const isHist = rf.kind === 'historical';
     const feat = {
       away: rf.away || '', home: rf.home || '', time: (he ? (rf.timeHe || rf.time) : rf.time) || '',
-      pick: he ? 'גבוה' : 'HIGH',
-      line: rf.lambda ? String(rf.lambda) : '—',
+      pick: isHist ? (rf.pickCode || '—') : (he ? 'גבוה' : 'HIGH'),
+      line: isHist ? (rf.engPick != null ? (he ? `${rf.engPick}% לניצחון` : `${rf.engPick}% to win`) : '—') : (rf.lambda ? String(rf.lambda) : '—'),
       lambda: rf.lambda || '—', stage: rf.stage != null ? String(rf.stage) : '—',
       engUnder: 100 - fEngPick,
       mktUnder: fMktPick != null ? (100 - fMktPick) : null,
       edge: fEdge, edgeStr: fEdge != null ? (fEdge >= 0 ? '+' : '') + fEdge + '%' : '—',
       hasMkt: fMktPick != null && !isOffseason,
-      blurb: he
+      blurb: isHist ? ((rf.note && (he ? rf.note.he : rf.note.en)) || '') : he
         ? (fMktPick != null && !isOffseason
             ? 'המנוע רואה ' + fEngPick + '% גבוה מול ' + (100-fMktPick) + '% בשוק — פער + כרית + מכויל. השערה למדידה, לא רווח מובטח · ה-CLV מכריע.'
             : 'המנוע רואה ' + fEngPick + '% גבוה. אין קו-שוק כרגע — אינדיקטיבי.')
@@ -686,15 +687,12 @@ class Component extends DCLogic {
     const drivers = isOffseason
       ? [
           { label: he?'יתרון דירוג Elo (גורם עיקרי)':'Elo rating edge (primary factor)', val:'', arrow:'▲', color:'#35e39a' },
-          { label: he?'עייפות B2B (+6.7pp, z=4.02)':'B2B fatigue edge (+6.7pp, z=4.02)', val:'', arrow:'▲', color:'#f5b23d' },
           { label: he?'יתרון מגרש ביתי (HCA)':'Home-court advantage (HCA)', val:'', arrow:'●', color:'#8791ab' },
         ]
       : [
           { label: he?'יתרון דירוג Elo מול שוק':'Elo rating edge vs market', val: feat.edgeStr, arrow:'▲', color:'#35e39a' },
-          hasB2b
-            ? { label: he?'עייפות B2B (+6.7pp, z=4.02)':'B2B fatigue edge (+6.7pp, z=4.02)', val:'⚠️', arrow:'▲', color:'#f5b23d' }
-            : { label: he?'יתרון בית (HCA)':'Home-court advantage (HCA)', val:'', arrow:'▲', color:'#f5b23d' },
-          { label: he?'טוטאל off/def מותאם':'Adjusted off/def total', val:(rf.lambda||'—')+' pts', arrow:'●', color:'#8791ab' },
+          { label: he?'יתרון בית (HCA)':'Home-court advantage (HCA)', val:'', arrow:'▲', color:'#f5b23d' },
+          { label: he?'טוטאל off/def מותאם':'Adjusted off/def total', val:(rf.lambda ? rf.lambda+' pts' : '—'), arrow:'●', color:'#8791ab' },
         ];
 
     const ig = R.integrity || {};
@@ -726,7 +724,7 @@ class Component extends DCLogic {
       { icon:'🏦', label: he?'שוק':'Market', value: he?'64% / 36% — מה שהבוקי חושב':'64% / 36% — what the book thinks', labelColor:'#c4c7d2' },
       { icon:'🏀', label:'Elo', value: he?'יתרון +180 נק׳ Elo':'+180 Elo pts advantage', labelColor:'#f3d29a' },
       { icon:'🏆', label: he?'קריאה':'Call', value: he?'בית · HIGH 68%':'Home · HIGH 68%', labelColor:'#f5d27a' },
-      { icon:'💚', label: he?'ערך':'Value', value: he?'+4% מנוע מול שוק · B2B +6.7pp':'engine +4% vs market · B2B +6.7pp', labelColor:'#8ff0c0' },
+      { icon:'💚', label: he?'ערך':'Value', value: he?'+4% מנוע מול שוק':'engine +4% vs market', labelColor:'#8ff0c0' },
     ];
 
     const clvCollecting = !R.clv || R.clv.n === 0 || R.clvCollecting === true;
@@ -781,7 +779,10 @@ class Component extends DCLogic {
       featEdgeTarget: fEdge != null ? Math.abs(fEdge) : '',
       featEdgePrefix: (fEdge != null && fEdge >= 0 ? '+' : (fEdge != null ? '-' : '')),
       clvFinalStr,
-      gauge: this.gauge(feat.mktUnder, 100 - fEngPick),
+      gauge: isHist ? { full:'', edge:'', cx:-9999, cy:-9999, mkt:{x:-9999,y:-9999}, eng:{x:-9999,y:-9999} } : this.gauge(feat.mktUnder, 100 - fEngPick),   // no over/under gauge on a win-probability card
+      signalKicker: rf.isAplus === true ? L.signalKicker : (isHist ? (he ? 'דוגמה היסטורית' : 'Historical example') : (he ? 'המשחק המוביל היום, לא קריאת A+' : 'Top game today, not an A+ call')),
+      overWord: isHist ? '' : L.overWord, underWord: isHist ? '' : L.underWord,
+      gaugeLegendDisp: isHist ? 'none' : 'flex',   // the over/under legend has no meaning for a win-probability card
       clv: this.clvChart(), cal: this.cal(), drivers, integrity, clvSeg,
       boardCounter: (function(){var a=tiles.filter(function(t){return t.state==='aplus';}).length,v=tiles.filter(function(t){return t.state==='value';}).length,k=tiles.filter(function(t){return t.state==='silent';}).length;return he?(a+' A+ · '+v+' ערך · '+k+(k===1?' שתיקה':' שתיקות')):(a+' A+ · '+v+' value · '+k+' silent');})(),
       dispSignals: tab === 'signals' ? 'block' : 'none',

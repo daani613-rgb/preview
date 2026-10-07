@@ -16,7 +16,7 @@ const GUIDE_EN=`
 
   <div class="sec"><div class="ey"><span class="num">03</span><h2>The three highlights</h2></div>
     <ul>
-      <li><b>Dark frame</b> (engine bar) = <b>the engine's call</b> — who wins. The <b>validated</b> layer.</li>
+      <li><b>Dark frame</b> (engine bar) = <b>the engine's call</b>: who wins. The <b>backtested</b> layer.</li>
       <li><b>Green frame</b> (market bar) = <b>the value side</b> — where the engine is pricier than the market. The <b>experimental</b> layer.</li>
       <li><b>Red / teal frame</b> = caution zones (section 04).</li>
     </ul>
@@ -73,12 +73,12 @@ const GUIDE_EN=`
     <p class="lead">The goals engine is a <b>separate</b> engine: it estimates <b>how many goals</b> a match will have — not who wins. It's hidden behind a button (like the surprise factor) so it doesn't overload; whoever wants — opens it.</p>
     <p>Inside the button, two bars one above the other — exactly like the 1X2 bar:</p>
     <ul>
-      <li><b>Engine bar ("what it's worth"):</b> the calibrated probability for Over 2.5 and Under 2.5. This layer is <b>validated</b> — it beats a naive baseline and is calibrated (predicted≈actual) — but it measures goal <b>quantity</b>, not the winner.</li>
+      <li><b>Engine bar ("what it's worth"):</b> the calibrated probability for Over 2.5 and Under 2.5. This layer is <b>backtested</b>: it beats a naive baseline and is calibrated (predicted≈actual) — but it measures goal <b>quantity</b>, not the winner.</li>
       <li><b>Market bar ("what it costs"):</b> the Over/Under line price after removing the bookmaker's margin (vig).</li>
     </ul>
     <p>The comparison is the whole point: where the engine gives Over (or Under) <b>more</b> than the market — that side is "cheap", and there may be value. The gap uses the same zones: <span class="gchip n">small &lt;3%</span> <span class="gchip v">value 3–10%</span> <span class="gchip c">large &gt;10% — check</span>.</p>
     <p><b>Totals by market line:</b> the same Over/Under across several lines (1.5/2.5/3.5) — engine above market for each line, exactly as the market quotes it. A line with no market shows "market line not collected yet".</p>
-    <div class="callout"><b>Honesty debt:</b> unlike the winner call (validated, 78%), <b>goals value is not yet proven</b> against the market. Forward CLV is the arbiter — exactly as with winner value. <b>There is no "surprise factor" for goals</b> — it's a clean over/under forecast.</div></div>
+    <div class="callout"><b>Honesty debt:</b> unlike the winner call (backtest, 78%), <b>goals value is not yet proven</b> against the market. Forward CLV is the arbiter — exactly as with winner value. <b>There is no "surprise factor" for goals</b> — it's a clean over/under forecast.</div></div>
 
   <div class="sec"><div class="ey"><span class="num">07</span><h2>After the match — every line is checked</h2></div>
     <ul>
@@ -112,7 +112,7 @@ const GUIDE_EN=`
 
   <div class="sec"><div class="ey"><span class="num">10</span><h2>Honesty debt</h2></div>
     <ul>
-      <li><b>The engine's call (dark) — validated.</b> 78% winner accuracy, calibrated probabilities.</li>
+      <li><b>The engine's call (dark): backtested.</b> 78% winner accuracy, calibrated probabilities.</li>
       <li><b>Value-vs-market (green) — experimental.</b> Not yet proven positive. Forward CLV is the arbiter.</li>
       <li><b>The 3%/10% bounds — an estimate</b>, to be calibrated from the journal, source-dependent.</li>
       <li><b>"Explanation"/"engine error" — judgment,</b> not automatic.</li>
@@ -134,7 +134,7 @@ const GUIDE_HE=`
 
   <div class="sec"><div class="ey"><span class="num">03</span><h2>שלוש ההדגשות</h2></div>
     <ul>
-      <li><b>מסגרת כהה</b> (בר-המנוע) = <b>קריאת-המנוע</b> — מי ינצח. השכבה ה<b>מאומתת</b>.</li>
+      <li><b>מסגרת כהה</b> (בר-המנוע) = <b>קריאת-המנוע</b>: מי ינצח. השכבה <b>שנבדקה בבדיקה לאחור</b>.</li>
       <li><b>מסגרת ירוקה</b> (בר-השוק) = <b>צד-הערך</b> — איפה המנוע יקר מהשוק. השכבה ה<b>ניסיונית</b>.</li>
       <li><b>מסגרת אדומה / תכלת</b> = אזורי-זהירות (סעיף 04).</li>
     </ul>
@@ -191,12 +191,12 @@ const GUIDE_HE=`
     <p class="lead">מנוע-הגולים הוא מנוע <b>נפרד</b>: הוא מעריך <b>כמה גולים</b> יבקיעו במשחק — לא מי ינצח. הוא מוסתר מאחורי כפתור (כמו גורם-ההפתעה) כדי לא להעמיס; מי שרוצה — פותח.</p>
     <p>בתוך הכפתור, שני ברים זה-מעל-זה — בדיוק כמו בר-ה-1X2:</p>
     <ul>
-      <li><b>בר-המנוע ("מה שווה"):</b> ההסתברות המכוילת ל-Over 2.5 ו-Under 2.5. שכבה זו <b>מאומתת</b> — מנצחת קו-בסיס נאיבי ומכוילת (חזוי≈בפועל) — אך מודדת <b>כמות-גולים</b>, לא מנצח.</li>
+      <li><b>בר-המנוע ("מה שווה"):</b> ההסתברות המכוילת ל-Over 2.5 ו-Under 2.5. שכבה זו <b>נבדקה בבדיקה לאחור</b>: מנצחת קו-בסיס נאיבי ומכוילת (חזוי≈בפועל) — אך מודדת <b>כמות-גולים</b>, לא מנצח.</li>
       <li><b>בר-השוק ("מה עולה"):</b> מחיר ה-Over/Under של הקו, אחרי ניכוי עמלת-הבוקי (vig).</li>
     </ul>
     <p>ההשוואה היא כל העניין: היכן שהמנוע נותן ל-Over (או ל-Under) <b>יותר</b> מהשוק — הצד הזה "זול", ושם אולי יש ערך. הפער מסווג לאותם אזורים: <span class="gchip n">קטן &lt;3%</span> <span class="gchip v">ערך 3–10%</span> <span class="gchip c">גדול &gt;10% — בדוק</span>.</p>
     <p><b>מעל/מתחת לפי קו-שוק:</b> אותו over/under בכמה קווים (1.5/2.5/3.5) — מנוע מעל שוק לכל קו, בדיוק כפי שהשוק מצטט. קו בלי-שוק מציג "קו-השוק טרם נאסף".</p>
-    <div class="callout"><b>חוב-יושר:</b> בניגוד לקריאת-המנצח (מאומתת, 78%), <b>ערך-הגולים טרם-הוכח</b> מול שוק. ה-CLV-קדימה הוא הארביטר — בדיוק כמו בערך-המנצח. <b>אין "גורם-הפתעה" לגולים</b> — זו תחזית-over/under נקייה.</div></div>
+    <div class="callout"><b>חוב-יושר:</b> בניגוד לקריאת-המנצח (בדיקה לאחור, 78%), <b>ערך-הגולים טרם-הוכח</b> מול שוק. ה-CLV-קדימה הוא הארביטר — בדיוק כמו בערך-המנצח. <b>אין "גורם-הפתעה" לגולים</b> — זו תחזית-over/under נקייה.</div></div>
 
   <div class="sec"><div class="ey"><span class="num">07</span><h2>אחרי המשחק — כל שורה נבדקת</h2></div>
     <ul>
@@ -230,7 +230,7 @@ const GUIDE_HE=`
 
   <div class="sec"><div class="ey"><span class="num">10</span><h2>חוב-יושר</h2></div>
     <ul>
-      <li><b>קריאת-המנוע (כהה) — מאומתת.</b> דיוק 78% מנצח, הסתברויות מכוילות.</li>
+      <li><b>קריאת-המנוע (כהה): נבדקה בבדיקה לאחור.</b> דיוק 78% מנצח, הסתברויות מכוילות.</li>
       <li><b>ערך-מול-שוק (ירוק) — ניסיוני.</b> טרם הוכח חיובי. ה-CLV-קדימה הוא הארביטר.</li>
       <li><b>הגבולות 3%/10% — הערכה</b>, ייכּיילו מהיומן, תלויי-מקור.</li>
       <li><b>"הסבר"/"טעות-מנוע" — שיקול-דעת,</b> לא אוטומט.</li>
@@ -491,11 +491,11 @@ class Component extends DCLogic {
       kpis: [
         {display: aplusAcc, target: parseFloat(aplusAcc), dec:1, prefix:'', u:'%', tag:'A+', d:`A+ calls (verdict=call) accuracy · ${nCalled} calls tracked · ${clvPos} correct.`},
         {display:'60.4',target:60.4,dec:1,prefix:'',u:'%',d:'Holdout accuracy, all 3 outcomes (Home / Draw / Away) · international results ≥2019 · holdout_test.py (HOLDOUT accAll).'},
-        {display:'78.3',target:78.3,dec:1,prefix:'',u:'%',d:'2-way skill (predicting which side wins, excluding draws) · holdout_test.py · 5,597 decisive matches ≥2019.'},
+        {display:'78.3',target:78.3,dec:1,prefix:'',u:'%',d:'2-way skill (predicting which side wins, excluding draws) · holdout_test.py · 5,655 decisive matches, 2019-01-02 to 2026-08-26.'},
         {display: clvPos + '/' + nCalled, target: null, dec:0, prefix:'', u:'', noCount:true, d:`A+ correct calls: ${clvPos} correct out of ${nCalled} A+ calls tracked. No closing-line market — real CLV not available.`},
       ],
       stageBars: [],
-      stageNote: 'Per-stage accuracy & calibration are computed in the full holdout report — not exposed in this live feed.',
+      stageNote: 'Per-stage accuracy and calibration are not part of this live feed.',
       howRows: [],
       howBullets: [
         {tag:'01',chip:'#35e39a',title:'Three outcomes, one bar',body:'Every match is Home / Draw / Away. The engine bar is our calibrated 1X2; the market bar (when available) is the book\'s. The comparison is the signal.'},
@@ -557,11 +557,11 @@ class Component extends DCLogic {
       kpis: [
         {display: aplusAcc, target: parseFloat(aplusAcc), dec:1, prefix:'', u:'%', tag:'A+', d:`דיוק קריאות A+ · ${nCalled} קריאות שנוטרו · ${clvPos} נכונות.`},
         {display:'60.4',target:60.4,dec:1,prefix:'',u:'%',d:'דיוק holdout, כל 3 תוצאות (בית / תיקו / חוץ) · תוצאות בינלאומיות מ-2019 · holdout_test.py (HOLDOUT accAll).'},
-        {display:'78.3',target:78.3,dec:1,prefix:'',u:'%',d:'כישרון 2-דרכי (ניבוי הצד המנצח, ללא תיקו) · holdout_test.py · 5,597 משחקים מוכרעים מ-2019.'},
+        {display:'78.3',target:78.3,dec:1,prefix:'',u:'%',d:'כישרון 2-דרכי (ניבוי הצד המנצח, ללא תיקו) · holdout_test.py · 5,655 משחקים מוכרעים, 2019-01-02 עד 2026-08-26.'},
         {display: clvPos + '/' + nCalled, target: null, dec:0, prefix:'', u:'', noCount:true, d:`קריאות A+ נכונות: ${clvPos} נכונות מתוך ${nCalled} קריאות. אין קו-שוק — CLV אמיתי אינו זמין.`},
       ],
       stageBars: [],
-      stageNote: 'דיוק לפי שלב וכיול מחושבים בדוח ה-holdout המלא — אינם חשופים בפיד החי.',
+      stageNote: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
       howRows: [],
       howBullets: [
         {tag:'01',chip:'#35e39a',title:'שלוש תוצאות, בר אחד',body:'כל משחק הוא בית / תיקו / חוץ. בר המנוע הוא ה-1X2 המכויל שלנו; בר השוק (כשזמין) הוא של הבוקי. ההשוואה היא הסיגנל.'},
@@ -1112,7 +1112,7 @@ class Component extends DCLogic {
       { label: he ? 'בסיס "תמיד בית"' : 'Base "always home"', val: (_hk.baseWin || '—') + '%', color: '#8791ab' },
     ];
     const trackKpisHead = he ? 'ביצועי-טורניר חיים (קריאות שהוכרעו)' : 'Live tournament (decided calls)';
-    const holdoutHead = he ? 'דיוק בבדיקה לאחור (holdout · סטטי)' : 'Backtest accuracy (holdout · static)';
+    const holdoutHead = he ? 'דיוק בבדיקה לאחור (holdout, 7,318 משחקי מבחן, 2019-01-02 עד 2026-08-26 · סטטי)' : 'Backtest accuracy (holdout, 7,318 test matches, 2019-01-02 to 2026-08-26 · static)';
     // Global chrome: back-to-top + Disclaimer & Privacy modal (mirrors live #backToTop + discModal)
     const backToTop = () => { if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' }); };
     const onOpenPrivacy = () => this.setState({ showPrivacy: true });

@@ -158,7 +158,7 @@
                   <text x="30" y="205" fill="#35e39a" style="font:600 12px var(--fm)">{{ overWord }}</text>
                   <text x="310" y="205" fill="#f5b23d" style="font:600 12px var(--fm);text-anchor:end">{{ underWord }}</text>
                 </svg>
-                <div style="display:flex;gap:20px;margin-top:8px;font-family:var(--fm);font-size:12px">
+                <div style="display:{{ gaugeLegendDisp }};gap:20px;margin-top:8px;font-family:var(--fm);font-size:12px">
                   <div style="display:flex;align-items:center;gap:7px"><span style="width:14px;height:4px;border-radius:2px;background:#35e39a;display:inline-block;box-shadow:0 0 8px #35e39a"></span><span style="color:#aeb4c8">{{ engineWord }} {{ feat.engUnder }}%</span></div>
                   <div style="display:flex;align-items:center;gap:7px"><span style="width:14px;height:0;border-top:2px dashed rgba(255,255,255,0.6);display:inline-block"></span><span style="color:#aeb4c8">{{ marketWord }} {{ feat.mktUnder }}%</span></div>
                 </div>
