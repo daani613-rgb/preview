@@ -52,7 +52,7 @@ const GUIDE_MLB=`
 `;
 
 class Component extends DCLogic {
-  state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'teams', openTile: 'lan-oak', dateSel: 'today' };
+  state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'teams', openTile: null, dateSel: 'today' };
 
   componentDidMount() { this.runCountUp(); this.ensureThree(); this.ensureChart(); this._syncGuide(); }
   componentDidUpdate(prevProps, prevState) { this.runCountUp(); this.ensureChart(); this._syncGuide(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
@@ -81,7 +81,8 @@ class Component extends DCLogic {
   runCountUp() {
     const run = () => {
       if (this._dead) return;
-      const els = document.querySelectorAll('[data-count-target]:not([data-counted])');
+      const els = [...document.querySelectorAll('[data-count-target]:not([data-counted])')]
+        .filter(el => { const v = el.getAttribute('data-count-target'); return v !== '' && isFinite(parseFloat(v)); });
       if (!els.length) return;
       els.forEach(el => el.setAttribute('data-counted', '1'));
       const start = performance.now(), dur = 1100, ease = t => 1 - Math.pow(1 - t, 3);
@@ -216,14 +217,15 @@ class Component extends DCLogic {
   gauge(mktV, engV) {
     const cx = 170, cy = 178, r = 138;
     const pt = (v) => { const th = Math.PI * (1 - v / 100); return { x: +(cx + r * Math.cos(th)).toFixed(1), y: +(cy - r * Math.sin(th)).toFixed(1) }; };
-    const m = mktV == null ? 51 : mktV, e = engV == null ? 64 : engV;
+    if (engV == null) return {};
+    const e = engV, m = mktV == null ? engV : mktV;   // no market line: market needle sits on the engine, no edge arc
     const p0 = pt(0), p100 = pt(100), pm = pt(m), pe = pt(e);
     return { cx, cy, full: `M ${p0.x} ${p0.y} A ${r} ${r} 0 0 1 ${p100.x} ${p100.y}`, edge: `M ${pm.x} ${pm.y} A ${r} ${r} 0 0 1 ${pe.x} ${pe.y}`, eng: pe, mkt: pm };
   }
 
   clvChart() {
-    const data = (window.REAL && REAL.clv && REAL.clv.spark && REAL.clv.spark.length) ? REAL.clv.spark
-      : [0, -0.02, 0.01, 0.05, 0.03, 0.08, 0.12, 0.09, 0.14, 0.18, 0.15, 0.20, 0.24, 0.21, 0.27, 0.30, 0.28, 0.33];
+    const data = (window.REAL && REAL.clv && REAL.clv.spark && REAL.clv.spark.length > 1) ? REAL.clv.spark : null;
+    if (!data) return { line: '', area: '', baseY: 0, dotX: -99, dotY: -99 };
     const W = 520, H = 200, yMin = Math.min(-0.1, ...data), yMax = Math.max(0.4, ...data);
     const X = i => +(i / (data.length - 1) * W).toFixed(1);
     const Y = v => +(H - (v - yMin) / (yMax - yMin) * H).toFixed(1);
@@ -233,8 +235,32 @@ class Component extends DCLogic {
   }
 
   labels() {
-    const RC = (window.REAL && REAL.clv) || { final: 0.33, n: 93, pos: 46 };
-    const hcl = (window.REAL && REAL.heroCLV) || '+0.33';
+    const R0 = window.REAL || {};
+    const HO = R0.holdout || {}, LR = R0.liveRecord || {}, CV = R0.clv || {};
+    const isNum = v => typeof v === 'number' && isFinite(v);
+    const dash = v => (v === null || v === undefined || v === '' || v === '—') ? '—' : v;
+    const pctS = v => isNum(v) ? v.toFixed(1) + '%' : '—';
+    const intS = v => isNum(v) ? v.toLocaleString('en-US') : '—';
+    const pair = a => (Array.isArray(a) && a.length === 2) ? a : ['—', '—'];
+    const TS = pair(HO.test_seasons), CH = pair(HO.chain_history);
+    const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dEn = s => { const p = String(s || '').split('-'); return p.length === 3 ? `${MON[+p[1]-1]} ${+p[2]}` : '—'; };
+    const dHe = s => { const p = String(s || '').split('-'); return p.length === 3 ? `${+p[2]}.${+p[1]}` : '—'; };
+    const clvN = isNum(CV.n) ? CV.n : '—';
+    const clvAvgEn = isNum(CV.avgPts) ? (CV.avgPts >= 0 ? '+' : '') + CV.avgPts.toFixed(2) : '—';
+    const clvAvgHe = isNum(CV.avgPts) ? (CV.avgPts < 0 ? '-' : '') + Math.abs(CV.avgPts).toFixed(2) : '—';
+    const clvTextEn = `Totals CLV (over/under, not the winner pick). Average ${clvAvgEn} pts per game over ${clvN} games.`;
+    const clvTextHe = `CLV טוטאלים (מעל/מתחת, לא בחירת המנצח). ממוצע ${clvAvgHe} נקודות למשחק על ${clvN} משחקים.`;
+    const hoStamp = (typeof HO.computed_utc === 'string' && /^\d{4}-\d\d-\d\dT\d\d:\d\d/.test(HO.computed_utc)) ? HO.computed_utc.slice(0, 16).replace('T', ' ') + ' UTC' : '—';
+    const backtestEn = `Backtest, walk-forward. Test seasons ${TS[0]} to ${TS[1]}, ${intS(HO.games)} games. Rating history in the chain: ${CH[0]} to ${CH[1]}. Overall ${pctS(HO.overall)}, A+ ${pctS(HO.aplus)} on ${intS(HO.aplus_n)} calls (${pctS(HO.aplus_pct)}). Computed ${hoStamp}.`;
+    const backtestHe = `בדיקה לאחור, walk-forward. עונות מבחן ${TS[0]} עד ${TS[1]}, ${intS(HO.games)} משחקים. היסטוריית הדירוגים בשרשרת: ${CH[0]} עד ${CH[1]}. כללי ${pctS(HO.overall)}, A+ ${pctS(HO.aplus)} על ${intS(HO.aplus_n)} קריאות (${pctS(HO.aplus_pct)}). חושב ${hoStamp}.`;
+    const liveEn = `Live A+ calls, ${dash(LR.season)} season (${dEn(LR.from)} to ${dEn(LR.to)}): ${dash(LR.correct)} of ${dash(LR.calls)} correct. Recorded before first pitch. ${dash(LR.voided)} calls voided and excluded. Too few calls to state a percentage.`;
+    const liveHe = `קריאות A+ חיות, עונת ${dash(LR.season)} (${dHe(LR.from)} עד ${dHe(LR.to)}): ${dash(LR.correct)} מתוך ${dash(LR.calls)} נכונות. נרשמו לפני המשחק. ${dash(LR.voided)} קריאות נפסלו והוצאו. מעט מדי קריאות כדי לנקוב באחוז.`;
+    const kNum = v => isNum(v) ? v : '';           // count-up target: empty (no animation) when missing
+    const kDisp = (v, dec) => isNum(v) ? v.toFixed(dec) : '—';
+    const FT = R0.feat || {};
+    const kickEn = FT.isAplus ? `A+ call, stage ${dash(FT.stage)}, ${dash(FT.conf)}%` : 'Top game today, not an A+ call';
+    const kickHe = FT.isAplus ? `קריאת A+, שלב ${dash(FT.stage)}, ${dash(FT.conf)}%` : 'המשחק המוביל היום, לא קריאת A+';
     const TD = (window.REAL && REAL.totalsDir) || null;
     const totPct = TD && TD.pct != null ? TD.pct : null;
     const totN   = TD && TD.n   != null ? TD.n   : null;
@@ -248,24 +274,26 @@ class Component extends DCLogic {
       ? `כיוון מעל/מתחת · גולמי · ${totC}/${totN} משחקים עם תוצאה (predictions_journal.json:tot_correct).`
       : 'כיוון מעל/מתחת — נאסף (אין עדיין משחקים עם תוצאה).';
     const totDec  = totPct != null ? 1 : 0;
-    const cf = (RC.final >= 0 ? '+' : '') + Number(RC.final).toFixed(2);
+    const cf = clvAvgEn;
     const en = {
       dir: 'ltr', brand: 'Command Center', liveLabel: 'LIVE',
-      heroTitle: 'The MLB engine, live.', heroSub: 'Two models per game — winner and total runs — validated on held-out data and recalibrated every morning at 06:00.',
-      signalKicker: 'Signal of the day · A+', edgeLabel: 'Edge vs market', runsLabel: 'expected runs', stageLabel: 'Stage',
+      heroTitle: 'The MLB engine, live.', heroSub: 'Two models per game, winner and total runs. Updated several times a day. Scheduled runs are often delayed or skipped.',
+      signalKicker: kickEn, edgeLabel: 'Edge vs market', runsLabel: 'expected runs', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'HIGH', underWord: 'LOW', homeWord: 'Home', awayWord: 'Away', starterPrefix: 'starter-aware:',
-      validatedHead: 'VALIDATED ACCURACY · HOLDOUT TEST',
-      clvTitle: 'Cumulative CLV', clvSub: `No-vig, vs the closing line · ${RC.n} closed-line games (${RC.pos} positive). >0 = engine beat the market's move.`,
+      validatedHead: 'BACKTEST', backtestText: backtestEn,
+      sepLabel: 'Live record is not the backtest', liveHead: 'LIVE RECORD', liveText: liveEn,
+      guideNote: 'Example values, illustration only',
+      clvTitle: 'Totals CLV, running average', clvSub: `${clvTextEn} No-vig, vs the closing line. ${dash(CV.pos)} of ${clvN} games positive.`,
       calTitle: 'Calibration', calSub: 'Predicted vs observed — computed in the full holdout report, not exposed in this live feed.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy & calibration curve are in the full holdout report — not in this live feed.',
       detailsWord: 'Total runs', runsWord: 'runs', lineWord: 'line',
-      stageTitle: 'Accuracy by stage group', stageSub: 'Holdout 2019–2023 · 32,483 games. Groups published in CLAUDE.md; individual per-stage breakdown is not in this live feed.',
+      stageTitle: 'Accuracy by stage group', stageSub: backtestEn,
       rankNote: 'Teams playing today, ranked by win probability and grouped into strength tiers by Elo.',
       teamCol: 'Team', pwinCol: 'p_win', annotatedLabel: 'Annotated example — one card', guideLabel: 'The full guide — how to read the board',
       eloExplain: '= who wins (the call).', fipExplain: '= how sure (calibrates it).',
       disclaimer: 'For information and entertainment only · Not betting advice · Play responsibly · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
       driversHead: 'Why this signal · top drivers', integrityHead: 'Model integrity', verifiedBadge: 'Verified vs Pinnacle close',
-      sampleLabel: 'signals validated', drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate', clvSegHead: 'CLV by segment · > 0 beats the close',
+      sampleLabel: 'backtest games', drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate, backtest', clvSegHead: 'CLV by segment · > 0 beats the close',
       navTabs: [ {id:'signals',icon:'⚡',label:'Signals'}, {id:'rankings',icon:'📊',label:'Rankings'}, {id:'track',icon:'🎯',label:'Track record'}, {id:'how',icon:'📖',label:'How it works'} ],
       rankTabs: [
         {id:'teams',icon:'🏟️',label:'Teams'},
@@ -291,16 +319,16 @@ class Component extends DCLogic {
       dateFilterLabel: 'Filter by date',
       resultLabel: 'Final', winCorrectLabel: 'winner', totCorrectLabel: 'total',
       collectingLabel: 'collecting — no settled games yet',
-      heroStats: [ {v:'58.1%',k:'overall',color:'#35e39a'}, {v:'70.2%',k:'A+ calls',color:'#35e39a'}, {v:hcl,k:'CLV pts',color:'#f5b23d'} ],
+      heroStats: [ {v:pctS(HO.overall),k:'backtest overall',color:'#35e39a'}, {v:pctS(HO.aplus),k:'backtest A+ calls',color:'#35e39a'}, {v:clvAvgEn,k:clvTextEn,color:'#f5b23d'} ],
       kpis: [
-        {display:'70.2',target:70.2,dec:1,prefix:'',u:'%',tag:'A+',d:'A+ calls — stage 8/9 + confidence ≥62% · ~5.4% of games.'},
-        {display:'60.9',target:60.9,dec:1,prefix:'',u:'%',d:'High-stage (6/8/9) accuracy.'},
-        {display:'58.1',target:58.1,dec:1,prefix:'',u:'%',d:'Overall · beats always-home baseline (53.3%).'},
+        {display:kDisp(HO.aplus,1),target:kNum(HO.aplus),dec:1,prefix:'',u:(isNum(HO.aplus)?'%':''),tag:'A+',d:`Backtest A+ calls: stage 8/9 and confidence ≥62%, ${intS(HO.aplus_n)} calls (${pctS(HO.aplus_pct)} of games).`},
+        {display:kDisp(HO.stage,1),target:kNum(HO.stage),dec:1,prefix:'',u:(isNum(HO.stage)?'%':''),d:'Backtest, high stage (6/8/9).'},
+        {display:kDisp(HO.overall,1),target:kNum(HO.overall),dec:1,prefix:'',u:(isNum(HO.overall)?'%':''),d:`Backtest, overall. Always-home baseline ${pctS(HO.base)}.`},
         {display:totDisplay,target:totTarget,dec:totDec,prefix:'',u:(totPct!=null?'%':''),d:totDesc_en},
-        {display:cf,target:RC.final,dec:2,prefix:(RC.final>=0?'+':''),u:'',d:`Cumulative CLV · ${RC.n} closed-line games (${RC.pos}+) · vs closing line.`},
+        {display:cf,target:kNum(CV.avgPts),dec:2,prefix:(isNum(CV.avgPts)&&CV.avgPts>=0?'+':''),u:'',d:clvTextEn},
       ],
       stageBars: [
-        {label:'Low (1–5, 7)',pct:57.1,src:'CLAUDE.md·holdout'}, {label:'High (6/8/9)',pct:60.9,src:'CLAUDE.md·holdout'}, {label:'Stage 9',pct:61.8,src:'CLAUDE.md·holdout'}, {label:'A+ (8/9 ≥62%)',pct:70.2,src:'CLAUDE.md·holdout'},
+        {label:'Low (1–5, 7)',pct:HO.low,src:'holdout.json'}, {label:'High (6/8/9)',pct:HO.stage,src:'holdout.json'}, {label:'Stage 9',pct:HO.stage9,src:'holdout.json'}, {label:'A+ (8/9 ≥62%)',pct:HO.aplus,src:'holdout.json'},
       ],
       howBullets: [
         {tag:'01',chip:'#35e39a',title:'Engine vs market is the whole point',body:'The engine bar is our most accurate probability per team; the market bar is what the book thinks. The comparison is the signal.'},
@@ -311,26 +339,27 @@ class Component extends DCLogic {
       howExtra: [
         {tag:'05',chip:'#f5b23d',title:'Value zones — colors explained',body:'Green box (💚 value) = gap 3–10%, engine starter-aware or cushioned. Red box (🛑) = gap >10%, usually pitcher-blindness. Grey = silent, in line with market. The zone classifies the gap — it does not predict profit.'},
         {tag:'06',chip:'#35e39a',title:'CLV is the arbiter — not a leaderboard',body:'CLV (Closing Line Value) = engine probability vs the closing market line. >0 means the engine predicted a direction the market later agreed with. It\'s the only honest long-run test. Raw direction accuracy is not the goal.'},
-        {tag:'07',chip:'#5aa9ff',title:'Forward-only — no backtesting',body:'All CLV and results shown here are forward-only: recorded before any outcome was known. The model was trained on pre-2019 data; every 2026 game is out-of-sample. No cherry-picking.'},
       ],
     };
     const he = {
       dir: 'rtl', brand: 'מרכז שליטה', liveLabel: 'חי',
-      heroTitle: 'מנוע החיזוי של MLB', heroSub: 'שני מודלים לכל משחק — מנצח וסך ריצות — מאומתים על נתונים שלא נראו ומכוילים מחדש כל בוקר ב-06:00.',
-      signalKicker: 'הסיגנל של היום · A+', edgeLabel: 'Edge מול השוק', runsLabel: 'ריצות צפויות', stageLabel: 'שלב',
+      heroTitle: 'מנוע החיזוי של MLB', heroSub: 'שני מודלים לכל משחק, מנצח וסך ריצות. מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.',
+      signalKicker: kickHe, edgeLabel: 'Edge מול השוק', runsLabel: 'ריצות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ', starterPrefix: 'מודע-פותח:',
-      validatedHead: 'דיוק מאומת · מבחן HOLDOUT',
-      clvTitle: 'CLV מצטבר', clvSub: `ללא-vig, מול קו הסגירה · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים). מעל 0 = המנוע ניצח את תנועת השוק.`,
+      validatedHead: 'בדיקה לאחור', backtestText: backtestHe,
+      sepLabel: 'השיא החי אינו הבדיקה לאחור', liveHead: 'שיא חי', liveText: liveHe,
+      guideNote: 'ערכים לדוגמה, להמחשה בלבד',
+      clvTitle: 'CLV טוטאלים, ממוצע מצטבר', clvSub: `${clvTextHe} ללא vig, מול קו הסגירה. ${dash(CV.pos)} מתוך ${clvN} משחקים חיוביים.`,
       calTitle: 'כיול (Calibration)', calSub: 'חזוי מול נצפה — מחושב בדוח הולד-אאוט המלא, לא חשוף בפיד החי הזה.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'דיוק לפי שלב בודד ועקומת כיול נמצאים בדוח הולד-אאוט המלא — לא בפיד החי הזה.',
       detailsWord: 'סך ריצות', runsWord: 'ריצות', lineWord: 'קו',
-      stageTitle: 'דיוק לפי קבוצת שלב', stageSub: 'הולד-אאוט 2019–2023 · 32,483 משחקים. הקבוצות מתועדות ב-CLAUDE.md; פירוט לפי שלב בודד אינו בפיד החי.',
+      stageTitle: 'דיוק לפי קבוצת שלב', stageSub: backtestHe,
       rankNote: 'הקבוצות שמשחקות היום, מדורגות לפי הסתברות ניצחון ומקובצות לטירים לפי Elo.',
       teamCol: 'קבוצה', pwinCol: 'הסתברות', annotatedLabel: 'דוגמה מבוארת — כרטיס אחד', guideLabel: 'המדריך המלא — איך לקרוא את הלוח',
       eloExplain: '= מי מנצח (הקריאה).', fipExplain: '= כמה בטוח (מכייל).',
       disclaimer: 'למידע ובידור בלבד · אינו ייעוץ הימורים · שחק באחריות · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
       driversHead: 'למה הסיגנל הזה · הגורמים המובילים', integrityHead: 'שלמות המודל', verifiedBadge: 'מאומת מול סגירת Pinnacle',
-      sampleLabel: 'סיגנלים מאומתים', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+', clvSegHead: 'CLV לפי פילוח · מעל 0 מנצח את הסגירה',
+      sampleLabel: 'משחקי בדיקה לאחור', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+, בדיקה לאחור', clvSegHead: 'CLV לפי פילוח · מעל 0 מנצח את הסגירה',
       navTabs: [ {id:'signals',icon:'⚡',label:'סיגנלים'}, {id:'rankings',icon:'📊',label:'דירוגים'}, {id:'track',icon:'🎯',label:'ביצועים'}, {id:'how',icon:'📖',label:'איך זה עובד'} ],
       rankTabs: [
         {id:'teams',icon:'🏟️',label:'קבוצות-היום'},
@@ -356,16 +385,16 @@ class Component extends DCLogic {
       dateFilterLabel: 'סנן לפי תאריך',
       resultLabel: 'תוצאה', winCorrectLabel: 'מנצח', totCorrectLabel: 'טוטאל',
       collectingLabel: 'נאסף — אין עדיין משחקים עם תוצאה',
-      heroStats: [ {v:'58.1%',k:'כללי',color:'#35e39a'}, {v:'70.2%',k:'קריאות A+',color:'#35e39a'}, {v:hcl,k:'CLV נק׳',color:'#f5b23d'} ],
+      heroStats: [ {v:pctS(HO.overall),k:'בדיקה לאחור, כללי',color:'#35e39a'}, {v:pctS(HO.aplus),k:'בדיקה לאחור, קריאות A+',color:'#35e39a'}, {v:clvAvgHe,k:clvTextHe,color:'#f5b23d'} ],
       kpis: [
-        {display:'70.2',target:70.2,dec:1,prefix:'',u:'%',tag:'A+',d:'קריאות A+ — שלב 8/9 + ביטחון ≥62% · כ-5.4% מהמשחקים.'},
-        {display:'60.9',target:60.9,dec:1,prefix:'',u:'%',d:'דיוק בשלב גבוה (6/8/9).'},
-        {display:'58.1',target:58.1,dec:1,prefix:'',u:'%',d:'כללי · מנצח את בסיס "תמיד-בית" (53.3%).'},
+        {display:kDisp(HO.aplus,1),target:kNum(HO.aplus),dec:1,prefix:'',u:(isNum(HO.aplus)?'%':''),tag:'A+',d:`בדיקה לאחור, קריאות A+: שלב 8/9 וביטחון ≥62%, ${intS(HO.aplus_n)} קריאות (${pctS(HO.aplus_pct)} מהמשחקים).`},
+        {display:kDisp(HO.stage,1),target:kNum(HO.stage),dec:1,prefix:'',u:(isNum(HO.stage)?'%':''),d:'בדיקה לאחור, שלב גבוה (6/8/9).'},
+        {display:kDisp(HO.overall,1),target:kNum(HO.overall),dec:1,prefix:'',u:(isNum(HO.overall)?'%':''),d:`בדיקה לאחור, כללי. בסיס "תמיד בית" ${pctS(HO.base)}.`},
         {display:totDisplay,target:totTarget,dec:totDec,prefix:'',u:(totPct!=null?'%':''),d:totDesc_he},
-        {display:cf,target:RC.final,dec:2,prefix:(RC.final>=0?'+':''),u:'',d:`CLV מצטבר · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים) · מול קו הסגירה.`},
+        {display:clvAvgHe,target:kNum(CV.avgPts),dec:2,prefix:'',u:'',d:clvTextHe},
       ],
       stageBars: [
-        {label:'נמוך (1–5, 7)',pct:57.1,src:'CLAUDE.md·holdout'}, {label:'גבוה (6/8/9)',pct:60.9,src:'CLAUDE.md·holdout'}, {label:'שלב 9',pct:61.8,src:'CLAUDE.md·holdout'}, {label:'A+ (8/9 ≥62%)',pct:70.2,src:'CLAUDE.md·holdout'},
+        {label:'נמוך (1–5, 7)',pct:HO.low,src:'holdout.json'}, {label:'גבוה (6/8/9)',pct:HO.stage,src:'holdout.json'}, {label:'שלב 9',pct:HO.stage9,src:'holdout.json'}, {label:'A+ (8/9 ≥62%)',pct:HO.aplus,src:'holdout.json'},
       ],
       howBullets: [
         {tag:'01',chip:'#35e39a',title:'מנוע מול שוק — זה כל העניין',body:'בר המנוע הוא ההסתברות המדויקת ביותר לכל קבוצה; בר השוק הוא מה שהבוקי חושב. ההשוואה ביניהם היא הסיגנל.'},
@@ -376,7 +405,6 @@ class Component extends DCLogic {
       howExtra: [
         {tag:'05',chip:'#f5b23d',title:'אזורי ערך — הסבר הצבעים',body:'ריבוע ירוק (💚 ערך) = פער 3–10%, המנוע מתחשב-בזורק או מכויל. ריבוע אדום (🛑) = פער >10%, לרוב עיוורון-זורק. אפור = שתיקה, בקו עם השוק. הריבוע מסווג את הפער — לא מנבא רווח.'},
         {tag:'06',chip:'#35e39a',title:'CLV הוא השופט — לא לוח-תוצאות',body:'CLV (ערך קו-סגירה) = הסתברות-המנוע מול קו-הסגירה. מעל 0 = המנוע חזה כיוון שהשוק הסכים איתו אחר-כך. זה המבחן הישר היחיד לאורך זמן. דיוק כיוון גולמי הוא לא המטרה.'},
-        {tag:'07',chip:'#5aa9ff',title:'קדימה בלבד — לא בקטסטינג',body:'כל ה-CLV והתוצאות כאן הם קדימה-בלבד: נרשמו לפני שידעו את התוצאה. המודל אומן על נתוני-מבחן מ-2019 ומטה; כל משחק 2026 הוא מחוץ-למדגם. אין ברירת-גרסאות.'},
       ],
     };
     return this.state.lang === 'he' ? he : en;
@@ -401,7 +429,7 @@ class Component extends DCLogic {
         ? { isTier: true, isRow: false, tierLabel: tierName3(r.tierKey, r.t1, r.t2) }
         : { isTier: false, isRow: true, rank: r.rank, team: r.team, opp: r.opp,
             pwin: r.pwin != null ? r.pwin.toFixed(1) : '—', elo: r.elo,
-            pwinPct: r.pwin || 0, pdisplay: r.pdisplay != null ? r.pdisplay.toFixed(1) : '—',
+            pwinPct: r.pwin != null ? r.pwin : null, pdisplay: r.pdisplay != null ? r.pdisplay.toFixed(1) : '—',
             col4: r.pdisplay != null ? r.pdisplay.toFixed(1)+'%' : '—' });
       return { rows, colHeaders: ['#', he?'קבוצה':'Team', 'p_win', he?'+FIP':'+FIP', 'Elo'] };
     }
@@ -525,7 +553,7 @@ class Component extends DCLogic {
       || (he ? 'אין היום משחקים בלוח.' : 'There are no games on today\'s slate.');
     const fMkt = rf.mktPick != null ? rf.mktPick : null;
     const feat = {
-      away: rf.away || '', home: rf.home || '', time: rf.time || '',
+      away: rf.away || '', home: rf.home || '', time: rf.timeET || '—',
       pick: rf.pickCode || '', line: '',
       lambda: rf.lambda || '—',
       stage: rf.stage != null ? String(rf.stage) : '—',
@@ -534,15 +562,28 @@ class Component extends DCLogic {
       engUnder: fEng, mktUnder: fMkt,
       edge: rf.edge, edgeStr: (rf.edge != null ? (rf.edge >= 0 ? '+' : '') + rf.edge + '%' : '—'),
       hasMkt: fMkt != null, oppCode: (rf.pickCode === rf.home ? rf.away : rf.home),
-      blurb: (rf.mktPick != null
+      // "gap + cushion + calibrated" describes an A+ call only; a non-A+ top game gets its own description
+      blurb: !rf.isAplus
+        ? (rf.mktPick != null
+            ? (he ? `המנוע רואה ${fEng}% ל-${rf.pickCode} מול ${fMkt}% בשוק. זה המשחק עם הביטחון הגבוה ביותר היום, אבל הוא לא עבר את רף ה-A+, ולכן זו לא קריאה.`
+                  : `Engine sees ${fEng}% for ${rf.pickCode} vs ${fMkt}% at market. This is today's highest-confidence game, but it did not clear the A+ bar, so it is not a call.`)
+            : (he ? `המנוע רואה ${fEng}% ל-${rf.pickCode}. אין קו שוק כרגע. זה המשחק עם הביטחון הגבוה ביותר היום, אבל הוא לא עבר את רף ה-A+, ולכן זו לא קריאה.`
+                  : `Engine sees ${fEng}% for ${rf.pickCode}. No market line yet. This is today's highest-confidence game, but it did not clear the A+ bar, so it is not a call.`))
+      : (rf.mktPick != null
         ? (he ? `המנוע רואה ${fEng}% ל-${rf.pickCode} מול ${fMkt}% בשוק — פער + כרית + מכויל. השערה למדידה, לא רווח מובטח · ה-CLV מכריע.`
               : `Engine sees ${fEng}% for ${rf.pickCode} vs ${fMkt}% at market — gap + cushion + calibrated. A hypothesis to measure, not guaranteed · CLV decides.`)
         : (he ? `המנוע רואה ${fEng}% ל-${rf.pickCode}. אין קו שוק כרגע — אינדיקטיבי.`
               : `Engine sees ${fEng}% for ${rf.pickCode}. No market line yet — indicative.`)),
     };
 
-    // Real freshness banner
-    const freshness = (R.freshness) || '—';
+    // Freshness: data time in UTC, always shown; the word LIVE only while the data is < 6 h old (age vs now)
+    const dataMs = R.dataUtc ? Date.parse(R.dataUtc) : NaN;
+    const ageH = isFinite(dataMs) ? (Date.now() - dataMs) / 3600000 : null;
+    const isLiveData = ageH != null && ageH >= 0 && ageH < 6;
+    const stamp = isFinite(dataMs) ? new Date(dataMs).toISOString().slice(0, 16).replace('T', ' ') : '—';
+    const freshness = he ? `עדכון אחרון: ${stamp} UTC` : `Last update: ${stamp} UTC`;
+    const liveWord = isLiveData ? (L.liveLabel + ' · ') : '';
+    const liveDot = isLiveData ? '#35e39a' : '#6f7897';
     const scannedN = (R.scannedN) || null;
 
     // Date nav — filter bar above signals board
@@ -593,7 +634,7 @@ class Component extends DCLogic {
     const boardIsJournal = (dateSel !== 'today') && (selDate !== dateForSel.today);
     const boardSource = boardIsJournal ? (journalByDate[selDate] || []) : (R.tiles || []);
     const raw = boardSource.map(t => ({
-      id: t.id, away: t.away, home: t.home, time: t.time,
+      id: t.id, away: t.away, home: t.home, time: t.timeET || '—',
       engH: t.engH, mktH: t.mktH, favCode: t.favCode, callPct: t.callPct,
       stage: t.stage, stageName: t.stageName,
       stageDisplay: t.stage != null ? (t.stageName ? `${t.stage} · ${t.stageName}` : String(t.stage)) : '—',
@@ -663,7 +704,7 @@ class Component extends DCLogic {
         hasMktOver, mktOverDisp: hasMktOver ? 'flex' : 'none',
         hasValue: !!t.value, valueDisp: t.value ? 'block' : 'none',
         valueSide: t.value ? (t.value.side === 'UNDER' ? (he ? 'נמוך' : 'LOW') : (he ? 'גבוה' : 'HIGH')) : '',
-        valuePct: t.value ? t.value.pct : 0,
+        valuePct: t.value ? t.value.pct : null,
         lines: (t.lines || []).map(ln => ({ ...ln, lock: ln.locked ? '🔒 ' : '', lcolor: ln.locked ? '#f5b23d' : '#8791ab', lfill: ln.locked ? 'linear-gradient(90deg,#f5b23d,#ffcf6b)' : '#4a9eff' })),
         span: open ? '1 / -1' : 'auto',
         starterAway: ex.sa || '', starterHome: ex.sh || '', elo,
@@ -689,7 +730,7 @@ class Component extends DCLogic {
     //  · plain tabs (power/composite/momentum/pitchers): rank · name · sub · value/trend
     const _ballStyle = (p) => p >= 65 ? { bg: 'rgba(53,227,154,0.14)', c: '#7fe3b0' }
       : (p >= 50 ? { bg: 'rgba(245,178,61,0.15)', c: '#f5c67a' } : { bg: 'rgba(255,255,255,0.06)', c: '#8791ab' });
-    const _num = (v) => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
+    const _num = (v) => { const n = parseFloat(v); return isNaN(n) ? null : n; };
     const rankRows = rawRankRows.map(r => {
       if (r.isTier) return r;
       const o = Object.assign({ cHasBall: false, cBall: '', cBallBg: '', cBallColor: '', cMain: '', cMainColor: '#eef1f7', cSub: '', cDetail: '', cDetailColor: '#8791ab' }, r);
@@ -709,7 +750,7 @@ class Component extends DCLogic {
     });
     const rankNote = (L.rankNotes || {})[rankSub] || '';
 
-    const stageBars = L.stageBars.map(s => ({ ...s, pctDisp: Number(s.pct).toFixed(1), fill: s.pct >= 64 ? 'linear-gradient(90deg,#2fbf78,#35e39a)' : (s.pct >= 58 ? 'linear-gradient(90deg,#3d7fd0,#5aa9ff)' : 'rgba(255,255,255,0.22)'), color: s.pct >= 64 ? '#35e39a' : (s.pct >= 58 ? '#5aa9ff' : '#8791ab') }));
+    const stageBars = L.stageBars.map(s => ({ ...s, pct: (typeof s.pct === 'number' ? s.pct : 0), pctDisp: (typeof s.pct === 'number' ? s.pct.toFixed(1) + '%' : '—'), fill: s.pct >= 64 ? 'linear-gradient(90deg,#2fbf78,#35e39a)' : (s.pct >= 58 ? 'linear-gradient(90deg,#3d7fd0,#5aa9ff)' : 'rgba(255,255,255,0.22)'), color: s.pct >= 64 ? '#35e39a' : (s.pct >= 58 ? '#5aa9ff' : '#8791ab') }));
 
     const fex = (R.extra || {})[rf.id] || {};
     const reasons = R.featReasons || [];
@@ -722,10 +763,12 @@ class Component extends DCLogic {
         ? { label: (he?'מקדם מגרש':'Park factor'), val:(he?'נלקח':'in model'), arrow:'●', color:'#8791ab' }
         : { label: (he?'שלב ביטחון':'Confidence stage'), val:(he?'שלב ':'stage ')+feat.stageDisplay, arrow:'▲', color:'#35e39a' },
     ];
-    const ig = R.integrity || {};
-    const integrity = { n: ig.n || '—', drawdown: (he?'נאסף':'collecting'), brier: (he?'נאסף':'collecting'), hit: ig.hit || '—' };
+    const HOr = R.holdout || {};
+    const integrity = { n: (typeof HOr.games === 'number' ? HOr.games.toLocaleString('en-US') : '—'), drawdown: (he?'נאסף':'collecting'), brier: (he?'נאסף':'collecting'),
+                        hit: (typeof HOr.aplus === 'number' ? HOr.aplus.toFixed(1) + '%' : '—') };
     const monthName = (m) => { const [y,mo]=String(m).split('-'); const en=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mo]||m; const heN=['','ינו','פבר','מרץ','אפר','מאי','יונ','יול','אוג','ספט','אוק','נוב','דצמ'][+mo]||m; return (he?heN:en)+' '+y; };
-    const clvRaw = (R.clvSeg || []).map(s => ({ label: monthName(s.month), val: (s.val>=0?'+':'')+s.val.toFixed(2) }));
+    const clvRaw = (R.clvSeg || []).filter(s => typeof s.avgPts === 'number')
+      .map(s => ({ label: `${monthName(s.month)} · n=${s.n}`, val: (s.avgPts>=0?'+':'')+s.avgPts.toFixed(2) }));
     const clvMax = Math.max(...clvRaw.map(s => Math.abs(parseFloat(String(s.val).replace('−','-'))))) || 1;
     const clvSeg = clvRaw.map(s => {
       const num = parseFloat(String(s.val).replace('−','-'));
@@ -768,8 +811,8 @@ class Component extends DCLogic {
     const totalsDecidedEmpty = he ? 'נאסף — אין עדיין טוטאלים שהוכרעו' : 'Collecting — no settled totals yet';
     const hasTotalsDecided = totalsDecidedRows.length > 0;
 
-    const clvFinal = (R.clv && R.clv.final != null) ? R.clv.final : 0.33;
-    const clvFinalStr = (clvFinal >= 0 ? '+' : '') + Number(clvFinal).toFixed(2);
+    const clvAvg = (R.clv && typeof R.clv.avgPts === 'number') ? R.clv.avgPts : null;
+    const clvFinalStr = clvAvg != null ? (clvAvg >= 0 ? '+' : '') + clvAvg.toFixed(2) : '—';
     return {
       ...L, navTabs, rankTabs, nav, feat, tiles, rankRows, rankNote, rankColHeaders, stageBars,
       howBullets, howExtra, howRows,
@@ -777,7 +820,7 @@ class Component extends DCLogic {
       featEdge: feat.edgeStr, featEdgeTarget: (feat.edge != null ? Math.abs(feat.edge) : ''),
       featEdgePrefix: (feat.edge != null && feat.edge < 0 ? '−' : '+'), clvFinalStr,
       gauge: featHas ? this.gauge(feat.mktUnder, feat.engUnder) : {}, clv: this.clvChart(), cal: this.cal(), drivers, integrity, clvSeg,
-      freshness, scannedN, scannedText,
+      freshness, liveWord, liveDot, scannedN, scannedText,
       totalsDecidedRows, totalsDecidedHead, totalsDecidedEmpty, hasTotalsDecided, noTotalsDecided: !hasTotalsDecided,
       scannedLine: (scannedN != null ? (he ? `נסרקו ${scannedN} משחקים היום` : `Scanned ${scannedN} games today`) : ''),
       boardCounter: (function(){var a=tiles.filter(function(t){return t.state==='aplus';}).length,v=tiles.filter(function(t){return t.state==='value';}).length,k=tiles.filter(function(t){return t.state==='silent';}).length;return he?(a+' A+ · '+v+' ערך · '+k+(k===1?' שתיקה':' שתיקות')):(a+' A+ · '+v+' value · '+k+' silent');})(),
@@ -805,7 +848,7 @@ class Component extends DCLogic {
       stateTitle: stMsg.t || '', stateBody: stMsg.b || '',
       stateScanned: scannedText,
       dispStateChip: V === 'empty' ? 'inline-flex' : 'none',
-      stateChip: he ? 'העדכון הבא · 06:00' : 'Next update · 06:00',
+      stateChip: he ? 'מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.' : 'Updated several times a day. Scheduled runs are often delayed or skipped.',
       showRetry: V === 'error' ? 'inline-flex' : 'none',
       retryLabel: he ? 'נסה שוב' : 'Retry',
       onKey: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } },

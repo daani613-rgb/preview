@@ -95,8 +95,8 @@
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(53,227,154,0.08);border:1px solid rgba(53,227,154,0.22)">
-          <span style="width:7px;height:7px;border-radius:50%;background:#35e39a;box-shadow:0 0 9px #35e39a;animation:livep 1.7s infinite"></span>
-          <span style="font-family:var(--fm);font-size:11px;color:#7fe3b0;font-weight:600">{{ liveLabel }} · {{ freshness }}</span>
+          <span style="width:7px;height:7px;border-radius:50%;background:{{ liveDot }};box-shadow:0 0 9px {{ liveDot }};animation:livep 1.7s infinite"></span>
+          <span style="font-family:var(--fm);font-size:11px;color:#7fe3b0;font-weight:600">{{ liveWord }}{{ freshness }}</span>
         </div>
         <div onClick="{{ toggleLang }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;padding:9px 15px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);font-family:var(--fm);font-size:12px;font-weight:600;color:#cfd3e2" style-hover="border-color:#4a9eff;color:#8fc4ff">{{ otherLang }}</div>
       </div>
@@ -320,7 +320,14 @@
       <!-- ============ TAB: TRACK RECORD ============ -->
       <div style="display:{{ dispTrack }}">
         <div>
-          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#6f7897;font-weight:600;margin-bottom:16px">{{ validatedHead }}</div>
+          <!-- separation: live record (forward, from baseball_log.csv) vs backtest (holdout.json) -->
+          <div style="font-size:15px;font-weight:700;color:#f5c67a;margin-bottom:14px">{{ sepLabel }}</div>
+          <div style="border-radius:18px;padding:18px 22px;margin-bottom:22px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08)">
+            <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#6f7897;font-weight:600;margin-bottom:8px">{{ liveHead }}</div>
+            <div style="font-size:14px;line-height:1.6;color:#c4c7d2">{{ liveText }}</div>
+          </div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#6f7897;font-weight:600;margin-bottom:6px">{{ validatedHead }}</div>
+          <div style="font-size:13px;line-height:1.6;color:#8791ab;margin-bottom:16px">{{ backtestText }}</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px">
             <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
               <div style="position:relative;border-radius:18px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.08);overflow:hidden">
@@ -413,7 +420,7 @@
                   <div style="display:flex;align-items:center;gap:12px">
                     <div style="width:90px;font-family:var(--fm);font-size:12px;color:#8791ab">{{ sb.label }}</div>
                     <div style="flex:1;height:12px;border-radius:6px;background:rgba(255,255,255,0.06);overflow:hidden"><div style="height:100%;border-radius:6px;background:{{ sb.fill }};width:{{ sb.pct }}%"></div></div>
-                    <div style="width:46px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:{{ sb.color }}">{{ sb.pctDisp }}%</div>
+                    <div style="width:46px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:{{ sb.color }}">{{ sb.pctDisp }}</div>
                   </div>
                 </sc-for>
               </div>
@@ -445,6 +452,7 @@
              Bilingual (l-he/l-en toggled via data-glang). Old summary bullets removed. -->
         <div style="border-radius:20px;padding:8px 30px 22px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
           <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin:16px 0 4px">{{ guideLabel }}</div>
+          <div style="font-size:14px;font-weight:700;color:#f5c67a;margin:4px 0 6px">{{ guideNote }}</div>
           <div class="mlg" data-mlb-guide></div>
         </div>
       </div>
