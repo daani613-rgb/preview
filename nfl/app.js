@@ -15,14 +15,25 @@ const GUIDE_NFL=`
 class Component extends DCLogic {
   state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'teams_today', openTile: null, dateFilter: 'week' };
 
-  componentDidMount() { this.runCountUp(); this.ensureThree(); this._syncGuide(); }
-  componentDidUpdate(prevProps, prevState) { this.runCountUp(); this._syncGuide(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
+  componentDidMount() { this.runCountUp(); this.ensureThree(); this._syncGuide(); this._syncStale(); }
+  componentDidUpdate(prevProps, prevState) { this.runCountUp(); this._syncGuide(); this._syncStale(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
   // Inject the full How-it-works guide (bilingual HTML) — dc-mini escapes text, so inject here.
   _syncGuide() {
     const el = document.querySelector('#dc-root [data-nfl-guide]');
     if (!el) return;
     if (!el.firstChild) el.innerHTML = GUIDE_NFL;
     el.setAttribute('data-glang', this.state.lang);
+  }
+  // Stale-data banner: client clock more than 24h past the build time (REAL.builtUtc). Placed before #dc-root, outside the dc-mini tree.
+  _syncStale() {
+    const root = document.getElementById('dc-root'), bt = (window.REAL || {}).builtUtc;
+    let el = document.getElementById('nfl-stale');
+    const old = !!(root && bt) && (Date.now() - Date.parse(bt)) > 24 * 3600 * 1000;
+    if (!old) { if (el) el.remove(); return; }
+    if (!el) { el = document.createElement('div'); el.id = 'nfl-stale'; el.style.cssText = 'margin:12px auto;max-width:1200px;padding:10px 14px;border:1px solid #f5b23d;border-radius:8px;color:#f5b23d;font:600 13px var(--fm,monospace)'; root.parentNode.insertBefore(el, root); }
+    const ts = bt.slice(0, 16).replace('T', ' '), he = this.state.lang === 'he';
+    el.dir = he ? 'rtl' : 'ltr';
+    el.textContent = he ? `הנתונים אינם מעודכנים. בנייה אחרונה ${ts} UTC.` : `Data is not current. Last build ${ts} UTC.`;
   }
   componentWillUnmount() {
     this._dead = true;
@@ -438,9 +449,10 @@ class Component extends DCLogic {
     const _mHe = ['','בינואר','בפברואר','במרץ','באפריל','במאי','ביוני','ביולי','באוגוסט','בספטמבר','באוקטובר','בנובמבר','בדצמבר'];
     const _ap = asOf ? asOf.split('-') : null;
     const _zone = R.asOfZone || null;
-    const freshnessLabel = (_ap && _ap.length === 3 && _zone)
+    const _bt = R.builtUtc ? R.builtUtc.slice(0, 16).replace('T', ' ') : null;
+    const freshnessLabel = ((_ap && _ap.length === 3 && _zone)
       ? (he ? `נכון ל: ${parseInt(_ap[2],10)} ${_mHe[parseInt(_ap[1],10)]} ${_ap[0]} (${_zone})` : `As of: ${parseInt(_ap[2],10)} ${_mFull[parseInt(_ap[1],10)]} ${_ap[0]} (${_zone})`)
-      : (he ? 'נכון ל: —' : 'As of: —');
+      : (he ? 'נכון ל: —' : 'As of: —')) + (_bt ? (he ? ` · נבנה ${_bt} UTC` : ` · Built ${_bt} UTC`) : '');
 
     const raw = (R.tiles || []).map(t => ({
       id: t.id, away: t.away, home: t.home, time: t.time,
