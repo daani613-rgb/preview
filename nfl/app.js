@@ -231,7 +231,7 @@ class Component extends DCLogic {
     };
     const he = {
       dir: 'rtl', brand: 'מרכז שליטה', liveLabel: 'חי',
-      heroTitle: 'מנוע החיזוי של NFL', heroSub: `שני מודלים לכל משחק, מנצח וסך נקודות. שחזור walk-forward על ${nGames.toLocaleString()} משחקים, עונות ${hoSeasons}. לא חלוקת holdout. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.`,
+      heroTitle: 'מנוע החיזוי של NFL', heroSub: `שני מודלים לכל משחק, מנצח וסך נקודות. שחזור walk-forward על ${nGames.toLocaleString()} משחקים, עונות ${hoSeasons}. לא מדידה על נתונים מוחזקים. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.`,
       signalKicker: `קריאת ה-A+ · שבוע ${wk}`, edgeLabel: 'Edge מול השוק', runsLabel: 'נקודות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ',
       validatedHead: 'שחזור WALK-FORWARD',
@@ -265,7 +265,7 @@ class Component extends DCLogic {
       ],
       kpis: [
         {display:'—', target:'', dec:0, prefix:'', u:'', tag:'A+', d:nflAplus('he')},
-        {display:`${accOverall}`, target:accOverall, dec:1, prefix:'', u:accOverall === '—' ? '' : '%', d:`כללי · שחזור walk-forward על ${nGames.toLocaleString()} משחקים, עונות ${hoSeasons}. לא חלוקת holdout.`},
+        {display:`${accOverall}`, target:accOverall, dec:1, prefix:'', u:accOverall === '—' ? '' : '%', d:`כללי · שחזור walk-forward על ${nGames.toLocaleString()} משחקים, עונות ${hoSeasons}. לא מדידה על נתונים מוחזקים.`},
         {display:'—', target:'', u:'', d:'כיוון מעל/מתחת · עדיין לא נמדד.'},
         {display:'—', target:'', u:'', d:'CLV · לא מחובר מקור קווי סגירה ל-NFL.'},
       ],
