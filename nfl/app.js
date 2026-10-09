@@ -179,21 +179,28 @@ class Component extends DCLogic {
 
   labels() {
     const R = window.REAL || {};
-    const acc = R.accuracy || {};
-    const accOverall = acc.overall != null ? acc.overall : '—';
-    const accAplus  = acc.aplus   != null ? acc.aplus   : '—';
-    const nGames    = acc.games   != null ? acc.games   : '—';
-    const pctOf     = v => v === '—' ? '—' : `${v}%`;
-    const hoSeasons = acc.seasons || '—';
-    const hoNAplus  = acc.aplusGames != null ? acc.aplusGames.toLocaleString() : '—';
+    // Accuracy fields computed at build time; each names its window and carries n. Missing field -> rendered empty ('—'), never an old number.
+    const A = R.acc || {}, HO = A.acc_heldout_2020_2025 || null, ST = A.acc_stage7_2020_2025 || null, AP = A.acc_aplus_2020_2025 || null, BL = A.home_baseline_2020_2025 || null;
+    const nf = x => Number(x).toLocaleString('en-US');
+    const accTxt = {
+      en: { ho: HO ? `Held out accuracy ${HO.value}% on ${nf(HO.n)} games, seasons ${HO.from} to ${HO.to}. The model parameters were chosen on seasons ${HO.train_from} to ${HO.train_to} only and this window was measured once.` : '',
+            bl: BL ? ` Always-home baseline on the same window: ${BL.value}%.` : '',
+            st: ST ? `Backtest, seasons ${ST.from} to ${ST.to}: when the favorite's form stage is ${ST.min_stage} or higher, right ${ST.value}% on ${nf(ST.n)} games. The stage settings were chosen on seasons that include these, so not held out.` : '',
+            ap: AP ? ` Backtest, seasons ${AP.from} to ${AP.to}: right ${AP.value}% on ${nf(AP.n)} games (${AP.cover}% of games). The A+ settings were chosen on seasons that include these, so not held out.` : '' },
+      he: { ho: HO ? `דיוק על נתונים מוחזקים ${HO.value}% על ${nf(HO.n)} משחקים, עונות ${HO.from} עד ${HO.to}. פרמטרי המודל נבחרו על עונות ${HO.train_from} עד ${HO.train_to} בלבד, והחלון הזה נמדד פעם אחת.` : '',
+            bl: BL ? ` בסיס 'תמיד-בית' על אותו חלון: ${BL.value}%.` : '',
+            st: ST ? `בדיקה היסטורית, עונות ${ST.from} עד ${ST.to}: כשהמועדף בשלב טופס ${ST.min_stage} ומעלה, צודק ב-${ST.value}% על ${nf(ST.n)} משחקים. הגדרות השלבים נבחרו על עונות שכוללות אותן, ולכן לא נתונים מוחזקים.` : '',
+            ap: AP ? ` בדיקה היסטורית, עונות ${AP.from} עד ${AP.to}: צודק ב-${AP.value}% על ${nf(AP.n)} משחקים (${AP.cover}% מהמשחקים). הגדרות ה-A+ נבחרו על עונות שכוללות אותן, ולכן לא נתונים מוחזקים.` : '' },
+    };
+    const kv = F => F ? F.value : '—', ku = F => F ? '%' : '';
     const wk        = R.curWeek != null ? R.curWeek : '—';
 
     const en = {
       dir: 'ltr', brand: 'Command Center', liveLabel: 'LIVE',
-      heroTitle: 'The NFL engine, live.', heroSub: `Two models per game, winner and total points. Walk-forward reconstruction over ${nGames.toLocaleString()} games, seasons ${hoSeasons}. Not a held-out split. Updated once a day. Scheduled runs are often delayed or skipped.`,
+      heroTitle: 'The NFL engine, live.', heroSub: `Two models per game, winner and total points. ${accTxt.en.ho ? accTxt.en.ho + ' ' : ''}Updated once a day. Scheduled runs are often delayed or skipped.`,
       signalKicker: `The A+ call · week ${wk}`, edgeLabel: 'Edge vs market', runsLabel: 'expected points', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'HIGH', underWord: 'LOW', homeWord: 'Home', awayWord: 'Away',
-      validatedHead: 'WALK-FORWARD RECONSTRUCTION',
+      validatedHead: 'ACCURACY: HELD OUT AND BACKTEST',
       clvTitle: 'CLV for NFL: no data yet', clvWhy: 'Closing-line value compares the price at prediction time with the closing price. No closing-line source is connected for NFL, so there is nothing to chart.', clvNeed: 'Needed: a closing-odds feed captured at each kickoff, stored per game next to the pre-game price.',
       seasonHead: `THIS SEASON · ${R.season || ''} · LIVE, FORWARD-ONLY`, seasonEmpty: 'No games decided yet this season.',
       calTitle: 'Calibration', calSub: 'Predicted probability vs what actually happened. On the diagonal = perfectly calibrated.',
@@ -206,7 +213,7 @@ class Component extends DCLogic {
       eloExplain: '= who wins (the call).', fipExplain: '= how sure (calibrates it).',
       disclaimer: 'For information and entertainment only · Not betting advice · Play responsibly · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
       driversHead: 'Why this signal · from the engine', integrityHead: 'Model integrity',
-      sampleLabel: `games · walk-forward reconstruction · seasons ${hoSeasons}`, drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate',
+      sampleLabel: HO ? `games · held out · seasons ${HO.from} to ${HO.to}` : '', drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate',
       navTabs: [ {id:'signals',icon:'⚡',label:'Signals'}, {id:'rankings',icon:'📊',label:'Rankings'}, {id:'track',icon:'🎯',label:'Track record'}, {id:'how',icon:'📖',label:'How it works'} ],
       rankTabs: [
         {id:'teams_today',   group:'week',   icon:'🏙️', label:'Teams', depLabel:'upcoming'},
@@ -219,12 +226,13 @@ class Component extends DCLogic {
       ],
       dateFilterLabels: ['This week', 'Results', 'By week', 'All'],
       heroStats: [
-        {v:pctOf(accOverall), k:'overall · walk-forward',   color:'#35e39a'},
+        {v:HO ? `${HO.value}%` : '—', k:HO ? `held out · ${HO.from} to ${HO.to}` : '', color:'#35e39a'},
         {v: '—',            k:'CLV',        color:'#6f7897'},
       ],
       kpis: [
-        {display:'—', target:'', dec:0, prefix:'', u:'', tag:'A+', d:nflAplus('en')},
-        {display:`${accOverall}`, target:accOverall, dec:1, prefix:'', u:accOverall === '—' ? '' : '%', d:`Overall · walk-forward reconstruction over ${nGames.toLocaleString()} games, seasons ${hoSeasons}. Not a held-out split.`},
+        {display:`${kv(AP)}`, target:AP ? AP.value : '', dec:1, prefix:'', u:ku(AP), tag:'A+', d:nflAplus('en') + accTxt.en.ap},
+        {display:`${kv(ST)}`, target:ST ? ST.value : '', dec:1, prefix:'', u:ku(ST), d:accTxt.en.st},
+        {display:`${kv(HO)}`, target:HO ? HO.value : '', dec:1, prefix:'', u:ku(HO), d:accTxt.en.ho + accTxt.en.bl},
         {display:'—', target:'', u:'', d:'Totals over/under direction · not tracked yet.'},
         {display:'—', target:'', u:'', d:'CLV · no closing-line source connected for NFL.'},
       ],
@@ -242,10 +250,10 @@ class Component extends DCLogic {
     };
     const he = {
       dir: 'rtl', brand: 'מרכז שליטה', liveLabel: 'חי',
-      heroTitle: 'מנוע החיזוי של NFL', heroSub: `שני מודלים לכל משחק, מנצח וסך נקודות. שחזור walk-forward על ${nGames.toLocaleString()} משחקים, עונות ${hoSeasons}. לא מדידה על נתונים מוחזקים. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.`,
+      heroTitle: 'מנוע החיזוי של NFL', heroSub: `שני מודלים לכל משחק, מנצח וסך נקודות. ${accTxt.he.ho ? accTxt.he.ho + ' ' : ''}מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.`,
       signalKicker: `קריאת ה-A+ · שבוע ${wk}`, edgeLabel: 'Edge מול השוק', runsLabel: 'נקודות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ',
-      validatedHead: 'שחזור WALK-FORWARD',
+      validatedHead: 'דיוק: נתונים מוחזקים ובדיקה היסטורית',
       clvTitle: 'CLV ל-NFL: אין עדיין נתונים', clvWhy: 'ערך קו הסגירה משווה את המחיר בזמן התחזית למחיר הסגירה. לא מחובר מקור קווי סגירה ל-NFL, ולכן אין מה להציג.', clvNeed: 'נדרש: מקור יחסי סגירה שנלכד בכל פתיחת משחק ונשמר לכל משחק לצד המחיר שלפני המשחק.',
       seasonHead: `העונה הזו · ${R.season || ''} · חי, קדימה בלבד`, seasonEmpty: 'עדיין אין משחקים שהוכרעו העונה.',
       calTitle: 'כיול (Calibration)', calSub: 'הסתברות חזויה מול מה שקרה בפועל. על האלכסון = מכויל בול.',
@@ -258,7 +266,7 @@ class Component extends DCLogic {
       eloExplain: '= מי מנצח (הקריאה).', fipExplain: '= כמה בטוח (מכייל).',
       disclaimer: 'למידע ובידור בלבד · אינו ייעוץ הימורים · שחק באחריות · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
       driversHead: 'למה הסיגנל הזה · מהמנוע', integrityHead: 'שלמות המודל',
-      sampleLabel: `משחקים · שחזור walk-forward · עונות ${hoSeasons}`, drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+',
+      sampleLabel: HO ? `משחקים · נתונים מוחזקים · עונות ${HO.from} עד ${HO.to}` : '', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+',
       navTabs: [ {id:'signals',icon:'⚡',label:'סיגנלים'}, {id:'rankings',icon:'📊',label:'דירוגים'}, {id:'track',icon:'🎯',label:'ביצועים'}, {id:'how',icon:'📖',label:'איך זה עובד'} ],
       rankTabs: [
         {id:'teams_today',   group:'week',   icon:'🏙️', label:'קבוצות', depLabel:'טרם שוחקו'},
@@ -271,12 +279,13 @@ class Component extends DCLogic {
       ],
       dateFilterLabels: ['השבוע', 'תוצאות', 'לפי שבוע', 'הכל'],
       heroStats: [
-        {v:pctOf(accOverall), k:'כללי · walk-forward',       color:'#35e39a'},
+        {v:HO ? `${HO.value}%` : '—', k:HO ? `נתונים מוחזקים · ${HO.from} עד ${HO.to}` : '', color:'#35e39a'},
         {v: '—', k:'CLV', color:'#6f7897'},
       ],
       kpis: [
-        {display:'—', target:'', dec:0, prefix:'', u:'', tag:'A+', d:nflAplus('he')},
-        {display:`${accOverall}`, target:accOverall, dec:1, prefix:'', u:accOverall === '—' ? '' : '%', d:`כללי · שחזור walk-forward על ${nGames.toLocaleString()} משחקים, עונות ${hoSeasons}. לא מדידה על נתונים מוחזקים.`},
+        {display:`${kv(AP)}`, target:AP ? AP.value : '', dec:1, prefix:'', u:ku(AP), tag:'A+', d:nflAplus('he') + accTxt.he.ap},
+        {display:`${kv(ST)}`, target:ST ? ST.value : '', dec:1, prefix:'', u:ku(ST), d:accTxt.he.st},
+        {display:`${kv(HO)}`, target:HO ? HO.value : '', dec:1, prefix:'', u:ku(HO), d:accTxt.he.ho + accTxt.he.bl},
         {display:'—', target:'', u:'', d:'כיוון מעל/מתחת · עדיין לא נמדד.'},
         {display:'—', target:'', u:'', d:'CLV · לא מחובר מקור קווי סגירה ל-NFL.'},
       ],
@@ -662,9 +671,9 @@ class Component extends DCLogic {
       { label: he ? 'פער מול קו השוק של המשחק' : 'Gap vs this game\'s market line', val: feat.edgeStr, arrow: '▲', color: '#8ff0c0' },
     ];
 
-    const ig = R.integrity || {};
+    const A = R.acc || {};
     const integrity = {
-      n: ig.n || '—',
+      n: (A.acc_heldout_2020_2025 ? Number(A.acc_heldout_2020_2025.n).toLocaleString('en-US') : '—'),
       drawdown: '—',
       brier:    '—',
       hit:      '—',   // A+ hit rate was a constant (nfl_build.py meta): not shown
