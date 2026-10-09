@@ -121,22 +121,6 @@
               <div onClick="{{ wc.onClick }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;padding:6px 12px;border-radius:8px;font-family:var(--fm);font-size:12px;font-weight:600;border:1px solid {{ wc.border }};background:{{ wc.bg }};color:{{ wc.color }}">{{ wc.label }}</div>
             </sc-for>
           </div>
-          <!-- games list (Results / By week / All) -->
-          <div style="display:{{ dispGamesList }}">
-            <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8791ab;margin-bottom:14px">{{ gamesCountLabel }}</div>
-            <div style="display:{{ dispGamesEmpty }};padding:20px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);font-size:14px;color:#9aa2ba;line-height:1.6">{{ gamesListEmptyMsg }}</div>
-            <div style="display:{{ dispGamesRows }};flex-direction:column;gap:8px">
-              <sc-for list="{{ gamesView }}" as="g" hint-placeholder-count="8">
-                <div style="position:relative;border-radius:12px;padding:14px 18px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-                  <div style="position:absolute;top:0;bottom:0;inset-inline-start:0;width:3px;background:{{ g.accent }}"></div>
-                  <div style="flex:1;min-width:150px"><div style="font-size:15px;font-weight:800">{{ g.matchup }} <sc-if value="{{ g.aplus }}"><span style="font-family:var(--fm);font-size:10px;font-weight:700;color:#8f7bff;border:1px solid rgba(143,123,255,0.4);border-radius:5px;padding:1px 5px;margin-inline-start:6px">{{ g.aplusTag }}</span></sc-if></div><div style="font-family:var(--fm);font-size:11px;color:#6f7897;margin-top:4px">{{ g.when }}</div></div>
-                  <div style="font-size:13px;color:#c4c7d2;min-width:150px">{{ g.pick }} <span style="color:#6f7897">{{ g.stageStr }}</span></div>
-                  <div style="font-family:var(--fm);font-size:12px;color:#9aa2ba;min-width:80px">{{ g.totalStr }} <span style="color:#f5b23d">{{ g.windTag }}</span></div>
-                  <div style="font-family:var(--fm);font-size:11px;color:#8791ab;min-width:130px;text-align:end">{{ g.tail }}<sc-if value="{{ g.verdict }}"><div style="font-weight:700;color:{{ g.verdictColor }};margin-top:3px">{{ g.verdict }}</div></sc-if></div>
-                </div>
-              </sc-for>
-            </div>
-          </div>
           <!-- board (This week) -->
           <div style="display:{{ dispBoard }}">
           <!-- featured signal (unplayed A+ only) -->
@@ -207,6 +191,7 @@
             </div>
           </sc-if>
           <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8791ab;margin-bottom:16px">{{ boardCounter }}</div>
+          <div style="font-size:13px;color:#9aa2ba;line-height:1.6;margin-bottom:16px">{{ boardNote }}</div>
           <!-- board -->
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;align-items:start">
             <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="4">
@@ -269,6 +254,22 @@
             </sc-for>
           </div>
           </div><!-- /dispBoard -->
+          <!-- games list (This week: under the board / Results / By week / All) -->
+          <div style="display:{{ dispGamesList }}">
+            <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8791ab;margin-bottom:14px">{{ gamesCountLabel }}</div>
+            <div style="display:{{ dispGamesEmpty }};padding:20px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);font-size:14px;color:#9aa2ba;line-height:1.6">{{ gamesListEmptyMsg }}</div>
+            <div style="display:{{ dispGamesRows }};flex-direction:column;gap:8px">
+              <sc-for list="{{ gamesView }}" as="g" hint-placeholder-count="8">
+                <div style="position:relative;border-radius:12px;padding:14px 18px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                  <div style="position:absolute;top:0;bottom:0;inset-inline-start:0;width:3px;background:{{ g.accent }}"></div>
+                  <div style="flex:1;min-width:150px"><div style="font-size:15px;font-weight:800">{{ g.matchup }} <sc-if value="{{ g.aplus }}"><span style="font-family:var(--fm);font-size:10px;font-weight:700;color:#8f7bff;border:1px solid rgba(143,123,255,0.4);border-radius:5px;padding:1px 5px;margin-inline-start:6px">{{ g.aplusTag }}</span></sc-if></div><div style="font-family:var(--fm);font-size:11px;color:#6f7897;margin-top:4px">{{ g.when }}</div></div>
+                  <div style="font-size:13px;color:#c4c7d2;min-width:150px">{{ g.pick }} <span style="color:#6f7897">{{ g.stageStr }}</span></div>
+                  <div style="font-family:var(--fm);font-size:12px;color:#9aa2ba;min-width:80px">{{ g.totalStr }} <span style="color:#f5b23d">{{ g.windTag }}</span></div>
+                  <div style="font-family:var(--fm);font-size:11px;color:#8791ab;min-width:130px;text-align:end">{{ g.tail }}<sc-if value="{{ g.verdict }}"><div style="font-weight:700;color:{{ g.verdictColor }};margin-top:3px">{{ g.verdict }}</div></sc-if></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
           <!-- honest caveat note -->
           <div style="margin-top:20px;padding:13px 16px;border-radius:11px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08);font-size:13px;color:#8791ab;line-height:1.6"><b style="color:#c4c7d2">Honest note.</b> {{ signalsCaveat }}</div>
         </div>

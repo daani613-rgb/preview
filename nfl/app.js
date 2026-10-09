@@ -418,7 +418,7 @@ class Component extends DCLogic {
     if (dateFilter === 'results') _gv = allGames.filter(g => g.played);
     else if (dateFilter === 'all') _gv = allGames;
     else if (dateFilter === 'byweek') _gv = allGames.filter(g => g.week === selWeek);
-    else _gv = allGames.filter(g => g.week === curWeek); // 'week'
+    else _gv = allGames.filter(g => (g.week || curWeek) === curWeek); // 'week': every game of the current week, same filter as visibleGames() on the old page
     const _mN = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const _fmtD = d => { if (!d) return ''; const p = d.split('-'); return p.length === 3 ? (parseInt(p[2],10) + ' ' + _mN[parseInt(p[1],10)]) : d; };
     const gamesView = _gv.map(g => ({
@@ -444,7 +444,7 @@ class Component extends DCLogic {
       color: w === selWeek ? '#c8bfff' : '#aeb4c8',
     }));
     const showWeekChips = dateFilter === 'byweek';
-    const showGamesList = dateFilter !== 'week';   // 'week' keeps the featured + tiles board
+    const showGamesList = true;   // 'week' shows the featured + tiles board, then this list under it
     const showBoard = dateFilter === 'week';
     const gamesListEmpty = gamesView.length === 0;
     const gamesListEmptyMsg = dateFilter === 'results'
@@ -713,6 +713,14 @@ class Component extends DCLogic {
       gauge: featHasGauge ? this.gauge(feat.mktUnder, feat.engUnder) : {},
       cal: this.cal(),
       drivers, integrity, seasonHas, seasonEmptyFlag: !seasonHas, seasonRows,
+      // Sentence above the board; N = A+ tiles in the output (the board holds every A+ game plus the next three by
+      // gen_nfl_data tile_priority: value zone + form stage).
+      boardNote: (function(){var n=tiles.filter(function(t){return t.state==='aplus';}).length;
+        if (!n) return he ? 'אין קריאות A פלוס השבוע. הלוח מציג את שלושת המשחקים עם הציון המשולב הגבוה ביותר של ערך ושלב כושר.'
+                          : 'No A plus calls this week. The board shows the three games with the highest combined score of value and form stage.';
+        if (he) return n === 1 ? 'יש קריאת A פלוס אחת השבוע. הלוח מציג אותה ועוד שלושה משחקים עם הציון המשולב הגבוה ביותר של ערך ושלב כושר.'
+                               : 'יש ' + n + ' קריאות A פלוס השבוע. הלוח מציג אותן ועוד שלושה משחקים עם הציון המשולב הגבוה ביותר של ערך ושלב כושר.';
+        return n + ' A plus calls this week. The board shows them plus the three games with the highest combined score of value and form stage.';})(),
       boardCounter: (function(){var a=tiles.filter(function(t){return t.state==='aplus';}).length,v=tiles.filter(function(t){return t.state==='value';}).length,k=tiles.filter(function(t){return t.state==='silent';}).length;return he?(a+' A+ · '+v+' ערך · '+k+(k===1?' שתיקה':' שתיקות')):(a+' A+ · '+v+' value · '+k+' silent');})(),
       dispSignals:  tab === 'signals'  ? 'block' : 'none',
       dispRankings: tab === 'rankings' ? 'block' : 'none',
