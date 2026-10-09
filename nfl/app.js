@@ -454,7 +454,7 @@ class Component extends DCLogic {
       color: w === selWeek ? '#c8bfff' : '#aeb4c8',
     }));
     const showWeekChips = dateFilter === 'byweek';
-    const showTopBtn = dateFilter === 'results' || dateFilter === 'all';
+    const showTopBtn = true;   // scroll-driven only: shown in every view once the page is scrolled, hidden at the top (CSS data-nfl-scrolled)
     const showGamesList = true;   // 'week' shows the featured + tiles board, then this list under it
     const showBoard = dateFilter === 'week';
     const gamesListEmpty = gamesView.length === 0;
