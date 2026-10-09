@@ -15,8 +15,10 @@ const GUIDE_NFL=`
 class Component extends DCLogic {
   state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'teams_today', openTile: null, dateFilter: 'week' };
 
-  componentDidMount() { this.runCountUp(); this.ensureThree(); this._syncGuide(); this._syncStale(); }
-  componentDidUpdate(prevProps, prevState) { this.runCountUp(); this._syncGuide(); this._syncStale(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
+  componentDidMount() { this.runCountUp(); this.ensureThree(); this._syncGuide(); this._syncStale(); this._syncWeekChip();
+    this._onScroll = () => { if (window.scrollY > 0) document.documentElement.setAttribute('data-nfl-scrolled', ''); else document.documentElement.removeAttribute('data-nfl-scrolled'); };
+    window.addEventListener('scroll', this._onScroll, { passive: true }); this._onScroll(); }
+  componentDidUpdate(prevProps, prevState) { this.runCountUp(); this._syncGuide(); this._syncStale(); if (prevState && (prevState.dateFilter !== this.state.dateFilter || prevState.lang !== this.state.lang)) this._syncWeekChip(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
   // Inject the full How-it-works guide (bilingual HTML) — dc-mini escapes text, so inject here.
   _syncGuide() {
     const el = document.querySelector('#dc-root [data-nfl-guide]');
@@ -35,11 +37,19 @@ class Component extends DCLogic {
     el.dir = he ? 'rtl' : 'ltr';
     el.textContent = he ? `הנתונים אינם מעודכנים. בנייה אחרונה ${ts} UTC.` : `Data is not current. Last build ${ts} UTC.`;
   }
+  // Week chips are one horizontally scrolling row; bring the selected week into view inside the row only.
+  _syncWeekChip() {
+    const row = document.querySelector('#dc-root [data-week-chips]'), on = row && row.querySelector('[data-on]');
+    if (!row || !on || !row.offsetParent) return;
+    const r = row.getBoundingClientRect(), c = on.getBoundingClientRect();
+    row.scrollLeft += (c.left - r.left) - (r.width - c.width) / 2;
+  }
   componentWillUnmount() {
     this._dead = true;
     [this._rafC, this._raf3].forEach(r => r && cancelAnimationFrame(r));
     if (this._onMove) window.removeEventListener('mousemove', this._onMove);
     if (this._onResize) window.removeEventListener('resize', this._onResize);
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
     if (this._renderer) { try { this._renderer.dispose(); } catch (e) {} }
   }
 
@@ -224,11 +234,11 @@ class Component extends DCLogic {
         {id:'elo_power',     group:'season', icon:'💪', label:'Power', depLabel:'season-long'},
         {id:'momentum',      group:'season', icon:'🔥', label:'Momentum', depLabel:'season-long'},
       ],
-      dateFilterLabels: ['This week', 'Results', 'By week', 'All'],
+      dateFilterLabels: ['This week', 'Results', 'By week', 'All'], filterBarLabel: 'FILTER GAMES', weekRowLabel: 'WEEK',
       heroStats: [
         {v:HO ? `${HO.value}%` : '—', k:HO ? `held out · ${HO.from} to ${HO.to}` : '', color:'#35e39a'},
         {v: '—',            k:'CLV',        color:'#6f7897'},
-      ],
+      ].filter(s => s.v !== '—'),   // a cell without a source is hidden whole, not shown as a dash
       kpis: [
         {display:`${kv(AP)}`, target:AP ? AP.value : '', dec:1, prefix:'', u:ku(AP), tag:'A+', d:nflAplus('en') + accTxt.en.ap},
         {display:`${kv(ST)}`, target:ST ? ST.value : '', dec:1, prefix:'', u:ku(ST), d:accTxt.en.st},
@@ -277,11 +287,11 @@ class Component extends DCLogic {
         {id:'elo_power',     group:'season', icon:'💪', label:'עוצמה', depLabel:'כל-העונה'},
         {id:'momentum',      group:'season', icon:'🔥', label:'מומנטום', depLabel:'כל-העונה'},
       ],
-      dateFilterLabels: ['השבוע', 'תוצאות', 'לפי שבוע', 'הכל'],
+      dateFilterLabels: ['השבוע', 'תוצאות', 'לפי שבוע', 'הכל'], filterBarLabel: 'סינון משחקים', weekRowLabel: 'שבוע',
       heroStats: [
         {v:HO ? `${HO.value}%` : '—', k:HO ? `נתונים מוחזקים · ${HO.from} עד ${HO.to}` : '', color:'#35e39a'},
         {v: '—', k:'CLV', color:'#6f7897'},
-      ],
+      ].filter(s => s.v !== '—'),   // a cell without a source is hidden whole, not shown as a dash
       kpis: [
         {display:`${kv(AP)}`, target:AP ? AP.value : '', dec:1, prefix:'', u:ku(AP), tag:'A+', d:nflAplus('he') + accTxt.he.ap},
         {display:`${kv(ST)}`, target:ST ? ST.value : '', dec:1, prefix:'', u:ku(ST), d:accTxt.he.st},
@@ -444,6 +454,7 @@ class Component extends DCLogic {
       color: w === selWeek ? '#c8bfff' : '#aeb4c8',
     }));
     const showWeekChips = dateFilter === 'byweek';
+    const showTopBtn = dateFilter === 'results' || dateFilter === 'all';
     const showGamesList = true;   // 'week' shows the featured + tiles board, then this list under it
     const showBoard = dateFilter === 'week';
     const gamesListEmpty = gamesView.length === 0;
@@ -461,7 +472,7 @@ class Component extends DCLogic {
     const _bt = R.builtUtc ? R.builtUtc.slice(0, 16).replace('T', ' ') : null;
     const freshnessLabel = ((_ap && _ap.length === 3 && _zone)
       ? (he ? `נכון ל: ${parseInt(_ap[2],10)} ${_mHe[parseInt(_ap[1],10)]} ${_ap[0]} (${_zone})` : `As of: ${parseInt(_ap[2],10)} ${_mFull[parseInt(_ap[1],10)]} ${_ap[0]} (${_zone})`)
-      : (he ? 'נכון ל: —' : 'As of: —')) + (_bt ? (he ? ` · נבנה ${_bt} UTC` : ` · Built ${_bt} UTC`) : '');
+      : '') + (_bt ? (he ? ` · נבנה ${_bt} UTC` : ` · Built ${_bt} UTC`) : '');
 
     const raw = (R.tiles || []).map(t => ({
       id: t.id, away: t.away, home: t.home, time: t.time,
@@ -700,7 +711,9 @@ class Component extends DCLogic {
     return {
       ...L, navTabs, rankTabs, nav, rank, feat: feat || {}, tiles, rankRows, stageBars, howBullets,
       rankColHeaders, rankNote2, rankEmpty, rankEmptyMsg, weekSecHead, seasonSecHead,
-      dateFilterTabs, freshnessLabel,
+      dateFilterTabs, freshnessLabel, freshSep: freshnessLabel ? ' · ' : '',
+      backToTop: () => { if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' }); },
+      backToTopLabel: he ? '↑ לראש' : '↑ Top', dispTopBtn: showTopBtn ? 'block' : 'none',
       gamesView, weekChips, showWeekChips, showGamesList, showBoard,
       gamesListEmpty, gamesListEmptyMsg, gamesCountLabel,
       dispBoard: showBoard ? 'block' : 'none', dispGamesList: showGamesList ? 'block' : 'none',
@@ -713,14 +726,13 @@ class Component extends DCLogic {
       gauge: featHasGauge ? this.gauge(feat.mktUnder, feat.engUnder) : {},
       cal: this.cal(),
       drivers, integrity, seasonHas, seasonEmptyFlag: !seasonHas, seasonRows,
-      // Sentence above the board; N = A+ tiles in the output (the board holds every A+ game plus the next three by
-      // gen_nfl_data tile_priority: value zone + form stage).
+      // Sentence above the board; which one depends on whether the output has A+ tiles (the board holds every A+ game
+      // plus three more by gen_nfl_data tile_priority: value zone + form stage; ties keep list order).
       boardNote: (function(){var n=tiles.filter(function(t){return t.state==='aplus';}).length;
-        if (!n) return he ? 'אין קריאות A פלוס השבוע. הלוח מציג את שלושת המשחקים עם הציון המשולב הגבוה ביותר של ערך ושלב כושר.'
-                          : 'No A plus calls this week. The board shows the three games with the highest combined score of value and form stage.';
-        if (he) return n === 1 ? 'יש קריאת A פלוס אחת השבוע. הלוח מציג אותה ועוד שלושה משחקים עם הציון המשולב הגבוה ביותר של ערך ושלב כושר.'
-                               : 'יש ' + n + ' קריאות A פלוס השבוע. הלוח מציג אותן ועוד שלושה משחקים עם הציון המשולב הגבוה ביותר של ערך ושלב כושר.';
-        return n + ' A plus calls this week. The board shows them plus the three games with the highest combined score of value and form stage.';})(),
+        if (!n) return he ? 'אין קריאות A פלוס השבוע. הלוח מציג שלושה משחקים, מדורגים לפי ציון משולב של ערך ושלב כושר.'
+                          : 'No A plus calls this week. The board shows three games, ranked by a combined score of value and form stage.';
+        return he ? 'הלוח מציג את כל קריאות ה-A פלוס של השבוע, ובנוסף שלושה משחקים מדורגים לפי ציון משולב של ערך ושלב כושר.'
+                  : 'The board shows every A plus call this week, plus three more games ranked by a combined score of value and form stage.';})(),
       boardCounter: (function(){var a=tiles.filter(function(t){return t.state==='aplus';}).length,v=tiles.filter(function(t){return t.state==='value';}).length,k=tiles.filter(function(t){return t.state==='silent';}).length;return he?(a+' A+ · '+v+' ערך · '+k+(k===1?' שתיקה':' שתיקות')):(a+' A+ · '+v+' value · '+k+' silent');})(),
       dispSignals:  tab === 'signals'  ? 'block' : 'none',
       dispRankings: tab === 'rankings' ? 'block' : 'none',

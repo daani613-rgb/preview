@@ -51,6 +51,9 @@
     /* hero copy: use the full mobile width (headings wrap; compact pills keep nowrap) */
     [style*="max-width: 560px"],[style*="max-width: 440px"]{max-width:100%!important}
   }
+  /* back-to-top stays hidden until the page is scrolled */
+  html:not([data-nfl-scrolled]) #nfl-top{display:none!important}
+  [data-week-chips]{scrollbar-width:thin}
 </style>
 </head>
 <body>
@@ -71,7 +74,7 @@
       <div style="display:flex;align-items:center;gap:10px">
         <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(53,227,154,0.08);border:1px solid rgba(53,227,154,0.22)">
           <span style="width:7px;height:7px;border-radius:50%;background:#35e39a;box-shadow:0 0 9px #35e39a;animation:livep 1.7s infinite"></span>
-          <span style="font-family:var(--fm);font-size:11px;color:#7fe3b0;font-weight:600">{{ liveLabel }} · {{ freshnessLabel }}</span>
+          <span style="font-family:var(--fm);font-size:11px;color:#7fe3b0;font-weight:600">{{ liveLabel }}{{ freshSep }}{{ freshnessLabel }}</span>
         </div>
         <div onClick="{{ toggleLang }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;padding:9px 15px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);font-family:var(--fm);font-size:12px;font-weight:600;color:#cfd3e2" style-hover="border-color:#4a9eff;color:#8fc4ff">{{ otherLang }}</div>
       </div>
@@ -111,14 +114,16 @@
         <div>
           <!-- date/week filter -->
           <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+            <span style="font-family:var(--fm);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897">{{ filterBarLabel }}</span>
             <sc-for list="{{ dateFilterTabs }}" as="df" hint-placeholder-count="4">
               <div onClick="{{ df.onClick }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;padding:8px 16px;border-radius:999px;font-family:var(--fm);font-size:12px;font-weight:600;border:1px solid {{ df.border }};background:{{ df.bg }};color:{{ df.color }};transition:.15s" style-hover="border-color:rgba(255,255,255,0.28)">{{ df.label }}</div>
             </sc-for>
           </div>
           <!-- week chips (By week) -->
-          <div style="display:{{ dispWeekChips }};gap:6px;margin-bottom:18px;flex-wrap:wrap">
+          <div style="display:{{ dispWeekChips }};margin-bottom:8px"><span style="font-family:var(--fm);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897">{{ weekRowLabel }}</span></div>
+          <div data-week-chips style="display:{{ dispWeekChips }};gap:6px;margin-bottom:18px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px">
             <sc-for list="{{ weekChips }}" as="wc" hint-placeholder-count="6">
-              <div onClick="{{ wc.onClick }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;padding:6px 12px;border-radius:8px;font-family:var(--fm);font-size:12px;font-weight:600;border:1px solid {{ wc.border }};background:{{ wc.bg }};color:{{ wc.color }}">{{ wc.label }}</div>
+              <div data-on="{{ wc.active }}" onClick="{{ wc.onClick }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="flex:0 0 auto;min-height:44px;display:inline-flex;align-items:center;cursor:pointer;padding:6px 14px;border-radius:8px;font-family:var(--fm);font-size:12px;font-weight:600;border:1px solid {{ wc.border }};background:{{ wc.bg }};color:{{ wc.color }}">{{ wc.label }}</div>
             </sc-for>
           </div>
           <!-- board (This week) -->
@@ -457,6 +462,7 @@
       <div style="font-size:12.5px;color:#6f7897">{{ disclaimer }}</div>
       <div style="font-family:var(--fm);font-size:11px;color:#4f566e;letter-spacing:1px">PREDICTION ENGINES · 2026</div>
     </div>
+    <div id="nfl-top" onClick="{{ backToTop }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="display:{{ dispTopBtn }};position:fixed;bottom:22px;inset-inline-end:22px;z-index:70;cursor:pointer;padding:10px 15px;border-radius:999px;background:rgba(11,15,28,0.9);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.14);font-family:var(--fm);font-size:12px;font-weight:700;color:#cfd3e2;box-shadow:0 14px 34px rgba(0,0,0,0.5)" style-hover="border-color:#4a9eff;color:#8fc4ff">{{ backToTopLabel }}</div>
 
   </div>
 </div>
