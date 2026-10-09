@@ -15,10 +15,10 @@ const GUIDE_NFL=`
 class Component extends DCLogic {
   state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'teams_today', openTile: null, dateFilter: 'week' };
 
-  componentDidMount() { this.runCountUp(); this.ensureThree(); this._syncGuide(); this._syncStale(); this._syncWeekChip();
+  componentDidMount() { this.runCountUp(); this.ensureThree(); this._syncGuide(); this._syncStale(); this._syncWeekChip(); this._syncEmptyCells();
     this._onScroll = () => { if (window.scrollY > 0) document.documentElement.setAttribute('data-nfl-scrolled', ''); else document.documentElement.removeAttribute('data-nfl-scrolled'); };
     window.addEventListener('scroll', this._onScroll, { passive: true }); this._onScroll(); }
-  componentDidUpdate(prevProps, prevState) { this.runCountUp(); this._syncGuide(); this._syncStale(); if (prevState && (prevState.dateFilter !== this.state.dateFilter || prevState.lang !== this.state.lang)) this._syncWeekChip(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
+  componentDidUpdate(prevProps, prevState) { this.runCountUp(); this._syncGuide(); this._syncStale(); this._syncEmptyCells(); if (prevState && (prevState.dateFilter !== this.state.dateFilter || prevState.lang !== this.state.lang)) this._syncWeekChip(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
   // Inject the full How-it-works guide (bilingual HTML) — dc-mini escapes text, so inject here.
   _syncGuide() {
     const el = document.querySelector('#dc-root [data-nfl-guide]');
@@ -43,6 +43,15 @@ class Component extends DCLogic {
     if (!row || !on || !row.offsetParent) return;
     const r = row.getBoundingClientRect(), c = on.getBoundingClientRect();
     row.scrollLeft += (c.left - r.left) - (r.width - c.width) / 2;
+  }
+  // Model-integrity cells are fixed in the template; a cell without a source (value '—') is hidden whole.
+  _syncEmptyCells() {
+    const root = document.getElementById('dc-root'); if (!root) return;
+    const L = this.labels() || {};
+    const head = [...root.querySelectorAll('div')].find(d => !d.children.length && d.textContent.trim() === L.integrityHead);
+    const grid = head && head.parentElement && head.parentElement.nextElementSibling;
+    if (!grid) return;
+    [...grid.children].forEach(c => { const v = c.firstElementChild; c.style.display = (v && v.textContent.trim() === '—') ? 'none' : ''; });
   }
   componentWillUnmount() {
     this._dead = true;
@@ -245,7 +254,7 @@ class Component extends DCLogic {
         {display:`${kv(HO)}`, target:HO ? HO.value : '', dec:1, prefix:'', u:ku(HO), d:accTxt.en.ho + accTxt.en.bl},
         {display:'—', target:'', u:'', d:'Totals over/under direction · not tracked yet.'},
         {display:'—', target:'', u:'', d:'CLV · no closing-line source connected for NFL.'},
-      ],
+      ].filter(k => k.display !== '—'),   // a row without a source is hidden whole, not shown as a dash
       stageBars: [],
       howBullets: [
         {tag:'01', chip:'#35e39a', title:'Engine vs market is the whole point', body:'The engine bar is our most accurate probability per team; the market bar is what the book thinks. The comparison is the signal.'},
@@ -298,7 +307,7 @@ class Component extends DCLogic {
         {display:`${kv(HO)}`, target:HO ? HO.value : '', dec:1, prefix:'', u:ku(HO), d:accTxt.he.ho + accTxt.he.bl},
         {display:'—', target:'', u:'', d:'כיוון מעל/מתחת · עדיין לא נמדד.'},
         {display:'—', target:'', u:'', d:'CLV · לא מחובר מקור קווי סגירה ל-NFL.'},
-      ],
+      ].filter(k => k.display !== '—'),   // a row without a source is hidden whole, not shown as a dash
       stageBars: [],
       howBullets: [
         {tag:'01', chip:'#35e39a', title:'מנוע מול שוק — זה כל העניין', body:'בר המנוע הוא ההסתברות המדויקת ביותר לכל קבוצה; בר השוק הוא מה שהבוקי חושב. ההשוואה ביניהם היא הסיגנל.'},
@@ -698,11 +707,11 @@ class Component extends DCLogic {
         v: he ? `${SR.correct} מתוך ${SR.n} · ${SR.pct}%` : `${SR.correct} of ${SR.n} · ${SR.pct}%`,
         d: (he ? `רווח סמך 95% (Wilson): ${SR.lo}%–${SR.hi}% · מבוסס על ${SR.n} משחקים שהוכרעו` : `95% interval (Wilson): ${SR.lo}%–${SR.hi}% · based on ${SR.n} decided games`)
            + (SR.ties ? (he ? ` · ${SR.ties} תיקו לא נספרו` : ` · ${SR.ties} ties not counted`) : '') },
-      { k: he ? 'קריאות A+ העונה' : 'A+ calls this season',
+      ...(!AS ? [] : [{ k: he ? 'קריאות A+ העונה' : 'A+ calls this season',
         v: AS ? (he ? `${AS.n} קריאות, ${AS.correct} צדקו` : `${AS.n} calls, ${AS.correct} correct`) : '—',
         d: AS ? ((he ? `מבוסס על ${AS.n} קריאות A+ שהוכרעו` : `based on ${AS.n} decided A+ calls`)
            + (AS.void ? (he ? ` · ${AS.void} רשומות שנפסלו ביומן לא נספרו` : ` · ${AS.void} journal entries marked void are not counted`) : ''))
-           : (he ? 'יומן ה-A+ לא זמין' : 'A+ journal not available') },
+           : (he ? 'יומן ה-A+ לא זמין' : 'A+ journal not available') }]),
     ];
 
     const howBullets = L.howBullets;
