@@ -53,3 +53,12 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
   - This covers the start guard at `collect_tennis.py` line 110, which is fed the live feed's current start time at write time, and later audits of existing rows.
   - It also covers the closing refresh cut-off at line 165, which uses the stale journal time.
   - The Hijikata-Rublev void (8 minutes between run start and recorded start) is within this margin; its row carries an audit note saying so.
+
+## 7. NFL: the Pinnacle close is taken against the scheduled kickoff, not the actual one
+- Recorded 2026-10-11 (nfl-engine 399a95a). Not fixed, not measured.
+- Where:
+  - The kickoff is the nflverse scheduled time, `gameday` + `gametime` (ET) in `games.csv`, converted by `_kickoff_utc` in `nfl_build.py`, lines 398-404, and passed in at lines 481-482.
+  - `nfl_pinnacle_close.py`, `close_before` (lines 56-67), takes the last Pinnacle entry strictly before that time.
+- What: if a game starts later than scheduled (a weather delay, for example), entries between the scheduled and the actual kickoff are not used, even though they are still pre-game prices. If it starts earlier, a price after the real start could be taken. The gap between scheduled and actual kickoff has not been measured for any game.
+- Effect: the official close (CLV_PREREGISTER section 9) of a delayed game is the last price before the scheduled time, not the last price before the game began. How often this happens, and by how much, is unknown.
+- Related: the kickoff re-check added in 399a95a handles a moved schedule in games.csv. It does not handle a delay that never appears in the schedule.
