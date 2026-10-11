@@ -301,6 +301,9 @@ class Component extends DCLogic {
     const RC = R.clv || { final: null, n: '—', pos: '—' };
     const hcl = R.heroCLV || '—';
     const cf = (RC.final == null) ? '—' : (RC.final >= 0 ? '+' : '') + Number(RC.final).toFixed(2);
+    // rows in the figure logged without a start time cannot be confirmed as written before the match started
+    const nsEn = RC.noStart ? ` Of these ${RC.n} matches, ${RC.noStart} were logged without a start time, so they cannot be confirmed as written before the match started.` : '';
+    const nsHe = RC.noStart ? ` מתוך ${RC.n} המשחקים האלה, ${RC.noStart} נרשמו ביומן בלי שעת פתיחה, ולכן אי אפשר לאשר שנכתבו לפני תחילת המשחק.` : '';
     // 63.7 / 77.3 / 77.4 / 61,182 (R.accuracy) have no script that produces them -> not shown
     const NOBT_EN = 'No backtest figure is published for tennis yet. The earlier number could not be reproduced from the data.';
     const NOBT_HE = 'לא מתפרסם מספר בדיקה לאחור לטניס. את המספר הקודם לא הצלחנו לשחזר מהנתונים.';
@@ -311,7 +314,7 @@ class Component extends DCLogic {
       signalKicker: 'The A+ call · today', edgeLabel: 'Edge vs Pinnacle', runsLabel: 'expected games', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Pinnacle', callWord: 'Call', stageWord: 'stage', overWord: 'OVER', underWord: 'UNDER', homeWord: 'Fav', awayWord: 'Dog', starterPrefix: 'surface · Elo blend:',
       validatedHead: 'BACKTEST ACCURACY · HOLDOUT',
-      clvTitle: 'Cumulative CLV', clvSub: `No-vig, vs Pinnacle's closing line · ${RC.n} closed-line matches (${RC.pos} positive). >0 = engine beat the market's move.`,
+      clvTitle: 'Cumulative CLV', clvSub: `No-vig, vs Pinnacle's closing line · ${RC.n} closed-line matches (${RC.pos} positive). >0 = engine beat the market's move.${nsEn}`,
       calTitle: 'Calibration', calSub: 'Reference diagonal shown. The engine curve and per-stage calibration are not part of this live feed.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy and calibration are not part of this live feed.',
       detailsWord: 'Total games', runsWord: 'games', lineWord: 'line',
@@ -345,7 +348,7 @@ class Component extends DCLogic {
       kpis: [
         {display:'—', target:null, dec:0, prefix:'', u:'', d:NOBT_EN},
         {display:'—', target:null, dec:0, prefix:'', u:'', d:'Totals over/under — INDICATIVE only · step-6b · no value-zone yet.'},
-        {display:cf, target:RC.final, dec:2, prefix:(RC.final>=0?'+':''), u:'', d:`Cumulative CLV · ${RC.n} closed-line matches (${RC.pos}+) · vs Pinnacle closing line.`},
+        {display:cf, target:RC.final, dec:2, prefix:(RC.final>=0?'+':''), u:'', d:`Cumulative CLV · ${RC.n} closed-line matches (${RC.pos}+) · vs Pinnacle closing line.${nsEn}`},
       ],
       stageBars: [],
       // How it works: complete bilingual bullets
@@ -369,7 +372,7 @@ class Component extends DCLogic {
       signalKicker: 'קריאת ה-A+ · היום', edgeLabel: 'Edge מול Pinnacle', runsLabel: 'גיימים צפויים', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'Pinnacle', callWord: 'קריאה', stageWord: 'שלב', overWord: 'מעל', underWord: 'מתחת', homeWord: 'מועדף', awayWord: 'מוחלש', starterPrefix: 'משטח · שילוב-Elo:',
       validatedHead: 'דיוק בבדיקה לאחור · HOLDOUT',
-      clvTitle: 'CLV מצטבר', clvSub: `ללא-vig, מול קו הסגירה של Pinnacle · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים). מעל 0 = המנוע ניצח את תנועת השוק.`,
+      clvTitle: 'CLV מצטבר', clvSub: `ללא-vig, מול קו הסגירה של Pinnacle · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים). מעל 0 = המנוע ניצח את תנועת השוק.${nsHe}`,
       calTitle: 'כיול (Calibration)', calSub: 'מוצג האלכסון כקו ייחוס. עקומת המנוע וכיול לפי שלב אינם חלק מהפיד החי הזה.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
       detailsWord: 'סך גיימים', runsWord: 'גיימים', lineWord: 'קו',
@@ -402,7 +405,7 @@ class Component extends DCLogic {
       kpis: [
         {display:'—', target:null, dec:0, prefix:'', u:'', d:NOBT_HE},
         {display:'—', target:null, dec:0, prefix:'', u:'', d:'מעל/מתחת לגיימים — אינדיקטיבי בלבד · step-6b · אין value-zone עדיין.'},
-        {display:cf, target:RC.final, dec:2, prefix:(RC.final>=0?'+':''), u:'', d:`CLV מצטבר · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים) · מול קו הסגירה של Pinnacle.`},
+        {display:cf, target:RC.final, dec:2, prefix:(RC.final>=0?'+':''), u:'', d:`CLV מצטבר · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים) · מול קו הסגירה של Pinnacle.${nsHe}`},
       ],
       stageBars: [],
       howBullets: [
