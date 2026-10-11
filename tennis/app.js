@@ -65,15 +65,6 @@ const GUIDE_TENNIS=`
       <h3><span class="snum">7</span><span class="l-he">forward-only</span><span class="l-en">forward-only</span></h3>
       <p><span class="l-he">איננו ממציאים עבר. כל שורה נרשמת קדימה-בלבד, בזמן-אמת. תוצאות מופיעות רק אחרי שמשחק נסגר — עם ניצח/הפסיד, אם המנוע צדק, וה-CLV מול קו-הסגירה.</span>
         <span class="l-en">We don't invent a past. Every row is recorded forward-only, in real time. Results appear only after a match settles — with won/lost, whether the engine was right, and the CLV against the closing line.</span></p>
-      <div class="gex">
-        <div class="exh"><span class="l-he">דוגמה — איך ייראה כרטיס אחרי שהמשחק נסגר:</span><span class="l-en">Example — how a card looks once the match settles:</span></div>
-        <div class="teams" style="font-size:.95rem"><span style="color:var(--grass)">Tommy Paul</span> <span style="color:var(--faint)">vs</span> Johannus Monday</div>
-        <div class="tail" style="border-top:none;color:var(--ink);padding-top:6px">
-          <span class="l-he">ניצח · Paul 6-3 6-4 6-2 · הקריאה צדקה · Brier 0.04 · CLV <b style="color:var(--t-high)">+2.1%</b></span>
-          <span class="l-en">Won · Paul 6-3 6-4 6-2 · call correct · Brier 0.04 · CLV <b style="color:var(--t-high)">+2.1%</b></span>
-        </div>
-        <p style="margin:6px 0 0"><span class="l-he">פול היה המקרה ה"ירוק" (מנוע 81% מול שוק 77%, פער +4%). ה-CLV החיובי אישר שתפסנו מחיר טוב-יותר מקו-הסגירה — זה ה-edge, לא עצם-הניצחון.</span><span class="l-en">Paul was the "green" case (engine 81% vs market 77%, +4% gap). The positive CLV confirmed we caught a better price than the closing line — that's the edge, not the win itself.</span></p>
-      </div>
     </div>
 
     <div class="gsec">
