@@ -190,11 +190,11 @@ class Component extends DCLogic {
       openLabel: 'פתח מנוע',
       footer: 'ה-tail, הטוטאל וה-CLV נסגרים על נתונים אמיתיים עם פתיחת העונות.',
       engines: [
-        { emoji:'🏀', name:'NBA', tag:'Elo + 9 שלבים', method:'Elo עם קריאת תשעה שלבים.' },
+        { emoji:'🏀', name:'NBA', tag:'Elo', method:'Elo עם מדד צורה מהעונה הנוכחית.' },
         { emoji:'⚽', name:'מונדיאל 2026', tag:'Elo בינלאומי', method:'דירוג נבחרות בינלאומי עם משמעת ביטחון. קריאות דו-כיווניות לכל משחק בטורניר.' },
-        { emoji:'⚾', name:'בייסבול MLB', tag:'Elo + שלבים', method:'Elo עם משמעת שלבים.' },
-        { emoji:'🏈', name:'NFL', tag:'Elo מודע-מרווח', method:'Elo מודע-מרווח עם תשעה שלבים.' },
-        { emoji:'🎾', name:'טניס ATP', tag:'Elo משטח-משוקלל', method:'Elo משוקלל-משטח עם שלבים. CLV נמדד קדימה.' },
+        { emoji:'⚾', name:'בייסבול MLB', tag:'Elo', method:'Elo עם מדד צורה מהעונה הנוכחית.' },
+        { emoji:'🏈', name:'NFL', tag:'Elo מודע-מרווח', method:'Elo מודע-מרווח עם מדד צורה (ממוצע Elo של 4 משחקים מול 8).' },
+        { emoji:'🎾', name:'טניס ATP', tag:'Elo משטח-משוקלל', method:'Elo משוקלל-משטח עם מדד צורה (ממוצע Elo נע של 20 משחקים). CLV נמדד קדימה.' },
       ],
     };
     const en = {
@@ -213,11 +213,11 @@ class Component extends DCLogic {
       openLabel: 'Open engine',
       footer: 'Tail, total and CLV settle on real data as the seasons open.',
       engines: [
-        { emoji:'🏀', name:'NBA', tag:'Elo + 9 stages', method:'Elo with a nine-stage read.' },
+        { emoji:'🏀', name:'NBA', tag:'Elo', method:'Elo with a form index read from the current season.' },
         { emoji:'⚽', name:'World Cup 2026', tag:'International Elo', method:'International team rating with confidence discipline. Two-way calls on every tournament match.' },
-        { emoji:'⚾', name:'MLB', tag:'Elo + stages', method:'Elo with stage discipline.' },
-        { emoji:'🏈', name:'NFL', tag:'Margin-aware Elo', method:'Margin-aware Elo with nine stages.' },
-        { emoji:'🎾', name:'ATP Tennis', tag:'Surface-blended Elo', method:'Surface-weighted Elo with stages. Forward CLV tracked.' },
+        { emoji:'⚾', name:'MLB', tag:'Elo', method:'Elo with a form index read from the current season.' },
+        { emoji:'🏈', name:'NFL', tag:'Margin-aware Elo', method:'Margin-aware Elo with a form index (4-game vs 8-game Elo average).' },
+        { emoji:'🎾', name:'ATP Tennis', tag:'Surface-blended Elo', method:'Surface-weighted Elo with a form index (20-match Elo moving average). Forward CLV tracked.' },
       ],
     };
     return this.state.lang === 'he' ? he : en;

@@ -5,8 +5,8 @@ const GUIDE_TENNIS=`
 <h3 class="gtitle"><span class="l-he">איך לקרוא את הדף</span><span class="l-en">How to read this page</span></h3>
 <div class="gsec first">
       <h3><span class="snum">1</span><span class="l-he">הרעיון</span><span class="l-en">The idea</span></h3>
-      <p class="lead"><span class="l-he">המנוע מדרג כל שחקן ב-Elo — דירוג כללי ודירוג נפרד לכל משטח — ומסווג את הצורה שלו לאחד מתשעה שלבים, מחזור-חיים שמקורו בניתוח-מגמות בשוקי-ההון.</span>
-        <span class="l-en">The engine rates every player with Elo — an overall rating plus a separate rating per surface — and classifies their form into one of nine stages, a life-cycle borrowed from trend analysis in financial markets.</span></p>
+      <p class="lead"><span class="l-he">המנוע מדרג כל שחקן ב-Elo — דירוג כללי ודירוג נפרד לכל משטח — ומחשב מדד צורה (מספר השלב) מממוצע נע של 20 משחקים של ה-Elo הכללי: השינוי של הממוצע ב-5 המשחקים האחרונים, וכמה ה-Elo הנוכחי מעליו או מתחתיו.</span>
+        <span class="l-en">The engine rates every player with Elo — an overall rating plus a separate rating per surface — and computes a form index (the stage number) from a 20-match moving average of the overall Elo: the average's change over the last 5 matches, and how far the current Elo sits above or below it.</span></p>
       <p><span class="l-he">הוא מדבר רק על <b>A+</b>: שלב-גבוה <b>וגם</b> ביטחון-גבוה. בכל מצב אחר הוא שותק. העיקרון: לדבר רק כשהכל מסתדר, לשתוק אחרת.</span>
         <span class="l-en">It speaks only on <b>A+</b>: a high stage <b>and</b> high confidence. In every other case it stays quiet. The principle: speak only when everything lines up, stay silent otherwise.</span></p>
     </div>
