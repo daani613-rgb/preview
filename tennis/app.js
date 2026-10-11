@@ -730,7 +730,7 @@ class Component extends DCLogic {
     const fEdge = rf.edge != null ? rf.edge : null;
     const indicative = R.totalsIndicative !== false;
 
-    // Real freshness banner from data file mtime
+    // Freshness: the build time written into today.json (gen: REAL.freshness); never the file mtime
     const freshness = R.freshness || null;
     const asOfRaw = R.asOf || '';
     // Display asOf as YYYY-MM-DD, consistent with the other engines. Robust: only reformat
@@ -741,16 +741,16 @@ class Component extends DCLogic {
     } else {
       asOfLabel = asOfRaw;
     }
-    // Freshness display: during the quota pause the slate is not refreshed, so say that; else real mtime, else asOf
+    // Freshness display: during the quota pause the slate is not refreshed, so say that; else the build time;
+    // with no build time, no time is shown at all (no guess, no file time)
     const qp = R.quotaPauseUntil || null;
     const freshnessLabel = qp
       ? (he ? `הסלייט מ-${asOfLabel} · משיכת היחסים מושהית עד ${qp} (מכסת OddsPapi), והסלייט לא מתעדכן עד אז`
             : `Slate of ${asOfLabel} · odds pulls paused until ${qp} (OddsPapi quota), so the slate is not refreshed until then`)
       : freshness
       ? (he ? 'עודכן: ' : 'Updated: ') + freshness + ' · today.json'
-      : asOfLabel
-      ? (he ? 'נכון ל-' : 'As of ') + asOfLabel
       : '';
+    const showFreshness = !!freshnessLabel;
 
     const feat = {
       away: rf.away || '', home: rf.home || '', time: rf.time || '',
@@ -980,7 +980,7 @@ class Component extends DCLogic {
       rankColHeaders,
       rankRows, nav, feat, tiles, stageBars, howBullets, howRows,
       asOfLabel,
-      freshnessLabel,
+      freshnessLabel, showFreshness,
       stageDisplay,
       dateChips, resultRows, showResults, showDateTiles,
       dateInputMin, dateInputMax, dateInputVal, dateInputLabel, onDateInput, onDateSelect,

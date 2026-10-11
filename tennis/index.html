@@ -108,8 +108,10 @@
       </div>
     </div>
 
-    <!-- REAL FRESHNESS BANNER -->
+    <!-- REAL FRESHNESS BANNER (hidden when there is no build time) -->
+    <sc-if value="{{ showFreshness }}" hint-placeholder-val="{{ true }}">
     <div style="font-family:var(--fm);font-size:11px;color:#4f566e;letter-spacing:.6px;margin-bottom:14px;padding:6px 10px;border-radius:7px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);display:inline-block">⏱ {{ freshnessLabel }}</div>
+    </sc-if>
 
     <!-- PERSISTENT 3D HERO -->
     <div style="position:relative;border-radius:26px;overflow:hidden;border:1px solid rgba(255,255,255,0.09);box-shadow:0 40px 100px rgba(0,0,0,0.55);margin-bottom:26px;height:300px;background:linear-gradient(160deg,#080b16,#05060d)">
