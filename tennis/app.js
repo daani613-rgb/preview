@@ -20,12 +20,12 @@ const GUIDE_TENNIS=`
       <p><span class="l-he">הפער ביניהם הוא ה"ערך" האפשרי. אבל <b>גודל-הפער אינו התשובה</b> — השאלה היא אם יש לו הסבר. CLV מכריע, לא העין.</span>
         <span class="l-en">The gap between them is the possible "value." But <b>the size of the gap is not the answer</b> — the question is whether it has an explanation. CLV decides, not the eye.</span></p>
       <div class="gex">
-        <div class="exh"><span class="l-he">דוגמה — מועדף-כבד, השוק והמנוע מסכימים:</span><span class="l-en">Example — heavy favorite, market and engine agree:</span></div>
+        <div class="exh"><span class="l-he">דוגמה להמחשה בלבד, שחקנים וערכים מומצאים. מועדף כבד שבו השוק והמנוע מסכימים:</span><span class="l-en">Illustration only, invented players and values. A heavy favorite where market and engine agree:</span></div>
         <div class="barwrap"><div class="barlabel"><span class="row-label">Engine</span><span class="row-sub"><span class="l-he">מה שווה</span><span class="l-en">what it's worth</span></span></div>
-          <div class="bar"><span class="seg pickseg" style="flex:0 0 94%">94%</span><span class="seg oppseg" style="flex:1">6%</span></div></div>
+          <div class="bar"><span class="seg pickseg" style="flex:0 0 80%">80%</span><span class="seg oppseg" style="flex:1">20%</span></div></div>
         <div class="barwrap"><div class="barlabel"><span class="row-label">Market</span><span class="row-sub"><span class="l-he">מה עולה</span><span class="l-en">what it costs</span></span></div>
-          <div class="bar"><span class="seg pickseg mkt" style="flex:0 0 93%">93%</span><span class="seg oppseg mkt" style="flex:1">7%</span></div></div>
-        <div class="axis"><span>Sinner</span><span>Kecmanović</span></div>
+          <div class="bar"><span class="seg pickseg mkt" style="flex:0 0 79%">79%</span><span class="seg oppseg mkt" style="flex:1">21%</span></div></div>
+        <div class="axis"><span><span class="l-he">שחקן א'</span><span class="l-en">Player A</span></span><span><span class="l-he">שחקן ב'</span><span class="l-en">Player B</span></span></div>
         <div class="vgap gray" style="margin-top:8px"><span class="big"><span class="l-he">בקו עם השוק · +1% · אין ערך</span><span class="l-en">In line with market · +1% · no value</span></span></div>
       </div>
     </div>

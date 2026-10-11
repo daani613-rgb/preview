@@ -61,7 +61,7 @@ const GUIDE_EN=`
         <rect x="40" y="324" width="480" height="56" rx="11" fill="#2a1416" stroke="#c0473e" stroke-width="1.8"/>
         <rect x="40" y="324" width="9" height="56" rx="4" fill="#c0473e"/>
         <text x="60" y="345" text-anchor="start" font-size="13.5" font-weight="800" fill="#f4a0a0">The explanation = a known engine error &nbsp;🛑</text>
-        <text x="60" y="363" text-anchor="start" font-size="11.5" fill="#aab2bd">e.g. AFC over-estimation (Iran 70/56) → silence</text>
+        <text x="60" y="363" text-anchor="start" font-size="11.5" fill="#aab2bd">e.g. AFC over-estimation (illustration: Team X 72/58) → silence</text>
         <rect x="40" y="388" width="480" height="56" rx="11" fill="#0f2a2c" stroke="#2b8a8a" stroke-width="1.8"/>
         <rect x="40" y="388" width="9" height="56" rx="4" fill="#2b8a8a"/>
         <text x="60" y="409" text-anchor="start" font-size="13.5" font-weight="800" fill="#6fd6cf">No explanation + a sharp source &nbsp;⚠️</text>
@@ -179,7 +179,7 @@ const GUIDE_HE=`
         <rect x="40" y="324" width="480" height="56" rx="11" fill="#2a1416" stroke="#c0473e" stroke-width="1.8"/>
         <rect x="511" y="324" width="9" height="56" rx="4" fill="#c0473e"/>
         <text x="500" y="345" text-anchor="start" font-size="13.5" font-weight="800" fill="#f4a0a0">ההסבר = טעות-מנוע ידועה &nbsp;🛑</text>
-        <text x="500" y="363" text-anchor="start" font-size="11.5" fill="#aab2bd">למשל הערכת-יתר AFC (אירן 70/56) → שתיקה</text>
+        <text x="500" y="363" text-anchor="start" font-size="11.5" fill="#aab2bd">למשל הערכת-יתר AFC (המחשה: נבחרת X ‏72/58) → שתיקה</text>
         <rect x="40" y="388" width="480" height="56" rx="11" fill="#0f2a2c" stroke="#2b8a8a" stroke-width="1.8"/>
         <rect x="511" y="388" width="9" height="56" rx="4" fill="#2b8a8a"/>
         <text x="500" y="409" text-anchor="start" font-size="13.5" font-weight="800" fill="#6fd6cf">אין הסבר + מקור חד &nbsp;⚠️</text>
