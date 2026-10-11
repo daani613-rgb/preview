@@ -499,11 +499,13 @@ class Component extends DCLogic {
     };
     const extra = R.extra || {};
     const CIRC = 2 * Math.PI * 22;
-    // Stage names (NFL uses the same 9-stage cup-and-handle method)
+    // What each value of nfl_stages.stage() computes (the code returns 2 to 8 only): direction = Elo now vs 4 games
+    // ago, avg = last-4-game Elo average vs last-8-game average, sharp = Elo moved more than 15 points over 4 games
     const STAGE_NAMES = {
-      1: he ? 'בסיס' : 'base', 2: he ? 'שבירה' : 'breakout', 3: he ? 'ביסוס' : 'establish',
-      4: he ? 'גיבוש' : 'consolidate', 5: he ? 'טופס' : 'form', 6: he ? 'ראלי' : 'rally',
-      7: he ? 'מתקדם' : 'advancing', 8: he ? 'מרחב' : 'extended', 9: he ? 'שיא' : 'peak',
+      2: he ? 'יורד, מתחת לממוצע, חד' : 'falling, below avg, sharp', 3: he ? 'יורד, מתחת לממוצע' : 'falling, below avg',
+      4: he ? 'יורד, מעל הממוצע, חד' : 'falling, above avg, sharp', 5: he ? 'תנועה קטנה נגד הממוצע' : 'small move against avg',
+      6: he ? 'עולה, מתחת לממוצע, חד' : 'rising, below avg, sharp', 7: he ? 'עולה, מעל הממוצע' : 'rising, above avg',
+      8: he ? 'עולה, מעל הממוצע, חד' : 'rising, above avg, sharp',
     };
 
     const tiles = raw.map(t => {

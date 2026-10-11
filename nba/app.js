@@ -639,7 +639,8 @@ class Component extends DCLogic {
       const ratingNote = [offStr, defStr, eloStr].filter(Boolean).join(' · ');
 
       // Stage name in correct language
-      const stgName = he ? (t.stageNameHe || this.stageName(t.stage, 'he')) : (t.stageName || this.stageName(t.stage, 'en'));
+      const stgName = t.stage == null ? '' : (he ? (t.stageNameHe || this.stageName(t.stage, 'he')) : (t.stageName || this.stageName(t.stage, 'en')));
+      const stageLine = t.stage == null ? '' : `${he ? 'שלב' : 'stage'} ${t.stage}`;   // no stage, no line
 
       // Fatigue tag
       const hasFatigue = !!(t.fatigue);
@@ -689,7 +690,7 @@ class Component extends DCLogic {
         span: open ? '1 / -1' : 'auto',
         starterAway: ratingNote, starterHome: '',
         elo: eloStr,
-        stgName,
+        stgName, stageLine,
         hasFatigue, fatigue,
         hasSurprise, surprise,
         cellAccDisp,

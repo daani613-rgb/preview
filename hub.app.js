@@ -190,7 +190,7 @@ class Component extends DCLogic {
       openLabel: 'פתח מנוע',
       footer: 'ה-tail, הטוטאל וה-CLV נסגרים על נתונים אמיתיים עם פתיחת העונות.',
       engines: [
-        { emoji:'🏀', name:'NBA', tag:'Elo + 9 שלבים', method:'Elo מותאם קצב עם קריאת תשעה שלבים.' },
+        { emoji:'🏀', name:'NBA', tag:'Elo + 9 שלבים', method:'Elo עם קריאת תשעה שלבים.' },
         { emoji:'⚽', name:'מונדיאל 2026', tag:'Elo בינלאומי', method:'דירוג נבחרות בינלאומי עם משמעת ביטחון. קריאות דו-כיווניות לכל משחק בטורניר.' },
         { emoji:'⚾', name:'בייסבול MLB', tag:'Elo + שלבים', method:'Elo עם משמעת שלבים.' },
         { emoji:'🏈', name:'NFL', tag:'Elo מודע-מרווח', method:'Elo מודע-מרווח עם תשעה שלבים.' },
@@ -213,7 +213,7 @@ class Component extends DCLogic {
       openLabel: 'Open engine',
       footer: 'Tail, total and CLV settle on real data as the seasons open.',
       engines: [
-        { emoji:'🏀', name:'NBA', tag:'Elo + 9 stages', method:'Pace-adjusted Elo with a nine-stage read.' },
+        { emoji:'🏀', name:'NBA', tag:'Elo + 9 stages', method:'Elo with a nine-stage read.' },
         { emoji:'⚽', name:'World Cup 2026', tag:'International Elo', method:'International team rating with confidence discipline. Two-way calls on every tournament match.' },
         { emoji:'⚾', name:'MLB', tag:'Elo + stages', method:'Elo with stage discipline.' },
         { emoji:'🏈', name:'NFL', tag:'Margin-aware Elo', method:'Margin-aware Elo with nine stages.' },
