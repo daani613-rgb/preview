@@ -741,8 +741,12 @@ class Component extends DCLogic {
     } else {
       asOfLabel = asOfRaw;
     }
-    // Freshness display: real mtime preferred, else asOf
-    const freshnessLabel = freshness
+    // Freshness display: during the quota pause the slate is not refreshed, so say that; else real mtime, else asOf
+    const qp = R.quotaPauseUntil || null;
+    const freshnessLabel = qp
+      ? (he ? `הסלייט מ-${asOfLabel} · משיכת היחסים מושהית עד ${qp} (מכסת OddsPapi), והסלייט לא מתעדכן עד אז`
+            : `Slate of ${asOfLabel} · odds pulls paused until ${qp} (OddsPapi quota), so the slate is not refreshed until then`)
+      : freshness
       ? (he ? 'עודכן: ' : 'Updated: ') + freshness + ' · today.json'
       : asOfLabel
       ? (he ? 'נכון ל-' : 'As of ') + asOfLabel
