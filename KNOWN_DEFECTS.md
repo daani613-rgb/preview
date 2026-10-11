@@ -41,3 +41,15 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
   - 57 of them are in the published CLV figure (2 have no CLV value). 13 are A+ rows.
   - The live pages now say so next to the figure, in EN and HE: "57 of the 336".
   - Every one of the 59 has closing odds. `phase_closing` (`collect_tennis.py`, lines 165-167) skips a row with no start time, so these rows did not get a closing-odds refresh.
+
+## 6. Tennis: OddsPapi start times change after they are journaled
+- Recorded 2026-10-11 (tennis-engine 57e4f73 and later). Not fixed.
+- Where the field comes from and where it is frozen:
+  - `start_iso` is taken from OddsPapi `startTime` in `tennis_odds.py`, line 247 (`fixture_to_matchup`), and passed on in `run_live.py`, line 143.
+  - It is written once, at the first ("early") write, in `collect_tennis.py`, line 130 (column defined at line 17).
+  - It is never updated afterwards: `phase_closing` reads it at line 165 but does not rewrite it.
+- What: OddsPapi moves start times after the row is written. Measured on Davidovich Fokina-Tiafoe (`clv_journal.csv` line 360, id1200308575439744): the journal holds 2026-10-11 11:10Z (written 2026-10-10 11:20Z), and the next day's feed (today.json, built 2026-10-11 11:33Z) had 11:30Z, a 20-minute move.
+- Effect: any "written before the start" check that relies on the journal's start time carries that margin of error.
+  - This covers the start guard at `collect_tennis.py` line 110, which is fed the live feed's current start time at write time, and later audits of existing rows.
+  - It also covers the closing refresh cut-off at line 165, which uses the stale journal time.
+  - The Hijikata-Rublev void (8 minutes between run start and recorded start) is within this margin; its row carries an audit note saying so.
