@@ -8,11 +8,19 @@ function nbaAplus(lang){
   const cov = c ? (lang==='he' ? ` כיסוי בתקופה המלאה האחרונה: ${c.calls} קריאות, ${c.pct}% מהמשחקים.` : ` Coverage in the last full period: ${c.calls} calls, ${c.pct}% of games.`) : '';
   return (lang==='he' ? `A+ בדף הזה הוא: ${rule}.` : `A+ on this page means: ${rule}.`) + cov;
 }
+// rolling window label from the data's own season range ("2021-22 to 2025-26"): count and range, never hand-written
+function seasonsLabel(w, lang){
+  const m = w && w.seasons ? String(w.seasons).match(/^(\d{4})-\d{2} to (\d{4})-\d{2}$/) : null;
+  if(!m) return "";
+  const k = Number(m[2]) - Number(m[1]) + 1, rng = lang==="he" ? String(w.seasons).replace(" to ", " עד ") : w.seasons;
+  return lang==="he" ? ` חלון מתגלגל: ${k} העונות האחרונות, ${rng}.` : ` Rolling window: the last ${k} seasons, ${rng}.`;
+}
 function nbaRecon(key, lang){
   const w = (_NR.recon || {})[key === 'trackCalls' ? 'track' : key] || null;
   const n = w ? Number(key === 'history' ? w.n : (key === 'trackCalls' ? w.n : w.gamesInWindow)).toLocaleString('en-US') : '—';
   const rng = !w ? '—' : (lang==='he' ? `${w.from} עד ${w.to}` : `${w.from} to ${w.to}`);
-  return lang==='he' ? `שחזור walk-forward על ${n} משחקים, ${rng}. לא חלוקת holdout.` : `Walk-forward reconstruction over ${n} games, ${rng}. Not a held-out split.`;
+  const win = key === 'history' ? '' : seasonsLabel(w, lang);   // TRACK and calibration use the rolling window; history does not
+  return (lang==='he' ? `שחזור walk-forward על ${n} משחקים, ${rng}. לא חלוקת holdout.` : `Walk-forward reconstruction over ${n} games, ${rng}. Not a held-out split.`) + win;
 }
 const GUIDE_NBA=`
 <h3 class="ngd-title"><span class="l-en">How to read this page</span><span class="l-he">איך לקרוא את הדף</span></h3><p class="ngd-p"><span class="ngd-num">1</span><span class="l-en"><b>The idea.</b> The engine rates every team in Elo and predicts the winner. It speaks on high-confidence (A+) calls and stays quieter otherwise.</span><span class="l-he"><b>הרעיון.</b> המנוע מדרג כל קבוצה ב-Elo ומנבא מי מנצח. הוא מדבר על קריאות-ביטחון-גבוה (A+) ושותק יותר אחרת.</span></p><p class="ngd-p"><span class="ngd-num">2</span><span class="l-en"><b>Two bars.</b> Engine (what we think) vs Market (the price without the vig: "what it costs"). The gap between them is the possible value.</span><span class="l-he"><b>שני הברים.</b> בר-מנוע (מה שאנחנו חושבים) מול בר-שוק (המחיר אחרי ניכוי ה-vig: "מה עולה"). הפער ביניהם הוא ה"ערך" האפשרי.</span></p><div class="ngd-demo"><span class="l-en">Example: engine 88%, market 85%. Gap +3% = small value window. When engine and market agree (~0 gap) there's no value, and that's fine.</span><span class="l-he">דוגמה: מנוע 88%, שוק 85%. פער +3% = חלון-ערך קטן. אם המנוע והשוק מסכימים (פער ~0) — אין ערך, וזה בסדר.</span></div><p class="ngd-p"><span class="ngd-num">3</span><span class="l-en"><b>A+ and silence.</b> ${nbaAplus('en')} That's not edge — clear favorites win often.</span><span class="l-he"><b>A+ ושתיקה.</b> ${nbaAplus('he')} זה לא edge — פייבוריטים-ברורים מנצחים הרבה.</span></p><p class="ngd-p"><span class="ngd-num">4</span><span class="l-en"><b>Value block & colors.</b> Green = 3–10% gap (value). Teal = >10% (open question). Gray = in line with market (no value). The gap is a <b>hypothesis to measure</b> — CLV decides.</span><span class="l-he"><b>בלוק-הערך והצבעים.</b> ירוק = פער 3–10% (חלון-ערך). כחלחל = פער >10% (שאלה-פתוחה). אפור = בקו עם השוק (אין ערך). הפער הוא <b>השערה-למדידה</b> — CLV מכריע.</span></p><p class="ngd-p"><span class="ngd-num">5</span><span class="l-en"><b>Totals.</b> Engine vs market on over/under, from offense/defense ratings. <b>Indication only</b> — not yet validated vs market.</span><span class="l-he"><b>טוטאל.</b> בר-מנוע מול בר-שוק על מעל/מתחת, מדירוגי-התקפה/הגנה. <b>אינדיקציה בלבד</b> — טרם-מאומת מול שוק.</span></p><p class="ngd-p"><span class="ngd-num">6</span><span class="l-en"><b>Surprise 🔥.</b> Lights up when a clear favorite plays a back-to-back and the underdog is rested — historically more upset-prone (~30% vs ~24%).</span><span class="l-he"><b>גורם-הפתעה 🔥.</b> נדלק כשפייבוריט-ברור משחק גב-אל-גב והאנדרדוג רענן — היסטורית נוטה יותר להפתעות (~30% מול ~24%).</span></p><p class="ngd-p"><span class="ngd-num">7</span><span class="l-en"><b>CLV is the arbiter.</b> A prediction is not a profit; edge = a better price. Only CLV vs the closing line decides if there's a real advantage.</span><span class="l-he"><b>CLV הוא הארביטר.</b> ניבוי אינו רווח; edge = מחיר טוב יותר. רק CLV מול קו-הסגירה מכריע אם יש יתרון אמיתי.</span></p>
@@ -798,7 +806,8 @@ class Component extends DCLogic {
       overWord: isHist ? '' : L.overWord, underWord: isHist ? '' : L.underWord,
       gaugeLegendDisp: isHist ? 'none' : 'flex',   // the over/under legend has no meaning for a win-probability card
       clv: this.clvChart(), cal: this.cal(), drivers, integrity, clvSeg,
-      clvSegHead: clvSeg.length ? L.clvSegHead : '',   // no CLV segments without a closed-line journal: no header either
+      // no CLV segments without a closed-line journal: the whole section (header, bars, axis) is hidden
+      dispClvSegHead: clvSeg.length ? 'block' : 'none', dispClvSeg: clvSeg.length ? 'flex' : 'none',
       boardCounter: (function(){var a=tiles.filter(function(t){return t.state==='aplus';}).length,v=tiles.filter(function(t){return t.state==='value';}).length,k=tiles.filter(function(t){return t.state==='silent';}).length;return he?(a+' A+ · '+v+' ערך · '+k+(k===1?' שתיקה':' שתיקות')):(a+' A+ · '+v+' value · '+k+' silent');})(),
       dispSignals: tab === 'signals' ? 'block' : 'none',
       dispResults: tab === 'results' ? 'block' : 'none',
