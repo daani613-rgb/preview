@@ -62,3 +62,16 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
 - What: if a game starts later than scheduled (a weather delay, for example), entries between the scheduled and the actual kickoff are not used, even though they are still pre-game prices. If it starts earlier, a price after the real start could be taken. The gap between scheduled and actual kickoff has not been measured for any game.
 - Effect: the official close (CLV_PREREGISTER section 9) of a delayed game is the last price before the scheduled time, not the last price before the game began. How often this happens, and by how much, is unknown.
 - Related: the kickoff re-check added in 399a95a handles a moved schedule in games.csv. It does not handle a delay that never appears in the schedule.
+
+## 8. NBA preview tiles: fields with no source were published
+- Recorded 2026-10-11. In `nba-engine/preview_build/gen_nba_data.py` since 17de499 (2026-07-03). The tiles are built from HISTORY (past games) and are shown in season; in the offseason the board hides them, but the values were in the published data line of `preview/nba/app.js` throughout.
+- Fields that had no source:
+  - **Stage and stage name:** picked from the verdict (8 for A+, 6 for value, 4 otherwise) because HISTORY has no stage. **Removed 2026-10-11** (no stage, no name).
+  - **`value.pct`:** the constants 7 (OVER) and 6 (UNDER) on A+ tiles; the NBA has no market totals price. **Removed 2026-10-11** (no value block).
+  - **`engOver`:** `50 - (net_h + net_a) * 0.8`, clipped to 35-65, a formula of the generator's own. **Not removed yet.** A real source exists in `nba_totals_live.py` (`predict_total`, and `total_to_prob_over`, line 51); the choice is open.
+  - **Line ladder:** `over = 50 - delta * 3` for lines at λ ± 2 and ± 4. **Not removed yet**, for the same reason.
+- Related, not changed:
+  - The tile badge "value" / "Value on the total" comes from probability alone (≥ 65%), with no market.
+  - "In line with market — quiet" is shown with no market price.
+  - λ is `110 + (h_off - a_def)/2 + (a_off - h_def)/2`, from the rankings cube rather than the totals model.
+  - The featured card shows "STAGE —", "EDGE VS MARKET —" and "EXPECTED POINTS —" for fields it has no value for.
