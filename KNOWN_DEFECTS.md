@@ -277,3 +277,30 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
   trap as the MLB doubleheader finding (item 9) and the same resolution.
 - This item records a pattern, not a defect.
 
+## 20 onward: tennis pages (audit of 2026-10-12; plan in tennis-engine/TENNIS_FIX_PREREGISTER.md)
+One line per defect. Status: fixed locally 2026-10-12 (pending push), or open.
+
+- **20.** The preview decided A+ by its own rule (`gen_tennis_data.py:110-118`, stage>=8 and conf>=0.62), not the engine's (`build_predictions.py:58`, `tennis_stages.is_aplus`): 17 of 98 engine A+ agreed, 19 extra. Fixed: the page carries the engine's `aplus` flag (363 of 363 agree); "value" is labelled a page tier. Also fixed: the featured card text (`app.js:770-771`) no longer gives "gap + cushion + calibrated" as the A+ definition; the unrendered `howBullets` block that repeated it was deleted (item 40); the classic page's copy of {5,7,8,9} (`tennis_dashboard.html:402`) is injected from `tennis_stages.HIGH_STAGES` at build.
+- **21.** A tile's settled result was found by player names only (`app.js:818`), so the 2026-10-12 Lehecka vs Jodar tile showed the 2026-08-08 result ("call correct"). Fixed: date and both names; no date match, no result ("Not decided yet").
+- **22.** `gen_tennis_data.py:279` `feat_tile = pool[0]` raised IndexError on an empty slate. Fixed: no featured card and one "No matches on today's slate" message.
+- **23.** CLV by segment groups by `date[:7]` of a YYYYMMDD date (`gen_tennis_data.py:344`), giving 10-day buckets labelled "2026062". Open.
+- **24.** The featured label "The A+ call · today" is a constant (`app.js:314`, `:372`) and shows on a non-A+ top tile. Open.
+- **25.** "Updated several times a day" and LIVE (`app.js:313`, `:371`) show during the quota pause. Open.
+- **26.** The cumulative winner CLV is labelled "CLV games" and plotted in "games" (`app.js:347`, `runsWord`). Open.
+- **27.** The classic card shows two numbers for one quantity: calibrated "what it's worth" and raw "confidence" (`tennis_dashboard.html:445-466`). Open.
+- **28.** With no market price the preview still says "In line with Pinnacle" (quiet) (`app.js:869-873`). Open.
+- **29.** The preview says "In line with Pinnacle" for any silent tile, including a 7 percent gap the page calls a value window (`app.js:869-873`). Open.
+- **30.** The classic page says "In line with market" for any gap under 3, including -12 percent (`tennis_dashboard.html:458-460`). Open.
+- **31.** `app.js:728` falls back to an engine probability of 72. Open.
+- **32.** `app.js:990` edge count-up target falls back to 0 ("+0%"). Open.
+- **33.** `app.js:839` market share for the away player falls back to 50. Open (check whether it is hidden).
+- **34.** `gen_tennis_data.py:568` publishes `'elo': 0` when there is no blended Elo. Open.
+- **35.** `gen_tennis_data.py:427-428` (Elo 1500) and `:477` (matches 10) fill missing players. Open (default or real start value to be decided).
+- **36.** Platt constants 0.903 and 0.001 (`tennis_dashboard.py:61`) have no script in the repo that produces them. Open.
+- **37.** 63.7, 77.3, 77.4 and 61,182 (`tennis_dashboard.py:26`, `gen_tennis_data.py:28-34`) have no producing script; they are not shown. Open (to be marked in code).
+- **38.** The hero KPI is a constant dash (`app.js:347`). Open.
+- **39.** The totals line ladder on the preview tiles is the generator's own Normal(lambda, sqrt(lambda)) (`gen_tennis_data.py:160-173`) and disagrees with the engine's `p_over_raw` on the same tile. Open, not scheduled in this plan.
+- **40.** The preview's `howBullets` (`app.js:355-366`, `:411-422` before the change) was never rendered by the template, so its A+ definition could not be read on the page. Deleted 2026-10-12 rather than shown: the page's guide already explains the method, and the block repeated claims that were wrong. This was the fourth place the A+ definition was derived or stated separately (engine `is_aplus`, the preview `state_for`, the classic page's copy of {5,7,8,9}, and this text plus the featured card text). Fixed locally.
+- **41.** Market odds for today's matches are joined to the journal by player names only (`gen_tennis_data.py:79-84` and `:95-101`, `tennis_dashboard.py:42-52` and `:65`): a rematch shows the price of whichever journal row with the same names is read last, possibly from an earlier date. No published aggregate uses this join. Open.
+- **42.** The Brier shown (0.437 on n=336) is the two-class sum `sum((p_i - t_i)^2)` over [p_home, 1 - p_home] (`tennis_clv.brier_score`, used by `collect_tennis._clv`), which is twice the usual binary Brier; a constant 0.5 forecast scores 0.5 on it, not 0.25. The binary equivalent on the current journal is 0.221 (n=343). The page does not state the convention. Open.
+

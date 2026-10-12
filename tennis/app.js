@@ -351,19 +351,6 @@ class Component extends DCLogic {
         {display:cf, target:RC.final, dec:2, prefix:(RC.final>=0?'+':''), u:'', d:`Cumulative CLV · ${RC.n} closed-line matches (${RC.pos}+) · vs Pinnacle closing line.${nsEn}`},
       ],
       stageBars: [],
-      // How it works: complete bilingual bullets
-      howBullets: [
-        {tag:'01', chip:'#35e39a', title:'Engine vs Pinnacle is the whole point', body:'The engine bar is our calibrated win probability; the Pinnacle bar is the sharpest book in the world. Beating it is the signal.'},
-        {tag:'02', chip:'#20c997', title:'Blended Elo picks, surface calibrates', body:'40% overall + 60% surface-specific Elo decides who wins; recent form and surface history tune how confident we are.'},
-        {tag:'03', chip:'#f5b23d', title:'A+ = gap + cushion + calibrated', body:'A signal only fires when the edge clears a cushion and sits in a calibrated zone. A huge gap alone is usually model error.'},
-        {tag:'04', chip:'#8791ab', title:'Quiet is part of the method', body:'When the engine agrees with Pinnacle, the card dims and stays quiet. In-line with the sharp book is fine — not every match is a call.'},
-        {tag:'05', chip:'#35e39a', title:'The value block & colors', body:'Green = 3–10% gap on the call side (value window). Teal = gap >10% (too large to trust). Gray = in line with the market or heavy favorite. The gap is always a hypothesis to measure, not a guaranteed profit — CLV decides whether it\'s real.'},
-        {tag:'06', chip:'#5aa9ff', title:'Surface ratings', body:'The "Rankings" tab opens 4 cubes — Win prob, Match score, Overall, By surface. By-surface blends 60% surface / 40% overall Elo. A player can dominate clay but be average on grass; the blend captures that.'},
-        {tag:'07', chip:'#f5b23d', title:'CLV is the arbiter', body:'High accuracy is not edge — it reflects that clear favorites win. The only edge is a better price than the closing line, over time. We record every call at Pinnacle\'s opening price and settle it against the closing line. A prediction is not a profit.'},
-        {tag:'08', chip:'#8791ab', title:'Forward-only, no backfill', body:'Every row in the journal is recorded forward-only, in real time. Results appear only after a match settles — with won/lost, whether the engine was right, and the CLV against the closing line.'},
-        {tag:'09', chip:'#20c997', title:'Platt calibration', body:'Win probabilities are Platt-scaled (logistic recalibration) so the engine bar reflects true probability, not raw model output.'},
-        {tag:'10', chip:'#8791ab', title:'Total games — indicative', body:'The totals model (over/under games) is at step-6b: <200 settled totals, no value-zone yet. Lambda (expected games) and the line are shown as a descriptive lean only. The arbiter, as always, is CLV.'},
-      ],
       howRows: [],
     };
     const he = {
@@ -408,18 +395,6 @@ class Component extends DCLogic {
         {display:cf, target:RC.final, dec:2, prefix:(RC.final>=0?'+':''), u:'', d:`CLV מצטבר · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים) · מול קו הסגירה של Pinnacle.${nsHe}`},
       ],
       stageBars: [],
-      howBullets: [
-        {tag:'01', chip:'#35e39a', title:'מנוע מול Pinnacle — זה כל העניין', body:'בר המנוע הוא הסתברות הניצחון המכוילת שלנו; בר Pinnacle הוא הבוקי החד ביותר בעולם. לנצח אותו זה הסיגנל.'},
-        {tag:'02', chip:'#20c997', title:'Elo משולב בוחר, משטח מכייל', body:'40% Elo כללי + 60% ספציפי-משטח מחליט מי מנצח; כושר אחרון והיסטוריית משטח מכווננים כמה אנחנו בטוחים.'},
-        {tag:'03', chip:'#f5b23d', title:'A+ = פער + כרית + מכויל', body:'סיגנל נורה רק כשה-Edge עובר כרית ביטחון ויושב באזור מכויל. פער ענק לבדו הוא בדרך כלל טעות מודל.'},
-        {tag:'04', chip:'#8791ab', title:'שקט הוא חלק מהשיטה', body:'כשהמנוע מסכים עם Pinnacle, הכרטיס מתעמעם ושותק. להיות בקו עם הבוקי החד זה בסדר — לא כל משחק הוא קריאה.'},
-        {tag:'05', chip:'#35e39a', title:'בלוק-הערך והצבעים', body:'ירוק = פער 3–10% לצד-הקריאה (חלון-הערך). כחלחל = פער >10% (שאלה-פתוחה, חשוד מדי). אפור = בקו עם השוק. הפער הוא תמיד השערה-למדידה — CLV מכריע אם הוא אמיתי.'},
-        {tag:'06', chip:'#5aa9ff', title:'דירוג-המשטח', body:'כרטיסיית "דירוגים" פותחת 4 קוביות — סיכוי-ניצחון, ציון-משחק, ציון-כללי, לפי-משטח. לפי-משטח משלב 60% משטח / 40% כללי. שחקן יכול להיות מעולה על חימר וממוצע על דשא.'},
-        {tag:'07', chip:'#f5b23d', title:'CLV — הארביטר', body:'דיוק-גבוה אינו edge — הוא משקף שמועדפים-ברורים מנצחים. ה-edge היחיד הוא מחיר טוב-יותר מקו-הסגירה לאורך זמן. כל קריאה נרשמת במחיר-הפתיחה ונסגרת מול קו-הסגירה. ניבוי אינו רווח.'},
-        {tag:'08', chip:'#8791ab', title:'forward-only, ללא backfill', body:'כל שורה נרשמת קדימה-בלבד, בזמן-אמת. תוצאות מופיעות רק אחרי שמשחק נסגר — עם ניצח/הפסיד, אם הקריאה צדקה, וה-CLV מול קו-הסגירה.'},
-        {tag:'09', chip:'#20c997', title:'כיול Platt', body:'הסתברויות הניצחון עוברות Platt-scaling (כיול-לוגיסטי) כך שבר-המנוע משקף הסתברות-אמיתית ולא פלט-גלם של המודל.'},
-        {tag:'10', chip:'#8791ab', title:'סך-גיימים — אינדיקטיבי', body:'מודל הטוטאלים (מעל/מתחת גיימים) בשלב-6ב: פחות מ-200 טוטאלים שנסגרו, אין value-zone עדיין. Lambda (גיימים-צפויים) והקו מוצגים כשיוך-תיאורי בלבד. הארביטר, כרגיל, הוא CLV.'},
-      ],
       howRows: [],
     };
     return this.state.lang === 'he' ? he : en;
@@ -767,8 +742,8 @@ class Component extends DCLogic {
       edge: fEdge,
       edgeStr: fEdge != null ? (fEdge >= 0 ? '+' : '') + fEdge + '%' : '—',
       blurb: (fMkt != null
-        ? (he ? `המנוע רואה ${fEng}% ל-${rf.pick} מול ${fMkt}% ב-Pinnacle — פער + כרית + מכויל. השערה למדידה, לא רווח מובטח · ה-CLV מכריע.`
-              : `Engine sees ${fEng}% for ${rf.pick} vs ${fMkt}% at Pinnacle — gap + cushion + calibrated. A hypothesis to measure, not guaranteed · CLV decides.`)
+        ? (he ? `המנוע רואה ${fEng}% ל-${rf.pick} מול ${fMkt}% ב-Pinnacle. קריאת A+ של המנוע נקבעת מהסתברות ומשלב, והשוק מוצג להשוואה. השערה למדידה, לא רווח מובטח · ה-CLV מכריע.`
+              : `Engine sees ${fEng}% for ${rf.pick} vs ${fMkt}% at Pinnacle. The engine's A+ call is set by probability and stage; the market is shown for comparison. A hypothesis to measure, not guaranteed · CLV decides.`)
         : (he ? `המנוע רואה ${fEng}% ל-${rf.pick}. אין קו שוק כרגע — אינדיקטיבי.`
               : `Engine sees ${fEng}% for ${rf.pick}. No market line yet — indicative.`)),
     };
@@ -815,7 +790,8 @@ class Component extends DCLogic {
 
       // Result tail for settled matches (real from games/journal)
       const settledGames = R.games || [];
-      const g = settledGames.find(g2 => g2.home === t.home && g2.away === t.away && g2.played);
+      // date and both names; no date match, no result (a past meeting of the same players is not this match)
+      const g = t.date ? settledGames.find(g2 => g2.date === t.date && g2.home === t.home && g2.away === t.away && g2.played) : null;
       let tail = null;
       if (g) {
         const tick = g.correct ? '✓' : '✗';
@@ -831,7 +807,7 @@ class Component extends DCLogic {
         };
       }
       // Pre-settlement tail
-      const preTail = g ? null : (he ? 'אוסף · forward-only' : 'collecting · forward-only');
+      const preTail = g ? null : (he ? 'טרם הוכרע' : 'Not decided yet');
 
       return {
         ...t, ...st,
@@ -870,7 +846,8 @@ class Component extends DCLogic {
           ? (gapPct != null
               ? (he ? `בקו עם Pinnacle · פער ${gapPct}% — שקט` : `In line with Pinnacle · gap ${gapPct}% — quiet`)
               : (he ? 'צמוד ל-Pinnacle — שקט' : 'In line with Pinnacle — quiet'))
-          : (t.state === 'aplus' ? (he ? 'קריאת A+ · מנצח' : 'A+ call · winner') : (he ? 'ערך' : 'Value')),
+          : (t.state === 'aplus' ? (he ? 'קריאת A+ של המנוע · מנצח' : 'Engine A+ call · winner')
+             : (he ? 'מדרגת "ערך" של הדף: שלב 6 ומעלה וביטחון 57% ומעלה. לא קריאה של המנוע.' : 'Page tier "value": stage 6+ and confidence 57%+. Not an engine call.')),
         toggle: () => this.toggleTile(t.id),
       };
     });
@@ -958,7 +935,6 @@ class Component extends DCLogic {
       return { ...s, pos, neg: !pos, widthPct: Math.round(Math.abs(num) / clvMax * 100), color: pos ? '#35e39a' : '#ff8f8f' };
     });
 
-    const howBullets = L.howBullets;
     const howRows = [
       { icon:'📊', label: he?'מנוע':'Engine', value: `${feat.engUnder}% / ${100-feat.engUnder}% — ${he?'מותאם-משטח':'surface-adjusted'}`, labelColor:'#c4c7d2' },
       (feat.hasMkt
@@ -978,7 +954,7 @@ class Component extends DCLogic {
       ...L, navTabs, rankTabs, rankSurfChips, rankScopeChips, rankExplainer,
       showSurfChips, showScopeChips,
       rankColHeaders,
-      rankRows, nav, feat, tiles, stageBars, howBullets, howRows,
+      rankRows, nav, feat, tiles, stageBars, howRows,
       asOfLabel,
       freshnessLabel, showFreshness,
       stageDisplay,
@@ -986,6 +962,11 @@ class Component extends DCLogic {
       dateInputMin, dateInputMax, dateInputVal, dateInputLabel, onDateInput, onDateSelect,
       privacyOpenLabel, privacyTitle, disclaimerHead, disclaimerBody, privacyHead, privacyBody,
       onOpenPrivacy, onClosePrivacy, dispPrivacy,
+      // empty slate: no featured card and no invented tile (KNOWN_DEFECTS item 22)
+      hasFeat: R.feat != null, noSlate: (R.tiles || []).length === 0,
+      boardDisp: (R.tiles || []).length ? 'block' : 'none',
+      noSlateTitle: he ? 'אין משחקים בסלייט של היום' : 'No matches on today\'s slate',
+      noSlateBody: he ? 'אין היום משחקי ATP לניתוח בנתונים שהמנוע בנה.' : 'There are no ATP matches to analyze in the data the engine built today.',
       featEdge: feat.edgeStr,
       featEdgeTarget: feat.edge != null ? Math.abs(feat.edge) : 0,
       featEdgePrefix: feat.edge != null && feat.edge < 0 ? '−' : '+',
