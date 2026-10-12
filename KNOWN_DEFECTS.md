@@ -64,14 +64,19 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
 - Related: the kickoff re-check added in 399a95a handles a moved schedule in games.csv. It does not handle a delay that never appears in the schedule.
 
 ## 8. NBA preview tiles: fields with no source were published
-- Recorded 2026-10-11. In `nba-engine/preview_build/gen_nba_data.py` since 17de499 (2026-07-03). The tiles are built from HISTORY (past games) and are shown in season; in the offseason the board hides them, but the values were in the published data line of `preview/nba/app.js` throughout.
-- Fields that had no source:
-  - **Stage and stage name:** picked from the verdict (8 for A+, 6 for value, 4 otherwise) because HISTORY has no stage. **Removed 2026-10-11** (no stage, no name).
-  - **`value.pct`:** the constants 7 (OVER) and 6 (UNDER) on A+ tiles; the NBA has no market totals price. **Removed 2026-10-11** (no value block).
-  - **`engOver`:** `50 - (net_h + net_a) * 0.8`, clipped to 35-65, a formula of the generator's own. **Not removed yet.** A real source exists in `nba_totals_live.py` (`predict_total`, and `total_to_prob_over`, line 51); the choice is open.
-  - **Line ladder:** `over = 50 - delta * 3` for lines at λ ± 2 and ± 4. **Not removed yet**, for the same reason.
-- Related, not changed:
-  - The tile badge "value" / "Value on the total" comes from probability alone (≥ 65%), with no market.
-  - "In line with market — quiet" is shown with no market price.
-  - λ is `110 + (h_off - a_def)/2 + (a_off - h_def)/2`, from the rankings cube rather than the totals model.
-  - The featured card shows "STAGE —", "EDGE VS MARKET —" and "EXPECTED POINTS —" for fields it has no value for.
+- Recorded 2026-10-11. In `nba-engine/preview_build/gen_nba_data.py` since 17de499 (2026-07-03). The tiles are built from HISTORY (past games) and are shown in season. In the offseason the board hides them, but the values were in the published data line of `preview/nba/app.js` throughout.
+- What was published without a source, and what was done on 2026-10-11:
+  - **Stage and stage name:** picked from the verdict (8 for A+, 6 for value, 4 otherwise), because HISTORY has no stage. Removed: no stage, no name.
+  - **`value.pct`:** the constants 7 (OVER) and 6 (UNDER) on A+ tiles. The NBA has no market totals price. Removed: no value block.
+  - **`engOver`:** `50 - (net_h + net_a) * 0.8`, clipped to 35-65, a formula of the generator's own. Removed from the tiles.
+  - **Line ladder:** `over = 50 - delta * 3` for lines at λ ± 2 and ± 4. Removed from the tiles.
+  - **λ and the "line":** `110 + (h_off - a_def)/2 + (a_off - h_def)/2` from the rankings cube, labelled "λ · expected points" and "λ = X pts · 🔒 line Y", which implies the totals model and a market line. Removed from the tiles and from the featured card. The featured driver row "Adjusted off/def total" stays, but only when it has a value; its label describes what the number is.
+  - **The "Total points" toggle and panel:** shown only when there are totals.
+  - **Market rule** (`preview/nba/app.js`): an element that claims a comparison with the market is shown only when there is a market price.
+    - The tile badge "value" and the notes "Value on the total" and "Strong edge on the total" appear only with a totals price.
+    - "too close, quiet" and "In line with market" appear only with a winner price.
+    - The board counter drops its "value" term when no tile has a totals price.
+    - The featured card shows "Edge vs market" only with a market price, and "Stage" only with a stage. Driver rows with no value are not shown.
+- What remains:
+  - The engine's real totals model (`nba_totals_live.py`: `predict_total`, and `total_to_prob_over`, line 51) is not connected to the page. Connecting it is a separate step with a verification gate.
+  - The tile `cellAcc` / `cellN` fall back to 65 and a constant when no calibration band matches. Recorded, not changed.

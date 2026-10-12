@@ -626,13 +626,17 @@ class Component extends DCLogic {
     const CIRC = 2 * Math.PI * 22;
     const tiles = raw.map(t => {
       const ex = extra[t.id] || {};
-      const st = styleFor(t.state);
       const hasMktH = t.mktH != null;
       const hasTotals = t.line != null && t.lambda != null;
       const hasMktOver = t.mktOver != null;
+      // Market rule: anything that claims a comparison with the market exists only when there is a market price.
+      // 'value' (probability >= 65%) is not a value without a totals price, so it is shown as a plain non-call.
+      const dState = (t.state === 'value' && !hasMktOver) ? 'silent' : t.state;
+      const st = styleFor(dState);
+      const badgeDisp = (dState === 'silent' && !hasMktH) ? 'none' : 'inline-flex';
       const lo = hasMktH ? Math.min(t.engH, t.mktH) : t.engH, hi = hasMktH ? Math.max(t.engH, t.mktH) : t.engH;
       const open = t.id === this.state.openTile;
-      const ringColor = t.state === 'aplus' ? '#35e39a' : (t.state === 'value' ? '#f5b23d' : '#8791ab');
+      const ringColor = dState === 'aplus' ? '#35e39a' : (dState === 'value' ? '#f5b23d' : '#8791ab');
       const gapPct = hasMktH ? Math.abs(t.engH - t.mktH) : null;
       const eloStr = ex.elo ? ('Elo ' + ex.elo) : '';
       const offStr = ex.off_rtg != null ? ((ex.off_rtg >= 0 ? '+' : '') + ex.off_rtg + ' off') : null;
@@ -673,10 +677,12 @@ class Component extends DCLogic {
 
       return {
         ...t, ...st, engA: 100 - t.engH, gapLeft: lo, gapWidth: Math.max(1.2, hi - lo),
-        open, detailDisp: open ? 'block' : 'none', chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
+        dState, badgeDisp,
+        open, detailDisp: (open && hasTotals) ? 'block' : 'none', toggleDisp: hasTotals ? 'flex' : 'none',
+        chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
         ringColor, ringArc: `${(CIRC * t.callPct / 100).toFixed(1)} ${CIRC.toFixed(1)}`,
         hasMktH, mktDisp: hasMktH ? 'flex' : 'none',
-        engUnder: t.engOver != null ? 100 - t.engOver : 40,
+        engUnder: t.engOver != null ? 100 - t.engOver : null,
         mktUnder: hasMktOver ? 100 - t.mktOver : null,
         mktA: hasMktH ? 100 - t.mktH : null, gap: gapPct,
         hasTotals, hasStarters: !!(ex.off_rtg != null || ex.def_rtg != null || ex.elo),
@@ -695,11 +701,11 @@ class Component extends DCLogic {
         hasFatigue, fatigue,
         hasSurprise, surprise,
         cellAccDisp,
-        callNote: t.state === 'silent'
-          ? (gapPct != null
-              ? (he ? `בקו עם השוק · פער ${gapPct}% — שקט` : `In line with market · gap ${gapPct}% — quiet`)
-              : (he ? 'צמוד לשוק — שקט' : 'In line with market — quiet'))
-          : (t.state === 'aplus' ? (he ? 'Edge חזק על הטוטאל · A+' : 'Strong edge on the total · A+') : (he ? 'ערך על הטוטאל' : 'Value on the total')),
+        // each note only when the comparison it names was made: with the winner price (silent) or the totals price
+        callNote: dState === 'silent'
+          ? (gapPct != null ? (he ? `בקו עם השוק · פער ${gapPct}% — שקט` : `In line with market · gap ${gapPct}% — quiet`) : '')
+          : (hasMktOver ? (dState === 'aplus' ? (he ? 'Edge חזק על הטוטאל · A+' : 'Strong edge on the total · A+') : (he ? 'ערך על הטוטאל' : 'Value on the total')) : ''),
+        noteDisp: (dState === 'silent' ? gapPct != null : hasMktOver) ? 'block' : 'none',
         toggle: () => this.toggleTile(t.id),
       };
     });
@@ -717,7 +723,7 @@ class Component extends DCLogic {
           { label: he?'יתרון דירוג Elo מול שוק':'Elo rating edge vs market', val: feat.edgeStr, arrow:'▲', color:'#35e39a' },
           { label: he?'יתרון בית (HCA)':'Home-court advantage (HCA)', val:'', arrow:'▲', color:'#f5b23d' },
           { label: he?'טוטאל off/def מותאם':'Adjusted off/def total', val:(rf.lambda ? rf.lambda+' pts' : '—'), arrow:'●', color:'#8791ab' },
-        ];
+        ].filter(d => d.val !== '—');   // a factor with no value (no market price, no lambda) is not shown
 
     const ig = R.integrity || {};
     const integrity = { n: ig.n || '—', drawdown: (he?'נאסף':'collecting'), brier: (he?'נאסף':'collecting'), hit: ig.aplusHit || ig.hit || '—' };
@@ -800,6 +806,8 @@ class Component extends DCLogic {
         : (he ? 'אין משחקים פעילים לניתוח כרגע.' : 'No active games to analyze right now.'),
       signalsEmptyIcon: stIcon,
       featEdge: feat.edgeStr,
+      featEdgeShow: feat.hasMkt && fEdge != null, featStageShow: rf.stage != null,
+      featSepShow: feat.hasMkt && fEdge != null && rf.stage != null,
       featEdgeTarget: fEdge != null ? Math.abs(fEdge) : '',
       featEdgePrefix: (fEdge != null && fEdge >= 0 ? '+' : (fEdge != null ? '-' : '')),
       clvFinalStr,
@@ -810,7 +818,8 @@ class Component extends DCLogic {
       clv: this.clvChart(), cal: this.cal(), drivers, integrity, clvSeg,
       // no CLV segments without a closed-line journal: the whole section (header, bars, axis) is hidden
       dispClvSegHead: clvSeg.length ? 'block' : 'none', dispClvSeg: clvSeg.length ? 'flex' : 'none',
-      boardCounter: (function(){var a=tiles.filter(function(t){return t.state==='aplus';}).length,v=tiles.filter(function(t){return t.state==='value';}).length,k=tiles.filter(function(t){return t.state==='silent';}).length;return he?(a+' A+ · '+v+' ערך · '+k+(k===1?' שתיקה':' שתיקות')):(a+' A+ · '+v+' value · '+k+' silent');})(),
+      boardCounter: (function(){var a=tiles.filter(function(t){return t.state==='aplus';}).length,v=tiles.filter(function(t){return t.dState==='value';}).length,k=tiles.filter(function(t){return t.dState==='silent';}).length;var m=tiles.some(function(t){return t.hasMktOver;});   /* no totals price anywhere: no 'value' term */
+        return he?(a+' A+ · '+(m?v+' ערך · ':'')+k+(k===1?' שתיקה':' שתיקות')):(a+' A+ · '+(m?v+' value · ':'')+k+' silent');})(),
       dispSignals: tab === 'signals' ? 'block' : 'none',
       dispResults: tab === 'results' ? 'block' : 'none',
       dispRankings: tab === 'rankings' ? 'block' : 'none',
