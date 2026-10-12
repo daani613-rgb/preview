@@ -79,4 +79,4 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
     - The featured card shows "Edge vs market" only with a market price, and "Stage" only with a stage. Driver rows with no value are not shown.
 - What remains:
   - The engine's real totals model (`nba_totals_live.py`: `predict_total`, and `total_to_prob_over`, line 51) is not connected to the page. Connecting it is a separate step with a verification gate.
-  - The tile `cellAcc` / `cellN` fall back to 65 and a constant when no calibration band matches. Recorded, not changed.
+- Fixed 2026-10-11 (part 5): the tile `cellAcc` / `cellN` fell back to 65 and 0 when no calibration band matched (probability under 60%), and the page turned the 0 into "small sample". Now there is no value and no display (generator default None; `preview/nba/app.js` no longer maps a missing value to 0).

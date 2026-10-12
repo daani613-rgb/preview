@@ -614,7 +614,7 @@ class Component extends DCLogic {
       line: t.line, lambda: t.lambda, engOver: t.engOver, mktOver: t.mktOver, value: t.value,
       lines: t.lines || [],
       fatigue: t.fatigue || null, surprise: t.surprise || null,
-      cellAcc: t.cellAcc || 0, cellN: t.cellN || 0,
+      cellAcc: t.cellAcc != null ? t.cellAcc : null, cellN: t.cellN != null ? t.cellN : null,   // no band: null, not 0
     }));
 
     const styleFor = (s) => {
@@ -671,13 +671,14 @@ class Component extends DCLogic {
       } : null;
 
       // Cell accuracy display
-      const cellAccDisp = t.cellN >= 30
+      // no calibration band for this probability: no cell accuracy at all (not "small sample")
+      const cellAccDisp = t.cellN == null ? '' : t.cellN >= 30
         ? (he ? `דיוק-תא ${t.cellAcc}% (n=${t.cellN})` : `Cell accuracy ${t.cellAcc}% (n=${t.cellN})`)
         : (he ? 'מדגם קטן' : 'small sample');
 
       return {
         ...t, ...st, engA: 100 - t.engH, gapLeft: lo, gapWidth: Math.max(1.2, hi - lo),
-        dState, badgeDisp,
+        dState, badgeDisp, cellDisp: t.cellN == null ? 'none' : 'block',
         open, detailDisp: (open && hasTotals) ? 'block' : 'none', toggleDisp: hasTotals ? 'flex' : 'none',
         chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
         ringColor, ringArc: `${(CIRC * t.callPct / 100).toFixed(1)} ${CIRC.toFixed(1)}`,
