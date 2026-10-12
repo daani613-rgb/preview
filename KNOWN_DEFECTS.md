@@ -147,8 +147,8 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
 - The MLB log spans two chains. Every row carries chain_version with the
   chain it was produced under: 2010_2023+2026 for rows written before the
   commit that added games_2024.csv and games_2025.csv, and 2010_2026_full
-  from that commit onward. The commit hash is recorded here once it
-  exists. The two groups are not pooled into a single record without
+  from that commit onward. That commit is baseball-engine 330d1e8
+  (2026-10-12). The two groups are not pooled into a single record without
   saying so.
 
 ## 12. MLB: the log writer's FIELDS lagged the file's header
