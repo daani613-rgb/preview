@@ -162,3 +162,59 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
   columns were added, and no row has been appended since. Every row in the
   file and in every committed version of it has as many fields as its
   header. The defect was latent and did not occur.
+
+## 13. NBA: BALLDONTLIE_KEY was missing from the Build dashboard step
+- Recorded 2026-10-12.
+- Correction 16 was only half applied. BALLDONTLIE_KEY was added to the
+  Update step and not to the Build dashboard step, so
+  dashboard.get_next_game() (dashboard.py:273) called balldontlie with no
+  key from that step. The CI log of 2026-10-11 shows it failing after all
+  retries, and a local copy reproduces the same error, expected string or
+  bytes-like object, which is what Authorization: None produces. Impact:
+  in the off-season the next game field was always empty; inside a season
+  the function is not called. Fixed 2026-10-12. Recorded because the
+  earlier record said done and was not, the same family as CLV_FINAL and
+  log_aplus.
+
+## 14. NBA preview: featured card, hero line and a fixed 60 when there is no featured game
+- Recorded 2026-10-12. Found in a local simulation of the opening night, not in production.
+- What was shown: with the season open and no featured game (`feat` is None: no NBA games that day, or the
+  day's schedule could not be loaded), the featured card still rendered: "@ ·" with no teams, "HIGH" over a
+  dash, "Engine 40%", an empty "Market %", and "Engine sees 60% HIGH". The 60 was a fallback constant in
+  `preview/nba/app.js` (`fEngPick ... : 60`), not an engine value. The hero line said "Off-season now, next
+  season tips off October 2026." in every state, because it was a fixed string.
+- What was fixed: no fallback number (no engine value, no number and no "Engine sees" sentence); when `feat` is
+  None the card is not rendered and one status message is shown instead ("No featured game today. There are
+  no NBA games today, or today's schedule could not be loaded.", and in Hebrew). The hero line reads
+  `isOffseason` (its logic unchanged) and carries no fixed date; in the off-season it names the next game's
+  date only when the data has one.
+- Opening guards: the four start guards (tennis, MLB journal, MLB totals freeze, NBA) were proven on copies
+  and on real API data, and none has fired in production. A firing cannot be forced, and data is not
+  injected into production to force one. The NBA opening night is the first opportunity for two of them.
+- Season strings: every string on the NBA page that describes the season state now reads `isOffseason` (its
+  logic unchanged) and carries no fixed date (the hero line, the rankings note, the CLV and totals collecting
+  lines, the empty-signals body, the empty-state preview body and chip, the next-game card). The rankings note
+  used to say "Off-season power rankings, no live games until October 2026" inside a season too. Hebrew typo
+  "יחזרים" corrected to "יחזרו".
+- The three day-dependent ranking cubes (teams today, games today, composite today) are never filled by
+  `gen_nba_data.py`, in any season; their note promised "Fills when the season opens (October 2026)". The note now
+  says they are not built on this page. Filling them is not done here.
+- The opening-night IndexError guard in `nba-engine/preview_build/gen_nba_data.py` is at line 406. It was
+  proven on local states of 0, 2, 4 and 6 rated teams (odd counts cannot arise: every game rates two teams).
+
+## 15. NBA preview tiles: calibration band picked by substring match
+- Recorded 2026-10-12. In `nba-engine/preview_build/gen_nba_data.py` (tile `cellAcc` / `cellN`), found while
+  scanning for numeric fallbacks.
+- What: the band for a pick was found with `'70' in c['band']` and the like. "60–70%" contains "70" and
+  "70–80%" contains "80", so a 70 to 79 percent pick was given the accuracy of the 60–70% band and a pick of 80
+  percent or more the accuracy of the 70–80% band: every pick above 70 percent showed the accuracy of the band
+  below its own. CALIB and its bands were correct; only the choice of band was wrong.
+- Fix: the band bounds are parsed from the label and compared as numbers ("60–70%" is [60, 70), "85%+" is
+  [85, up)). CALIB and the bands it builds are unchanged.
+- Effect on the number shown next to A+ calls (A+ is 80 percent or more): it was the 70–80% band's accuracy,
+  73 percent on the current data (n=1,433). It is now 80 percent (80–85% band, n=444) or 85 percent (85%+ band,
+  n=319). The shown number changes because a wrong number is replaced by the right one; this is not a
+  regression.
+- Remaining: the tile probability is rounded to a whole percent before the band is chosen, while CALIB banded
+  the unrounded probability, so a pick at 79.6 percent is shown with the 80–85% band. Not fixed.
+

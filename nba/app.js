@@ -243,6 +243,7 @@ class Component extends DCLogic {
 
   labels() {
     const R = window.REAL || {};
+    const off = R.isOffseason === true;   // read only; season strings below depend on it and carry no fixed date
     const acc = R.accuracy || {};
     const clvCollecting = !R.clv || R.clv.n === 0 || R.clvCollecting === true;
     const aplusAcc = acc.aplus != null ? acc.aplus : null;      // no hand-written fallback
@@ -253,16 +254,16 @@ class Component extends DCLogic {
 
     const en = {
       dir: 'ltr', brand: 'Command Center', liveLabel: 'LIVE',
-      heroTitle: 'The NBA engine, live.', heroSub: `Two models per game, winner and total points. Updated once a day. Scheduled runs are often delayed or skipped. Off-season now, next season tips off October 2026.`,
+      heroTitle: 'The NBA engine, live.', heroSub: `Two models per game, winner and total points. Updated once a day. Scheduled runs are often delayed or skipped.`,
       signalKicker: 'The A+ call · season signals', edgeLabel: 'Edge vs market', runsLabel: 'expected points', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'HIGH', underWord: 'LOW', homeWord: 'Home', awayWord: 'Away', starterPrefix: 'rest-aware:',
       validatedHead: 'WALK-FORWARD RECONSTRUCTION',
-      clvTitle: 'Cumulative CLV', clvSub: 'No-vig, vs closing line · collecting — settles as the season plays out from October. No closing-line journal exists yet for current season.',
+      clvTitle: 'Cumulative CLV', clvSub: 'No-vig, vs closing line · collecting. Settles as the season\'s games are played. No closing-line journal exists yet for the current season.',
       calTitle: 'Calibration', calSub: 'Predicted probability vs what actually happened. On the diagonal = perfectly calibrated.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'The engine hugs the diagonal — slightly conservative at the high end, which is exactly what you want.',
       detailsWord: 'Total points', runsWord: 'points', lineWord: 'line',
       stageTitle: 'Accuracy by stage', stageSub: 'Higher stages = higher conviction.',
-      rankNote: 'All 30 NBA teams ranked by real Elo rating and grouped into power tiers. Off-season power rankings — no live games until October 2026.',
+      rankNote: 'All 30 NBA teams ranked by real Elo rating and grouped into power tiers.' + (off ? ' Off-season power rankings: no live games until the new season opens.' : ' Season in progress: the rankings move with each daily run.'),
       teamCol: 'Team', pwinCol: 'Elo strength', annotatedLabel: 'Annotated example — illustrative card', guideLabel: 'The full guide — how to read this page',
       eloExplain: '= who wins (the call).', fipExplain: '= how sure (calibrates it).',
       disclaimer: 'For information and entertainment only · Not betting advice · Play responsibly · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
@@ -315,8 +316,8 @@ class Component extends DCLogic {
       kpis: [
         {display: aplusAcc == null ? '—' : String(aplusAcc), target: aplusAcc == null ? '' : aplusAcc, dec:0, prefix:'', u: aplusAcc == null ? '' : '%', tag:'A+', d:`${nbaAplus('en')} ${nbaRecon('trackCalls','en')}`},
         {display: overall == null ? '—' : overall.toFixed(1), target: overall == null ? '' : overall, dec:1, prefix:'', u: overall == null ? '' : '%', d:`${nbaRecon('history','en')}`},
-        {display:'collecting', target:'', u:'', d:'Totals over/under direction · collecting — settles from October 2026.'},
-        {display:'collecting', target:'', u:'', d:'Cumulative CLV · vs closing line · collecting from October 2026.'},
+        {display:'collecting', target:'', u:'', d:'Totals over/under direction · collecting. Settles as games are played.'},
+        {display:'collecting', target:'', u:'', d:'Cumulative CLV · vs closing line · collecting.'},
       ],
       stageBars: [],
       stageNote: 'Per-stage accuracy and calibration are not part of this live feed.',
@@ -326,16 +327,16 @@ class Component extends DCLogic {
     };
     const he = {
       dir: 'rtl', brand: 'מרכז שליטה', liveLabel: 'חי',
-      heroTitle: 'מנוע החיזוי של NBA', heroSub: `שני מודלים לכל משחק, מנצח וסך נקודות. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות. עונת הפסקה כעת, העונה הבאה נפתחת באוקטובר 2026.`,
+      heroTitle: 'מנוע החיזוי של NBA', heroSub: `שני מודלים לכל משחק, מנצח וסך נקודות. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.`,
       signalKicker: 'קריאות A+ · אות העונה', edgeLabel: 'Edge מול השוק', runsLabel: 'נקודות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ', starterPrefix: 'מודע-מנוחה:',
       validatedHead: 'שחזור WALK-FORWARD',
-      clvTitle: 'CLV מצטבר', clvSub: 'ללא-vig, מול קו הסגירה · נצבר — נסגר ככל שהעונה מתקדמת מאוקטובר. אין יומן קו-סגירה לעונה הנוכחית.',
+      clvTitle: 'CLV מצטבר', clvSub: 'ללא-vig, מול קו הסגירה · נצבר. נסגר ככל שמשחקי העונה מתקיימים. אין יומן קו-סגירה לעונה הנוכחית.',
       calTitle: 'כיול (Calibration)', calSub: 'הסתברות חזויה מול מה שקרה בפועל. על האלכסון = מכויל בול.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'המנוע צמוד לאלכסון — מעט שמרני בקצה הגבוה, בדיוק כפי שרוצים.',
       detailsWord: 'סך נקודות', runsWord: 'נקודות', lineWord: 'קו',
       stageTitle: 'דיוק לפי שלב', stageSub: 'שלב גבוה יותר = ביטחון גבוה יותר.',
-      rankNote: 'כל 30 קבוצות NBA מדורגות לפי דירוג Elo אמיתי ומקובצות לשכבות עוצמה. דירוגי עונת הפסקה — אין משחקים חיים עד אוקטובר 2026.',
+      rankNote: 'כל 30 קבוצות NBA מדורגות לפי דירוג Elo אמיתי ומקובצות לשכבות עוצמה.' + (off ? ' דירוגי עונת הפסקה: אין משחקים חיים עד פתיחת העונה החדשה.' : ' העונה פעילה: הדירוגים מתעדכנים בכל ריצה יומית.'),
       teamCol: 'קבוצה', pwinCol: 'עוצמת Elo', annotatedLabel: 'דוגמה מבוארת — כרטיס להמחשה', guideLabel: 'המדריך המלא — איך לקרוא את הדף',
       eloExplain: '= מי מנצח (הקריאה).', fipExplain: '= כמה בטוח (מכייל).',
       disclaimer: 'למידע ובידור בלבד · אינו ייעוץ הימורים · שחק באחריות · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
@@ -388,8 +389,8 @@ class Component extends DCLogic {
       kpis: [
         {display: aplusAcc == null ? '—' : String(aplusAcc), target: aplusAcc == null ? '' : aplusAcc, dec:0, prefix:'', u: aplusAcc == null ? '' : '%', tag:'A+', d:`${nbaAplus('he')} ${nbaRecon('trackCalls','he')}`},
         {display: overall == null ? '—' : overall.toFixed(1), target: overall == null ? '' : overall, dec:1, prefix:'', u: overall == null ? '' : '%', d:`${nbaRecon('history','he')}`},
-        {display:'נצבר', target:'', u:'', d:'כיוון מעל/מתחת · נצבר — נסגר מאוקטובר 2026.'},
-        {display:'נצבר', target:'', u:'', d:'CLV מצטבר · מול קו הסגירה · נצבר מאוקטובר 2026.'},
+        {display:'נצבר', target:'', u:'', d:'כיוון מעל/מתחת · נצבר. נסגר ככל שמשחקים מתקיימים.'},
+        {display:'נצבר', target:'', u:'', d:'CLV מצטבר · מול קו הסגירה · נצבר.'},
       ],
       stageBars: [],
       stageNote: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
@@ -514,7 +515,7 @@ class Component extends DCLogic {
     const stAccent = '#f5b23d', stIcon = '🏀';
     const stMsg = {
       loading: { t: he ? 'טוען סיגנלים…' : 'Loading signals…', b: he ? 'המנוע מכייל את המודלים ומושך את משחקי היום. רגע אחד.' : 'The engine is calibrating its models and pulling today\'s slate. One moment.' },
-      empty:   { t: he ? 'אין סיגנלים כרגע' : 'No signals right now', b: he ? 'אין משחקי NBA פעילים לניתוח — עונת הפסקה. הסיגנלים יחזרו עם פתיחת העונה · אוקטובר 2026.' : 'No active NBA games to analyze — off-season. Signals return when the season opens · October 2026.' },
+      empty:   { t: he ? 'אין סיגנלים כרגע' : 'No signals right now', b: isOffseason ? (he ? 'אין משחקי NBA פעילים לניתוח: עונת הפסקה. הסיגנלים יחזרו עם פתיחת העונה.' : 'No active NBA games to analyze: off-season. Signals return when the season opens.') : (he ? 'אין משחקי NBA פעילים לניתוח כרגע.' : 'No active NBA games to analyze right now.') },
       error:   { t: he ? 'המנוע אינו זמין זמנית' : 'Engine temporarily unavailable', b: he ? 'לא הצלחנו למשוך נתונים מהשרת. בדוק את החיבור ונסה שוב.' : 'We couldn\'t reach the data feed. Check the connection and try again.' },
     }[V] || {};
     const tab = this.state.tab;
@@ -563,7 +564,7 @@ class Component extends DCLogic {
     const rankIsEmpty = rankResult.isEmpty;
     const rankIsDayDep = rankResult.isDayDep;
     const rankEmptyMsg = rankIsDayDep
-      ? (he ? 'מתמלא עם פתיחת העונה (אוקטובר 2026).' : 'Fills when the season opens (October 2026).')
+      ? (he ? 'הקובייה הזו לא נבנית בדף הזה.' : 'This cube is not built on this page.')   // the generator never fills day-dependent cubes
       : (he ? 'אין נתונים לטאב זה.' : 'No data for this tab.');
 
     // ── Column headers per sub-tab ────────────────────────────────────────
@@ -582,7 +583,8 @@ class Component extends DCLogic {
     const resultsData = this.buildResultsRows();
 
     const rf = R.feat || {};
-    const fEngPick = rf.engPick != null ? rf.engPick : 60;
+    const fEngPick = rf.engPick != null ? rf.engPick : null;   // no engine value, no number (was a fallback of 60)
+    const hasFeat = R.feat != null && fEngPick != null;      // no featured game: the card is not rendered
     const fMktPick = rf.mktPick != null ? rf.mktPick : null;
     const fEdge    = (rf.edge != null && !isOffseason) ? rf.edge : null;
     // A historical winner-pick card (rf.kind === 'historical'): the % is the engine's WIN probability for
@@ -593,11 +595,11 @@ class Component extends DCLogic {
       pick: isHist ? (rf.pickCode || '—') : (he ? 'גבוה' : 'HIGH'),
       line: isHist ? (rf.engPick != null ? (he ? `${rf.engPick}% לניצחון` : `${rf.engPick}% to win`) : '—') : (rf.lambda ? String(rf.lambda) : '—'),
       lambda: rf.lambda || '—', stage: rf.stage != null ? String(rf.stage) : '—',
-      engUnder: 100 - fEngPick,
+      engUnder: fEngPick != null ? 100 - fEngPick : null,
       mktUnder: fMktPick != null ? (100 - fMktPick) : null,
       edge: fEdge, edgeStr: fEdge != null ? (fEdge >= 0 ? '+' : '') + fEdge + '%' : '—',
       hasMkt: fMktPick != null && !isOffseason,
-      blurb: isHist ? ((rf.note && (he ? rf.note.he : rf.note.en)) || '') : he
+      blurb: fEngPick == null ? '' : isHist ? ((rf.note && (he ? rf.note.he : rf.note.en)) || '') : he
         ? (fMktPick != null && !isOffseason
             ? 'המנוע רואה ' + fEngPick + '% גבוה מול ' + (100-fMktPick) + '% בשוק — פער + כרית + מכויל. השערה למדידה, לא רווח מובטח · ה-CLV מכריע.'
             : 'המנוע רואה ' + fEngPick + '% גבוה. אין קו-שוק כרגע — אינדיקטיבי.')
@@ -786,8 +788,8 @@ class Component extends DCLogic {
       tag: he ? 'המשחק המתוזמן הבא · תצוגה בלבד (לא ביומן)' : 'Next scheduled game · display-only (not journaled)',
     } : {
       has: false, hasNot: true,
-      msg: he ? 'אין משחק מתוזמן בחלון 7 הימים — עונת הפסקה. הכרטיס יטען כשהעונה מתקרבת · אוקטובר 2026.'
-              : 'No game scheduled within the 7-day look-ahead — off-season. This card fills as the season nears · October 2026.',
+      msg: he ? 'אין משחק מתוזמן בחלון 7 הימים: עונת הפסקה. הכרטיס יתמלא כשהעונה תתקרב.'
+              : 'No game scheduled within the 7-day look-ahead: off-season. This card fills as the season nears.',
       tag: he ? 'המשחק הבא · נאסף' : 'Next game · collecting',
     };
     const dispNextGame = (isOffseason && V === 'empty') ? 'flex' : 'none';
@@ -795,6 +797,19 @@ class Component extends DCLogic {
     return {
       ...L, navTabs, rankTabs, nav, feat, tiles, rankRows, stageBars, howBullets, howExplainers, howRows,
       hasSignals, noSignals: !hasSignals,
+      hasFeat, noFeat: !hasFeat,
+      noFeatTitle: he ? 'אין משחק מוביל היום' : 'No featured game today',
+      noFeatBody: he ? 'אין היום משחקי NBA, או שלוח המשחקים של היום לא נטען.'
+                     : "There are no NBA games today, or today's schedule could not be loaded.",
+      // the hero line reads isOffseason (data-driven); no fixed date: the next game's date only when the data has one
+      heroSub: (function () {
+        const base = he ? 'שני מודלים לכל משחק, מנצח וסך נקודות. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.'
+                        : 'Two models per game, winner and total points. Updated once a day. Scheduled runs are often delayed or skipped.';
+        if (!isOffseason) return base + (he ? ' העונה פעילה.' : ' The season is in progress.');
+        const nd = R.nextGame && R.nextGame.date ? String(R.nextGame.date).slice(0, 10) : '';
+        return base + (he ? ' עונת הפסקה כעת: אין משחקים לניתוח עד פתיחת העונה החדשה.' : ' Off-season now: no games to analyze until the new season opens.')
+                    + (nd ? (he ? ` המשחק המתוזמן הבא ב-${nd}.` : ` The next scheduled game is on ${nd}.`) : '');
+      })(),
       stageNote, hideNetCol, rankGridCols,
       rankNote, rankIsEmpty, rankIsDayDep, rankEmptyMsg, rankCH,
       resultsData,
@@ -802,8 +817,8 @@ class Component extends DCLogic {
       freshTs, freshLabel,
       signalsEmptyTitle: he ? 'אין סיגנלים כרגע' : 'No signals right now',
       signalsEmptyBody: isOffseason
-        ? (he ? 'אין משחקי NBA לניתוח — מחוץ לעונה. הסיגנלים יחזרים עם פתיחת העונה · אוקטובר 2026.'
-              : 'No NBA games to analyze — off-season. Signals return when the season opens · October 2026.')
+        ? (he ? 'אין משחקי NBA לניתוח: מחוץ לעונה. הסיגנלים יחזרו עם פתיחת העונה.'
+              : 'No NBA games to analyze: off-season. Signals return when the season opens.')
         : (he ? 'אין משחקים פעילים לניתוח כרגע.' : 'No active games to analyze right now.'),
       signalsEmptyIcon: stIcon,
       featEdge: feat.edgeStr,
@@ -812,7 +827,7 @@ class Component extends DCLogic {
       featEdgeTarget: fEdge != null ? Math.abs(fEdge) : '',
       featEdgePrefix: (fEdge != null && fEdge >= 0 ? '+' : (fEdge != null ? '-' : '')),
       clvFinalStr,
-      gauge: isHist ? { full:'', edge:'', cx:-9999, cy:-9999, mkt:{x:-9999,y:-9999}, eng:{x:-9999,y:-9999} } : this.gauge(feat.mktUnder, 100 - fEngPick),   // no over/under gauge on a win-probability card
+      gauge: isHist ? { full:'', edge:'', cx:-9999, cy:-9999, mkt:{x:-9999,y:-9999}, eng:{x:-9999,y:-9999} } : (fEngPick != null ? this.gauge(feat.mktUnder, 100 - fEngPick) : { full:'', edge:'', cx:-9999, cy:-9999, mkt:{x:-9999,y:-9999}, eng:{x:-9999,y:-9999} }),   // no over/under gauge on a win-probability card
       signalKicker: rf.isAplus === true ? L.signalKicker : (isHist ? (he ? 'דוגמה היסטורית' : 'Historical example') : (he ? 'המשחק המוביל היום, לא קריאת A+' : 'Top game today, not an A+ call')),
       overWord: isHist ? '' : L.overWord, underWord: isHist ? '' : L.underWord,
       gaugeLegendDisp: isHist ? 'none' : 'flex',   // the over/under legend has no meaning for a win-probability card
@@ -839,7 +854,9 @@ class Component extends DCLogic {
       stateTitle: stMsg.t || '', stateBody: stMsg.b || '',
       dispStateChip: V === 'empty' ? 'inline-flex' : 'none',
       stateChip: isOffseason
-        ? (he ? 'העונה הבאה · אוקטובר 2026' : 'Next season · October 2026')
+        ? ((R.nextGame && R.nextGame.date)
+            ? (he ? `המשחק הבא · ${String(R.nextGame.date).slice(0, 10)}` : `Next game · ${String(R.nextGame.date).slice(0, 10)}`)
+            : (he ? 'מחוץ לעונה' : 'Off-season'))
         : (he ? 'מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.' : 'Updated once a day. Scheduled runs are often delayed or skipped.'),
       nextGameCard, dispNextGame,
       showRetry: V === 'error' ? 'inline-flex' : 'none',
