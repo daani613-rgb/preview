@@ -218,3 +218,28 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
 - Remaining: the tile probability is rounded to a whole percent before the band is chosen, while CALIB banded
   the unrounded probability, so a pick at 79.6 percent is shown with the 80–85% band. Not fixed.
 
+## 16. NBA: the A+ label was decided from the rounded probability
+- Recorded 2026-10-12.
+- The published A+ record (82 percent on n=763) is computed in `dashboard.py` from the raw probability
+  (`conf_band`, the 80-85 and 85+ bands). The A+ label the reader sees was decided again, in two places, from
+  the probability already rounded to a whole percent: the classic page (`dashboard.html`, the "A+ ·" label and
+  tier 1 of the day cubes, `p.prob>=80`) and the preview (`gen_nba_data.py`, tile state 'aplus' and the A+
+  counter). A pick at 79.5 to 79.99 percent was shown as 80 and labelled A+ without being an A+ pick.
+- Scope: 158 such picks in all seasons (2010-11 to 2025-26), 16 in the two seasons the pages show
+  (2024-25 and 2025-26), which is 4.5 percent of the 356 A+ picks there.
+- Fix: the decision is made once, in `dashboard.py`, from the raw probability, and carried as a flag
+  `is_aplus` on every pick; both pages read the flag. The 0.80 threshold, the probability and the fatigue
+  flag are unchanged. A 79.6 percent pick now shows tier 2 on the classic page and 'value' on the preview.
+- The published record did not change: holdout_test.py output is byte-identical and TRACK is 82 percent on
+  n=763 before and after. The 16 picks lost a label that was not justified; this is not a regression.
+- Same change: the classic page's cell accuracy fell back to 0 when there was no band
+  (`dashboard.py`, `acc if acc is not None else 0`); with no band there is now no field and no number
+  (n under 30 still says "Too few similar calls"; n of 0 shows nothing).
+
+## 17. NBA preview: the three "today" ranking cubes are never built
+- Recorded 2026-10-12.
+- The day-dependent ranking cubes (teams today, games today, composite today) return `data: []` from
+  `gen_nba_data.py` in every season. Their note said "Fills when the season opens (October 2026)", which was
+  false in both season states. The note now says they are not built on this page.
+- Whether to build them or remove them from the page is deferred until after 2026-10-20.
+
