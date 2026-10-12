@@ -266,3 +266,14 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
   open is the probability, which depends on a market line existing.
 - Option (b), connecting the preview to today's games (PICKS), is deferred until after 2026-10-20.
 
+## 19. Pattern worth copying: a leak gate that runs before publication
+- Pattern worth copying, recorded 2026-10-12. The NBA preview build now runs a leak gate on every run: 20 seeded
+  history rows are recompared against predict_total on a strictly-earlier-dates state, and a single mismatch
+  stops the totals being published at all. The five look-ahead bugs that actually occurred in this project were
+  all found after the fact. Item 9 is a sixth instance of the same family, but it is the absence of a guard rather
+  than an occurrence. This mechanism is the first that catches one before publication. The other four engines do
+  not have it. Deferred to after 2026-10-20.
+- Same-day games do not feed each other in pregame_totals(), because start times are unknown. This is the same
+  trap as the MLB doubleheader finding (item 9) and the same resolution.
+- This item records a pattern, not a defect.
+
