@@ -80,3 +80,85 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
 - What remains:
   - The engine's real totals model (`nba_totals_live.py`: `predict_total`, and `total_to_prob_over`, line 51) is not connected to the page. Connecting it is a separate step with a verification gate.
 - Fixed 2026-10-11 (part 5): the tile `cellAcc` / `cellN` fell back to 65 and 0 when no calibration band matched (probability under 60%), and the page turned the 0 into "small sample". Now there is no value and no display (generator default None; `preview/nba/app.js` no longer maps a missing value to 0).
+
+## 9. MLB: classify_stage has no guard of its own
+- Recorded 2026-10-12.
+- **classify_stage has no guard of its own.**
+  predict_baseball.py:50 and :62 call classify_stage(history.get(pick, []))
+  with the full history and no date filter. In production this is harmless,
+  because predictions are made in the morning and the history holds only
+  completed games. The defect is the absence of a guard: the function relies
+  entirely on its caller passing a truncated series, so any backtest, any
+  new script, or any reordering of the pipeline gets look-ahead by default
+  with nothing to signal it. This is the sixth instance of the look-ahead
+  family, and the first one that is an absence rather than an occurrence.
+  Not fixed.
+- Claude's earlier wording of this item was wrong and is retracted: it said
+  the date-only timestamp affects the live stage and probability. It does
+  not, because production applies no date filter at all. The date-only
+  timestamp matters only where a "strictly before" filter is applied, which
+  today is the stages_v2 census input alone. Doubleheaders per season: 14 to
+  35 in normal years, 56 in 2020, 59 in 2021, 69 in 2022, 26 so far in 2026.
+
+## 10. MLB: the rating chain skips 2024 and 2025
+- Recorded 2026-10-12.
+- **The MLB rating chain skips 2024 and 2025. Pipeline, not missing data.**
+  The chain is predict_baseball.py:24, CHAIN = ["baseball_full_2010_2023.csv"]
+  plus sorted(glob("games_2*.csv")). In the repo and in CI that resolves to
+  2010 to 2023 plus 2026 only. games_2024.csv (2,432 games) and
+  games_2025.csv (2,434 games) exist in the owner's local
+  ~/baseball-engine folder and have never been in git history: .gitignore
+  carries the pattern games_2*.csv, and CI force-adds only the file it
+  creates itself, which is the current year. CLAUDE.md already stated that
+  the live chain needs 2024 and 2025.
+  Consequence: the between-season regression in stages.py:31-34 runs once
+  per season change, so between 2023 and 2026 it ran once where a complete
+  chain runs three times. Two regressions were skipped.
+  Scope, measured 2026-10-12 UTC from the local files, read only: entering 2026
+  the mean absolute difference against a complete chain was 19.7 Elo points
+  and the maximum 53.4 (ATL). After the 2026 season the mean is 7.5 and the
+  maximum 20.5 (KCA). In probability terms, on the two games live on
+  2026-10-12 the model confidence moved by up to 3.8 points (TBA from 0.617
+  to 0.579) and the displayed probability by up to 3.6 points (TBA from
+  0.661 to 0.625). MIL moved the other way, from 0.534 to 0.557. Neither
+  pick entered or left A plus, because both were silent before and after
+  and TBA was already just under the 0.62 threshold. The earlier estimate of
+  up to three points was derived from the Elo to probability conversion;
+  these figures are measured, on a sample of two games.
+  All seasons except 2026 hold regular season games only, including
+  baseball_full_2010_2023.csv (2,430 games in 2022 and the same in 2023).
+  games_2026.csv also holds 25 playoff games so far. The odd season is
+  2026, not 2024 and 2025. Recorded, not fixed.
+  Not affected: the published holdout accuracy, because holdout_test.py runs
+  on baseball_full_2010_2023.csv alone with test seasons 2019 to 2023, which
+  are continuous. The A+ constants were chosen on that same holdout. cellAcc
+  does not exist in MLB.
+  Affected: the live application of the A+ rule in 2026, the live picks, and
+  their record in baseball_log.
+  Gate result: holdout_test.py output identical before and after on
+  every field except computed_utc, which the script writes from the clock
+  on every run. All figures identical: aplus 70.2 on 578 games, overall
+  58.1, test_seasons [2019, 2023]. The comparison was made on the parsed
+  JSON with the clock field excluded.
+  Status: being fixed under a chain version marker. See item 11.
+
+## 11. MLB: the live log spans two rating chains
+- Recorded 2026-10-12.
+- The MLB log spans two chains. Every row carries chain_version with the
+  chain it was produced under: 2010_2023+2026 for rows written before the
+  commit that added games_2024.csv and games_2025.csv, and 2010_2026_full
+  from that commit onward. The commit hash is recorded here once it
+  exists. The two groups are not pooled into a single record without
+  saying so.
+
+## 12. MLB: the log writer's FIELDS lagged the file's header
+- Recorded 2026-10-12.
+- FIELDS in log_baseball.py held 11 columns while baseball_log.csv held 13:
+  void_reason was added on 2026-10-07 (f1cdfc0) and void_reason_en the same
+  day (84ace3f), and FIELDS was not extended. A row appended in that state
+  would have been written without both columns. FIELDS was extended on
+  2026-10-12, together with chain_version.
+- Rows affected: none. The last row was logged on 2026-09-27, before the
+  columns were added, and no row has been appended since. Every row in the
+  file and in every committed version of it has as many fields as its
+  header. The defect was latent and did not occur.
