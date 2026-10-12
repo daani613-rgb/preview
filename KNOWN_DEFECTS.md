@@ -81,6 +81,8 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
   - The engine's real totals model (`nba_totals_live.py`: `predict_total`, and `total_to_prob_over`, line 51) is not connected to the page. Connecting it is a separate step with a verification gate.
 - Fixed 2026-10-11 (part 5): the tile `cellAcc` / `cellN` fell back to 65 and 0 when no calibration band matched (probability under 60%), and the page turned the 0 into "small sample". Now there is no value and no display (generator default None; `preview/nba/app.js` no longer maps a missing value to 0).
 
+- Update 2026-10-12: the real totals model is now connected as an expected total only; see item 18.
+
 ## 9. MLB: classify_stage has no guard of its own
 - Recorded 2026-10-12.
 - **classify_stage has no guard of its own.**
@@ -242,4 +244,25 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
   `gen_nba_data.py` in every season. Their note said "Fills when the season opens (October 2026)", which was
   false in both season states. The note now says they are not built on this page.
 - Whether to build them or remove them from the page is deferred until after 2026-10-20.
+
+## 18. NBA totals: what is connected, what was removed, what stays open
+- Recorded 2026-10-12. Measured first: `nba-engine/NBA_TOTALS_MODEL_MEASURED.md`.
+- Connected: the expected total from `nba_totals_live.predict_total`, as one number, with its measured error:
+  "Expected total (engine): X points · typical miss about 15 points (average error since 2019-20, n=8,472). A
+  forecast from the engine, not a pick." (and in Hebrew).
+  - Classic page: on today's games (it was already shown there, next to "No market line yet" and "not yet
+    validated vs market · CLV decides"; those texts were replaced). The games cube label reads "expected total X".
+  - Preview: on each finished game's tile, the expected total from a state built only from games on earlier
+    dates, next to the realised total, so the misses can be seen. Leak gate on every build (20 rows, seed
+    20261012): one mismatch and no totals are published. No expected total, no field and no display.
+- Removed from `dashboard.html`: the P(over) branch that depended on `marketTotal`, which was always None and never
+  ran: `pOverJS`, `segBar`, the over/under and zone strings (`totEngOU`, `modelVsLine`, `totZoneValue`,
+  `totZoneOpen`, `totZoneNone`, `totNoLine`, `totalsHonest`), and in `dashboard.py` the fields `marketTotal`,
+  `marketProbOver` and `totalSigma`. Lines removed: `dashboard.html` 613 to 628 (helpers) and 708 to 732 (branch),
+  as of 006189a.
+- Not connected, and not until there is a market line: `eng_over` or any probability of going over a line,
+  `total_to_prob_over`, and any line ladder. A probability of going over needs a line, and this project has no
+  NBA totals line. Item 8's removal of `engOver` and the ladder is therefore closed only in part: what stays
+  open is the probability, which depends on a market line existing.
+- Option (b), connecting the preview to today's games (PICKS), is deferred until after 2026-10-20.
 

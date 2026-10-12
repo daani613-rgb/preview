@@ -616,6 +616,7 @@ class Component extends DCLogic {
       line: t.line, lambda: t.lambda, engOver: t.engOver, mktOver: t.mktOver, value: t.value,
       lines: t.lines || [],
       fatigue: t.fatigue || null, surprise: t.surprise || null,
+      expTotal: t.expTotal != null ? t.expTotal : null, actTotal: t.actTotal != null ? t.actTotal : null,
       cellAcc: t.cellAcc != null ? t.cellAcc : null, cellN: t.cellN != null ? t.cellN : null,   // no band: null, not 0
     }));
 
@@ -704,6 +705,11 @@ class Component extends DCLogic {
         hasFatigue, fatigue,
         hasSurprise, surprise,
         cellAccDisp,
+        // expected total (engine, pre-game state) next to the realised total; no probability, no line; no value, no line shown
+        totDisp: t.expTotal != null ? 'block' : 'none',
+        totLine: t.expTotal == null ? '' : (he
+          ? `סך נקודות צפוי (מנוע): ${t.expTotal} · בפועל ${t.actTotal} · פספוס אופייני כ-15 נקודות (שגיאה ממוצעת מ-2019-20, n=8,472). תחזית של המנוע, לא המלצה.`
+          : `Expected total (engine): ${t.expTotal} points · actual ${t.actTotal} points · typical miss about 15 points (average error since 2019-20, n=8,472). A forecast from the engine, not a pick.`),
         // each note only when the comparison it names was made: with the winner price (silent) or the totals price
         callNote: dState === 'silent'
           ? (gapPct != null ? (he ? `בקו עם השוק · פער ${gapPct}% — שקט` : `In line with market · gap ${gapPct}% — quiet`) : '')
