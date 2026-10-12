@@ -410,7 +410,7 @@ class Component extends DCLogic {
       oppCode: rf.pickCode === rf.home ? rf.away : rf.home,
     } : null;
     const featHasGauge = !!(feat && feat.engUnder != null && feat.mktUnder != null);
-    const featEmptyTitle = he ? 'אין השבוע קריאה בביטחון גבוה' : 'No high-confidence call this week';
+    const featEmptyTitle = he ? 'אין קריאת A+ במשחקים שנותרו השבוע' : 'No A+ call among this week\'s remaining games';
     const featEmptyBody = he
       ? `המנוע מדבר רק על מצבי A+. ${nflAplus('he')} אף אחד מהמשחקים שעוד לא שוחקו בשבוע ${dash(R.curWeek)} לא עומד בתנאי.`
       : `The engine speaks only on A+ setups. ${nflAplus('en')} None of the unplayed games in week ${dash(R.curWeek)} qualifies.`;
@@ -442,7 +442,7 @@ class Component extends DCLogic {
     const _fmtD = d => { if (!d) return ''; const p = d.split('-'); return p.length === 3 ? (parseInt(p[2],10) + ' ' + _mN[parseInt(p[1],10)]) : d; };
     const gamesView = _gv.map(g => ({
       matchup: `${g.away} @ ${g.home}`,
-      pick: (he ? 'קריאה: ' : 'Pick: ') + g.favorite + ' · ' + g.favPct + '%',
+      pick: g.favorite ? ((he ? 'קריאה: ' : 'Pick: ') + g.favorite + ' · ' + g.favPct + '%') : '',   // no frozen pre-game row: no pick
       aplus: !!g.aplus, aplusTag: g.aplus ? 'A+' : '',
       stageStr: g.stage != null ? ('· ' + (he ? 'שלב ' : 'stage ') + g.stage) : '',
       when: (he ? 'ש\' ' : 'Wk ') + g.week + ' · ' + _fmtD(g.date) + (g.time ? ' · ' + g.time + ' ET' : ''),
@@ -451,7 +451,7 @@ class Component extends DCLogic {
       tail: g.played
         ? (g.awayScore != null && g.homeScore != null ? `${he ? 'סופי' : 'Final'} · ${g.away} ${g.awayScore}–${g.homeScore} ${g.home}` : '')
         : (he ? 'טרם שוחק' : 'not played yet'),
-      verdict: !g.played ? '' : (g.correct === 1 ? (he ? '✓ צדק' : '✓ correct') : g.correct === 0 ? (he ? '✗ טעה' : '✗ wrong') : (he ? 'תיקו · לא נבדק' : 'tie · not graded')),
+      verdict: (!g.played || !g.favorite) ? '' : (g.correct === 1 ? (he ? '✓ צדק' : '✓ correct') : g.correct === 0 ? (he ? '✗ טעה' : '✗ wrong') : (he ? 'תיקו · לא נבדק' : 'tie · not graded')),
       verdictColor: g.correct === 1 ? '#35e39a' : (g.correct === 0 ? '#ff8f8f' : '#8791ab'),
       accent: g.aplus ? '#8f7bff' : '#4a5060',
     }));
@@ -490,6 +490,7 @@ class Component extends DCLogic {
       lines: t.lines || [],
       windUnder: t.windUnder || false,
       result: t.result || null,
+      played: t.played === true || !!t.result,   // decided: past-tense labels
       winZone: t.winZone || null, totZone: t.totZone || null,
     }));
     const styleFor = (s) => {
@@ -544,7 +545,18 @@ class Component extends DCLogic {
         resultText: t.result ? `${he ? 'סופי' : 'Final'} · ${t.away} ${t.result.awayScore}–${t.result.homeScore} ${t.home}` : '',
         verdict: !t.result ? '' : (t.result.correct === 1 ? (he ? '✓ צדק' : '✓ correct') : t.result.correct === 0 ? (he ? '✗ טעה' : '✗ wrong') : (he ? 'תיקו · לא נבדק' : 'tie · not graded')),
         verdictColor: t.result && t.result.correct === 1 ? '#35e39a' : (t.result && t.result.correct === 0 ? '#ff8f8f' : '#8791ab'),
-        callNote: t.state === 'silent'
+        // a decided tile speaks in the past tense: what was called before kickoff, then the verdict
+        callNote: t.played
+          ? (t.state === 'aplus'
+              ? (he ? `הייתה קריאת A+: ${t.favCode} לנצח` : `Was an A+ call: ${t.favCode} to win`)
+              : (t.winZone === 'value' && t.totZone === 'value')
+                ? (he ? 'לפני הפתיחה: ערך על המנצח ועל הטוטאל' : 'Before kickoff: value on the winner and the total')
+                : t.winZone === 'value'
+                  ? (he ? 'לפני הפתיחה: ערך על המנצח' : 'Before kickoff: value on the winner')
+                  : t.totZone === 'value'
+                    ? (he ? 'לפני הפתיחה: ערך על הטוטאל' : 'Before kickoff: value on the total')
+                    : (he ? 'לפני הפתיחה: שתיקה' : 'Before kickoff: quiet'))
+          : t.state === 'silent'
           ? (gapPct != null
               ? (he ? `בקו עם השוק · פער ${gapPct}% — שקט` : `In line with market · gap ${gapPct}% — quiet`)
               : (he ? 'צמוד לשוק — שקט' : 'In line with market — quiet'))
@@ -711,11 +723,14 @@ class Component extends DCLogic {
     const seasonRows = !seasonHas ? [] : [
       { k: he ? 'דיוק העונה' : 'Season accuracy',
         v: he ? `${SR.correct} מתוך ${SR.n} · ${SR.pct}%` : `${SR.correct} of ${SR.n} · ${SR.pct}%`,
-        d: (he ? `רווח סמך 95% (Wilson): ${SR.lo}%–${SR.hi}% · מבוסס על ${SR.n} משחקים שהוכרעו` : `95% interval (Wilson): ${SR.lo}%–${SR.hi}% · based on ${SR.n} decided games`)
-           + (SR.ties ? (he ? ` · ${SR.ties} תיקו לא נספרו` : ` · ${SR.ties} ties not counted`) : '') },
+        // graded = decided games with a frozen pre-game pick and a winner; ties and games without a frozen pick are out
+        d: (he ? `רווח סמך 95% (Wilson): ${SR.lo}%–${SR.hi}% · על ${SR.n} משחקים שנבדקו` : `95% interval (Wilson): ${SR.lo}%–${SR.hi}% · based on ${SR.n} graded games`)
+           + (SR.decided != null ? (he ? ` · ${SR.decided} הוכרעו` : ` · ${SR.decided} decided`) : '')
+           + (SR.ties ? (he ? ` · תיקו ${SR.ties}` : ` · ${SR.ties} ${SR.ties === 1 ? 'tie' : 'ties'}`) : '')
+           + (SR.noPick ? (he ? ` · ${SR.noPick} בלי בחירה קפואה` : ` · ${SR.noPick} without a frozen pick`) : '') },
       ...(!AS ? [] : [{ k: he ? 'קריאות A+ העונה' : 'A+ calls this season',
         v: AS ? (he ? `${AS.n} קריאות, ${AS.correct} צדקו` : `${AS.n} calls, ${AS.correct} correct`) : '—',
-        d: AS ? ((he ? `מבוסס על ${AS.n} קריאות A+ שהוכרעו` : `based on ${AS.n} decided A+ calls`)
+        d: AS ? ((he ? `על ${AS.n} קריאות A+ שנבדקו` : `based on ${AS.n} graded A+ calls`)
            + (AS.void ? (he ? ` · ${AS.void} רשומות שנפסלו ביומן לא נספרו` : ` · ${AS.void} journal entries marked void are not counted`) : ''))
            : (he ? 'יומן ה-A+ לא זמין' : 'A+ journal not available') }]),
     ];
@@ -741,14 +756,16 @@ class Component extends DCLogic {
       gauge: featHasGauge ? this.gauge(feat.mktUnder, feat.engUnder) : {},
       cal: this.cal(),
       drivers, integrity, seasonHas, seasonEmptyFlag: !seasonHas, seasonRows,
-      // Sentence above the board; which one depends on whether the output has A+ tiles (the board holds every A+ game
-      // plus three more by gen_nfl_data tile_priority: value zone + form stage; ties keep list order).
-      boardNote: (function(){var n=tiles.filter(function(t){return t.state==='aplus';}).length;
-        if (!n) return he ? 'אין קריאות A פלוס השבוע. הלוח מציג שלושה משחקים, מדורגים לפי ציון משולב של ערך ושלב כושר.'
-                          : 'No A plus calls this week. The board shows three games, ranked by a combined score of value and form stage.';
-        return he ? 'הלוח מציג את כל קריאות ה-A פלוס של השבוע, ובנוסף שלושה משחקים מדורגים לפי ציון משולב של ערך ושלב כושר.'
-                  : 'The board shows every A plus call this week, plus three more games ranked by a combined score of value and form stage.';})(),
-      boardCounter: (function(){var a=tiles.filter(function(t){return t.state==='aplus';}).length,v=tiles.filter(function(t){return t.state==='value';}).length,k=tiles.filter(function(t){return t.state==='silent';}).length;return he?(a+' A+ · '+v+' ערך · '+k+(k===1?' שתיקה':' שתיקות')):(a+' A+ · '+v+' value · '+k+' silent');})(),
+      // Sentence above the board: how gen_nfl_data fills it (games still to play first, then decided games; A+ first in
+      // each, then tile_priority: value zone + form stage; ties by kickoff time, then team names).
+      boardNote: he
+        ? 'הלוח מציג קודם את משחקי השבוע שעוד לא שוחקו, ואחריהם משחקים שהוכרעו. בכל קבוצה קריאות ה-A פלוס קודם, ואחריהן לפי ציון משולב של ערך ושלב כושר. שוויון נשבר לפי שעת הפתיחה ואחריה שמות הקבוצות.'
+        : 'The board shows this week\'s games still to play first, then decided games. In each group A plus calls come first, then a combined score of value and form stage. Ties go by kickoff time, then team names.',
+      // the counter says in words what it counts: games still to play and decided games on the board, with their A+ calls
+      boardCounter: (function(){var o=tiles.filter(function(t){return !t.played;}),d=tiles.filter(function(t){return t.played;});
+        var ao=o.filter(function(t){return t.state==='aplus';}).length, ad=d.filter(function(t){return t.state==='aplus';}).length;
+        return he ? (o.length+' לשחק'+(ao?' ('+ao+' A+)':'')+' · '+d.length+' הוכרעו'+(ad?' ('+ad+' A+)':''))
+                  : (o.length+' to play'+(ao?' ('+ao+' A+)':'')+' · '+d.length+' decided'+(ad?' ('+ad+' A+)':''));})(),
       dispSignals:  tab === 'signals'  ? 'block' : 'none',
       dispRankings: tab === 'rankings' ? 'block' : 'none',
       dispTrack:    tab === 'track'    ? 'block' : 'none',
