@@ -307,14 +307,27 @@ class Component extends DCLogic {
     // 63.7 / 77.3 / 77.4 / 61,182 (R.accuracy) have no script that produces them -> not shown
     const NOBT_EN = 'No backtest figure is published for tennis yet. The earlier number could not be reproduced from the data.';
     const NOBT_HE = 'לא מתפרסם מספר בדיקה לאחור לטניס. את המספר הקודם לא הצלחנו לשחזר מהנתונים.';
+    // the kicker says what the featured card is (gen, NFL rule): an A+ call still to play, another match still to
+    // play, or, when nothing is left to play, a decided one (KNOWN_DEFECTS item 52)
+    const FT = R.feat || null;
+    const kickEn = !FT ? '' : (FT.open ? (FT.isAplus ? 'The A+ call · still to play' : 'Top match still to play · not an A+ call')
+                                       : 'No match left to play · ' + (FT.isAplus ? 'was an A+ call' : 'decided'));
+    const kickHe = !FT ? '' : (FT.open ? (FT.isAplus ? 'קריאת ה-A+ · עוד לא שוחק' : 'המשחק המוביל שעוד לא שוחק · לא קריאת A+')
+                                       : 'אין משחק שעוד לא שוחק · ' + (FT.isAplus ? 'הייתה קריאת A+' : 'הוכרע'));
+    // during the quota pause nothing is "live" and nothing updates several times a day
+    const QP = R.quotaPauseUntil || null;
+    // started matches with no frozen pre-match record (gaps_check.py); no payload, no sentence
+    const GP = R.gaps || null;
+    const gapEn = GP ? ` Started matches with no frozen pre-match record: ${GP.n} of ${GP.started} since ${String(GP.from).slice(6,8)}.${String(GP.from).slice(4,6)}.` : '';
+    const gapHe = GP ? ` משחקים שהתחילו בלי רשומה קפואה מלפני המשחק: ${GP.n} מתוך ${GP.started} מאז ${String(GP.from).slice(6,8)}.${String(GP.from).slice(4,6)}.` : '';
 
     const en = {
-      dir: 'ltr', brand: 'Command Center', liveLabel: 'LIVE',
-      heroTitle: 'The tennis engine, live.', heroSub: 'Two models per match, the winner and total games. Updated several times a day. Scheduled runs are often delayed or skipped. Edges are measured against Pinnacle.',
-      signalKicker: 'The A+ call · today', edgeLabel: 'Edge vs Pinnacle', runsLabel: 'expected games', stageLabel: 'Stage',
+      dir: 'ltr', brand: 'Command Center', liveLabel: QP ? 'PAUSED' : 'LIVE',
+      heroTitle: QP ? 'The tennis engine.' : 'The tennis engine, live.', heroSub: QP ? 'Two models per match, the winner and total games. Odds pulls are paused, so the slate is not refreshed. Edges are measured against Pinnacle.' : 'Two models per match, the winner and total games. Updated several times a day. Scheduled runs are often delayed or skipped. Edges are measured against Pinnacle.',
+      signalKicker: kickEn, edgeLabel: 'Edge vs Pinnacle', runsLabel: 'expected games', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Pinnacle', callWord: 'Call', stageWord: 'stage', overWord: 'OVER', underWord: 'UNDER', homeWord: 'Fav', awayWord: 'Dog', starterPrefix: 'surface · Elo blend:',
       validatedHead: 'BACKTEST ACCURACY · HOLDOUT',
-      clvTitle: 'Cumulative CLV', clvSub: `No-vig, vs Pinnacle's closing line · ${RC.n} closed-line matches (${RC.pos} positive). >0 = engine beat the market's move.${nsEn}`,
+      clvTitle: 'Cumulative CLV', clvSub: `No-vig, vs Pinnacle's closing line · ${RC.n} closed-line matches (${RC.pos} positive). >0 = engine beat the market's move.${nsEn}${gapEn}`,
       calTitle: 'Calibration', calSub: 'Reference diagonal shown. The engine curve and per-stage calibration are not part of this live feed.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy and calibration are not part of this live feed.',
       detailsWord: 'Total games', runsWord: 'games', lineWord: 'line',
@@ -324,7 +337,7 @@ class Component extends DCLogic {
       eloExplain: '= who wins (the call).', fipExplain: '= how sure (calibrates it).',
       disclaimer: 'For information and entertainment only · Not betting advice · Play responsibly · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
       driversHead: 'Why this signal · top drivers', integrityHead: 'Model integrity',
-      sampleLabel: 'signals', drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate', clvSegHead: 'CLV by segment · > 0 beats the close',
+      sampleLabel: 'signals', drawdownLabel: 'max drawdown', brierLabel: 'Brier score (binary; a coin gives 0.25)', hitLabel: 'A+ hit rate', clvSegHead: 'CLV by segment · > 0 beats the close',
       navTabs: [ {id:'signals',icon:'⚡',label:'Signals'}, {id:'rankings',icon:'📊',label:'Rankings'}, {id:'track',icon:'🎯',label:'Track record'}, {id:'how',icon:'📖',label:'How it works'} ],
       // 4 distinct ranking cube tabs (data-driven)
       rankTabs: [
@@ -344,7 +357,7 @@ class Component extends DCLogic {
         {id:'all',   label:'All players'},
       ],
       dateLabels: ['Today', 'Results', 'By date'],
-      heroStats: [ {v:'—', k:NOBT_EN, color:'#8791ab'}, {v:hcl, k:'CLV games', color:'#f5b23d'} ],
+      heroStats: [ {v:hcl, k:'CLV · winner market', color:'#f5b23d'} ],   // the backtest tile had no number: gone
       kpis: [
         {display:'—', target:null, dec:0, prefix:'', u:'', d:NOBT_EN},
         {display:'—', target:null, dec:0, prefix:'', u:'', d:'Totals over/under — INDICATIVE only · step-6b · no value-zone yet.'},
@@ -354,12 +367,12 @@ class Component extends DCLogic {
       howRows: [],
     };
     const he = {
-      dir: 'rtl', brand: 'מרכז שליטה', liveLabel: 'חי',
-      heroTitle: 'מנוע החיזוי של הטניס', heroSub: 'שני מודלים לכל משחק, מנצח וסך גיימים. מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות. ה-Edge נמדד מול Pinnacle.',
-      signalKicker: 'קריאת ה-A+ · היום', edgeLabel: 'Edge מול Pinnacle', runsLabel: 'גיימים צפויים', stageLabel: 'שלב',
+      dir: 'rtl', brand: 'מרכז שליטה', liveLabel: QP ? 'מושהה' : 'חי',
+      heroTitle: 'מנוע החיזוי של הטניס', heroSub: QP ? 'שני מודלים לכל משחק, מנצח וסך גיימים. משיכת היחסים מושהית, ולכן הסלייט לא מתעדכן. ה-Edge נמדד מול Pinnacle.' : 'שני מודלים לכל משחק, מנצח וסך גיימים. מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות. ה-Edge נמדד מול Pinnacle.',
+      signalKicker: kickHe, edgeLabel: 'Edge מול Pinnacle', runsLabel: 'גיימים צפויים', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'Pinnacle', callWord: 'קריאה', stageWord: 'שלב', overWord: 'מעל', underWord: 'מתחת', homeWord: 'מועדף', awayWord: 'מוחלש', starterPrefix: 'משטח · שילוב-Elo:',
       validatedHead: 'דיוק בבדיקה לאחור · HOLDOUT',
-      clvTitle: 'CLV מצטבר', clvSub: `ללא-vig, מול קו הסגירה של Pinnacle · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים). מעל 0 = המנוע ניצח את תנועת השוק.${nsHe}`,
+      clvTitle: 'CLV מצטבר', clvSub: `ללא-vig, מול קו הסגירה של Pinnacle · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים). מעל 0 = המנוע ניצח את תנועת השוק.${nsHe}${gapHe}`,
       calTitle: 'כיול (Calibration)', calSub: 'מוצג האלכסון כקו ייחוס. עקומת המנוע וכיול לפי שלב אינם חלק מהפיד החי הזה.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
       detailsWord: 'סך גיימים', runsWord: 'גיימים', lineWord: 'קו',
@@ -369,7 +382,7 @@ class Component extends DCLogic {
       eloExplain: '= מי מנצח (הקריאה).', fipExplain: '= כמה בטוח (מכייל).',
       disclaimer: 'למידע ובידור בלבד · אינו ייעוץ הימורים · שחק באחריות · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
       driversHead: 'למה הסיגנל הזה · הגורמים המובילים', integrityHead: 'שלמות המודל',
-      sampleLabel: 'סיגנלים', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+', clvSegHead: 'CLV לפי פילוח · מעל 0 מנצח את הסגירה',
+      sampleLabel: 'סיגנלים', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier (בינארי; מטבע נותן 0.25)', hitLabel: 'דיוק A+', clvSegHead: 'CLV לפי פילוח · מעל 0 מנצח את הסגירה',
       navTabs: [ {id:'signals',icon:'⚡',label:'סיגנלים'}, {id:'rankings',icon:'📊',label:'דירוגים'}, {id:'track',icon:'🎯',label:'ביצועים'}, {id:'how',icon:'📖',label:'איך זה עובד'} ],
       rankTabs: [
         {id:'rkWin',    icon:'🎯', label:'סיכוי-ניצחון', explainer:'סיכוי-הניצחון של המנוע לכל שחקן במשחקי-היום. פשוט, ללא-שקלול. מיון יורד.'},
@@ -388,7 +401,7 @@ class Component extends DCLogic {
         {id:'all',   label:'כל-השחקנים'},
       ],
       dateLabels: ['היום', 'תוצאות', 'לפי תאריך'],
-      heroStats: [ {v:'—', k:NOBT_HE, color:'#8791ab'}, {v:hcl, k:'CLV גיימים', color:'#f5b23d'} ],
+      heroStats: [ {v:hcl, k:'CLV · שוק המנצח', color:'#f5b23d'} ],
       kpis: [
         {display:'—', target:null, dec:0, prefix:'', u:'', d:NOBT_HE},
         {display:'—', target:null, dec:0, prefix:'', u:'', d:'מעל/מתחת לגיימים — אינדיקטיבי בלבד · step-6b · אין value-zone עדיין.'},
@@ -700,7 +713,7 @@ class Component extends DCLogic {
     // REAL data wiring
     const R = window.REAL || {};
     const rf = R.feat || {};
-    const fEng = rf.engPick != null ? rf.engPick : 72;
+    const fEng = rf.engPick != null ? rf.engPick : null;   // no engine number: none shown (was a fallback of 72)
     const fMkt = rf.mktPick != null ? rf.mktPick : null;
     const fEdge = rf.edge != null ? rf.edge : null;
     const indicative = R.totalsIndicative !== false;
@@ -728,7 +741,8 @@ class Component extends DCLogic {
     const showFreshness = !!freshnessLabel;
 
     const feat = {
-      away: rf.away || '', home: rf.home || '', time: rf.time || '',
+      away: rf.away || '', home: rf.home || '',
+      time: /^\d{8}$/.test(rf.date || '') ? (he ? `${+rf.date.slice(6,8)}.${+rf.date.slice(4,6)}` : `${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+rf.date.slice(4,6)-1]} ${+rf.date.slice(6,8)}`) : '',
       surface: rf.surface || '', round: rf.round || '',
       pick: rf.pick || '',
       line: rf.line || '',
@@ -741,7 +755,12 @@ class Component extends DCLogic {
       hasMkt: fMkt != null,
       edge: fEdge,
       edgeStr: fEdge != null ? (fEdge >= 0 ? '+' : '') + fEdge + '%' : '—',
-      blurb: (fMkt != null
+      blurb: (rf.open === false && rf.result)
+        ? (he ? `לפני המשחק המנוע ראה ${fEng}% ל-${rf.pick}${fMkt != null ? ` מול ${fMkt}% ב-Pinnacle` : ''}. ${rf.result.correct ? '✓ הקריאה צדקה' : '✗ הקריאה טעתה'} · ${rf.result.winner} ניצח.`
+              : `Before the match the engine saw ${fEng}% for ${rf.pick}${fMkt != null ? ` vs ${fMkt}% at Pinnacle` : ''}. ${rf.result.correct ? '✓ call correct' : '✗ call wrong'} · ${rf.result.winner} won.`)
+        : (rf.open === false)
+        ? (he ? `לפני המשחק המנוע ראה ${fEng}% ל-${rf.pick}. המשחק התחיל; התוצאה טרם נרשמה.` : `Before the match the engine saw ${fEng}% for ${rf.pick}. The match has started; the result is not in yet.`)
+        : (fMkt != null
         ? (he ? `המנוע רואה ${fEng}% ל-${rf.pick} מול ${fMkt}% ב-Pinnacle. קריאת A+ של המנוע נקבעת מהסתברות ומשלב, והשוק מוצג להשוואה. השערה למדידה, לא רווח מובטח · ה-CLV מכריע.`
               : `Engine sees ${fEng}% for ${rf.pick} vs ${fMkt}% at Pinnacle. The engine's A+ call is set by probability and stage; the market is shown for comparison. A hypothesis to measure, not guaranteed · CLV decides.`)
         : (he ? `המנוע רואה ${fEng}% ל-${rf.pick}. אין קו שוק כרגע — אינדיקטיבי.`
@@ -812,7 +831,7 @@ class Component extends DCLogic {
       return {
         ...t, ...st,
         engA: 100 - t.engH,
-        mktA: hasMktH ? 100 - t.mktH : 50,
+        mktA: hasMktH ? 100 - t.mktH : null,   // hidden without a price anyway (mktDisp); no number either (was 50)
         gapLeft: lo, gapWidth: Math.max(1.2, hi - lo),
         open, detailDisp: open ? 'block' : 'none', chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
         ringColor, ringArc: `${(CIRC * t.callPct / 100).toFixed(1)} ${CIRC.toFixed(1)}`,
@@ -843,9 +862,13 @@ class Component extends DCLogic {
         hasSettledTail: !!tail,
         preTail,
         callNote: t.state === 'silent'
-          ? (gapPct != null
-              ? (he ? `בקו עם Pinnacle · פער ${gapPct}% — שקט` : `In line with Pinnacle · gap ${gapPct}% — quiet`)
-              : (he ? 'צמוד ל-Pinnacle — שקט' : 'In line with Pinnacle — quiet'))
+          ? (!hasMktH
+              ? (he ? 'שקט · אין מחיר שוק' : 'Quiet · no market price')
+              : gapPct < 3
+              ? (he ? `בקו עם Pinnacle · פער ${gapPct}% · שקט` : `In line with Pinnacle · gap ${gapPct}% · quiet`)
+              : (t.engH > t.mktH) === (t.favCode === t.home)
+              ? (he ? `המנוע מעל Pinnacle ב-${gapPct}% · שקט` : `Engine above Pinnacle by ${gapPct}% · quiet`)
+              : (he ? `המנוע מתחת ל-Pinnacle ב-${gapPct}% · שקט` : `Engine below Pinnacle by ${gapPct}% · quiet`))
           : (t.state === 'aplus' ? (he ? 'קריאת A+ של המנוע · מנצח' : 'Engine A+ call · winner')
              : (he ? 'מדרגת "ערך" של הדף: שלב 6 ומעלה וביטחון 57% ומעלה. לא קריאה של המנוע.' : 'Page tier "value": stage 6+ and confidence 57%+. Not an engine call.')),
         toggle: () => this.toggleTile(t.id),
@@ -913,11 +936,11 @@ class Component extends DCLogic {
     ];
 
     const ig = R.integrity || {};
+    // only figures with a source: the binary Brier of the journal. The backtest count and hit rate (no script
+    // produces them) and the drawdown ("collecting" with no source) are gone, not shown as a dash.
     const integrity = {
-      n: '—',                 // was the 61,182 backtest count: no script produces it
-      drawdown: he ? 'אוסף' : 'collecting',
-      brier: ig.brier || (he ? 'אוסף' : 'collecting'),
-      hit: '—',               // was 77.3%: no script produces it
+      brier: ig.brier || '', brierDisp: ig.brier ? 'block' : 'none',
+      nDisp: 'none', drawdownDisp: 'none', hitDisp: 'none',
     };
 
     const monthName = (m) => {
@@ -968,7 +991,7 @@ class Component extends DCLogic {
       noSlateTitle: he ? 'אין משחקים בסלייט של היום' : 'No matches on today\'s slate',
       noSlateBody: he ? 'אין היום משחקי ATP לניתוח בנתונים שהמנוע בנה.' : 'There are no ATP matches to analyze in the data the engine built today.',
       featEdge: feat.edgeStr,
-      featEdgeTarget: feat.edge != null ? Math.abs(feat.edge) : 0,
+      featEdgeTarget: feat.edge != null ? Math.abs(feat.edge) : '',   // no edge: no count-up target (was 0)
       featEdgePrefix: feat.edge != null && feat.edge < 0 ? '−' : '+',
       clvFinalStr,
       gauge: this.gauge(feat.hasMkt ? feat.mktUnder : null, feat.engUnder),
@@ -990,7 +1013,7 @@ class Component extends DCLogic {
       stateIcon: stIcon, stateAccent: stAccent, stateGlow: stAccent + '2b', stateRing: stAccent + '66',
       stateTitle: stMsg.t || '', stateBody: stMsg.b || '',
       dispStateChip: V === 'empty' ? 'inline-flex' : 'none',
-      stateChip: he ? 'מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.' : 'Updated several times a day. Scheduled runs are often delayed or skipped.',
+      stateChip: R.quotaPauseUntil ? (he ? 'משיכת היחסים מושהית; הסלייט לא מתעדכן.' : 'Odds pulls are paused; the slate is not refreshed.') : he ? 'מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.' : 'Updated several times a day. Scheduled runs are often delayed or skipped.',
       showRetry: V === 'error' ? 'inline-flex' : 'none',
       retryLabel: he ? 'נסה שוב' : 'Retry',
       onKey: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } },
