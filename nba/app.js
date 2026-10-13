@@ -13,6 +13,9 @@ function seasonsLabel(w, lang){
   const m = w && w.seasons ? String(w.seasons).match(/^(\d{4})-\d{2} to (\d{4})-\d{2}$/) : null;
   if(!m) return "";
   const k = Number(m[2]) - Number(m[1]) + 1, rng = lang==="he" ? String(w.seasons).replace(" to ", " עד ") : w.seasons;
+  // the wording follows the number of seasons in the window (from its season range, not from a count of games)
+  if (k === 1) { const one = String(w.seasons).split(" to ")[0];
+    return lang==="he" ? ` חלון מתגלגל: העונה האחרונה, ${one}.` : ` Rolling window: the last season, ${one}.`; }
   const kw = k === 2 ? (lang==="he" ? "שתי" : "two") : k;   // the history window: "the last two seasons" (item 61)
   return lang==="he" ? ` חלון מתגלגל: ${kw} העונות האחרונות, ${rng}.` : ` Rolling window: the last ${kw} seasons, ${rng}.`;
 }
@@ -265,7 +268,7 @@ class Component extends DCLogic {
       validatedHead: 'WALK-FORWARD RECONSTRUCTION',
       clvTitle: 'Cumulative CLV', clvSub: 'No-vig, vs closing line · collecting. Settles as the season\'s games are played. No closing-line journal exists yet for the current season.',
       calTitle: 'Calibration', calSub: 'Predicted probability vs what actually happened. On the diagonal = perfectly calibrated.',
-      predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'The engine hugs the diagonal — slightly conservative at the high end, which is exactly what you want.',
+      predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Each band: how often the engine\'s pick won, with the number of games (n).',
       detailsWord: 'Total points', runsWord: 'points', lineWord: 'line',
       stageTitle: 'Accuracy by stage', stageSub: 'Higher stages = higher conviction.',
       rankNote: 'All 30 NBA teams ranked by real Elo rating and grouped into power tiers.' + (off ? ' Off-season power rankings: no live games until the new season opens.' : ' Season in progress: the rankings move with each daily run.'),
@@ -300,7 +303,7 @@ class Component extends DCLogic {
       ],
       howBullets: [
         {tag:'01', chip:'#35e39a', title:'Engine vs market is the whole point', body:'The engine bar is our most accurate probability per team; the market bar is what the book thinks. The comparison is the signal.'},
-        {tag:'02', chip:'#f5b23d', title:'Elo picks, rest calibrates', body:'Elo decides who wins; rest and schedule spots tune how confident we are. Each does what it\'s best at.'},
+        {tag:'02', chip:'#f5b23d', title:'Elo picks, rest is a label', body:'Elo decides the pick and its probability. Back-to-back and rest flags are shown as labels; they do not change the probability.'},
         {tag:'03', chip:'#f5b23d', title:'What A+ means', body:nbaAplus('en')},
         {tag:'04', chip:'#8791ab', title:'Quiet is part of the method', body:'When the engine agrees with the market, the card dims and stays quiet. In-line with market is fine — not every game is a call.'},
         {tag:'06', chip:'#8791ab', title:'Calibration — the diagonal test', body:'A well-calibrated model means: when it says 70%, the team wins ~70% of the time. The engine passes this test across 4 confidence bands. '+nbaRecon('calib','en')},
@@ -338,7 +341,7 @@ class Component extends DCLogic {
       validatedHead: 'שחזור WALK-FORWARD',
       clvTitle: 'CLV מצטבר', clvSub: 'ללא-vig, מול קו הסגירה · נצבר. נסגר ככל שמשחקי העונה מתקיימים. אין יומן קו-סגירה לעונה הנוכחית.',
       calTitle: 'כיול (Calibration)', calSub: 'הסתברות חזויה מול מה שקרה בפועל. על האלכסון = מכויל בול.',
-      predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'המנוע צמוד לאלכסון — מעט שמרני בקצה הגבוה, בדיוק כפי שרוצים.',
+      predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'בכל רצועה: באיזה שיעור הבחירה של המנוע ניצחה, ומספר המשחקים (n).',
       detailsWord: 'סך נקודות', runsWord: 'נקודות', lineWord: 'קו',
       stageTitle: 'דיוק לפי שלב', stageSub: 'שלב גבוה יותר = ביטחון גבוה יותר.',
       rankNote: 'כל 30 קבוצות NBA מדורגות לפי דירוג Elo אמיתי ומקובצות לשכבות עוצמה.' + (off ? ' דירוגי עונת הפסקה: אין משחקים חיים עד פתיחת העונה החדשה.' : ' העונה פעילה: הדירוגים מתעדכנים בכל ריצה יומית.'),
@@ -373,7 +376,7 @@ class Component extends DCLogic {
       ],
       howBullets: [
         {tag:'01', chip:'#35e39a', title:'מנוע מול שוק — זה כל העניין', body:'בר המנוע הוא ההסתברות המדויקת ביותר לכל קבוצה; בר השוק הוא מה שהבוקי חושב. ההשוואה ביניהם היא הסיגנל.'},
-        {tag:'02', chip:'#f5b23d', title:'Elo בוחר, מנוחה מכייל', body:'Elo מחליט מי מנצח; מנוחה ולוח-משחקים מכווננים כמה אנחנו בטוחים. כל אחד עושה את מה שהוא הכי טוב בו.'},
+        {tag:'02', chip:'#f5b23d', title:'Elo בוחר, מנוחה היא תווית', body:'Elo מחליט על הבחירה ועל ההסתברות. דגלי משחק גב-אל-גב ומנוחה מוצגים כתוויות, ואינם משנים את ההסתברות.'},
         {tag:'03', chip:'#f5b23d', title:'מה A+ אומר', body:nbaAplus('he')},
         {tag:'04', chip:'#8791ab', title:'שקט הוא חלק מהשיטה', body:'כשהמנוע מסכים עם השוק, הכרטיס מתעמעם ושותק. להיות בקו עם השוק זה בסדר — לא כל משחק הוא קריאה.'},
         {tag:'06', chip:'#8791ab', title:'כיול — מבחן האלכסון', body:'מודל מכויל היטב אומר: כשהוא אומר 70%, הקבוצה מנצחת ~70% מהזמן. המנוע עובר מבחן זה על 4 רצועות-ביטחון. '+nbaRecon('calib','he')},
@@ -594,7 +597,7 @@ class Component extends DCLogic {
     const fEdge    = (rf.edge != null && !isOffseason) ? rf.edge : null;
     // A historical winner-pick card (rf.kind === 'historical'): the % is the engine's WIN probability for
     // rf.pickCode, not a totals %; totals fields are '—' (no value for that game in the data).
-    const isHist = rf.kind === 'historical';
+    const isHist = rf.kind === 'historical' || rf.kind === 'today';   // a winner-pick card: % is the win probability
     const feat = {
       away: rf.away || '', home: rf.home || '', time: (he ? (rf.timeHe || rf.time) : rf.time) || '',
       pick: isHist ? (rf.pickCode || '—') : (he ? 'גבוה' : 'HIGH'),
@@ -623,6 +626,7 @@ class Component extends DCLogic {
       fatigue: t.fatigue || null, surprise: t.surprise || null,
       expTotal: t.expTotal != null ? t.expTotal : null, actTotal: t.actTotal != null ? t.actTotal : null,
       cellAcc: t.cellAcc != null ? t.cellAcc : null, cellN: t.cellN != null ? t.cellN : null,   // no band: null, not 0
+      phase: t.phase || null, result: t.result || null, isAplus: !!t.isAplus,   // today's games (PICKS): pregame / started / decided
     }));
 
     const styleFor = (s) => {
@@ -640,8 +644,10 @@ class Component extends DCLogic {
       // Market rule: anything that claims a comparison with the market exists only when there is a market price.
       // 'value' (probability >= 65%) is not a value without a totals price, so it is shown as a plain non-call.
       const dState = (t.state === 'value' && !hasMktOver) ? 'silent' : t.state;
-      const st = styleFor(dState);
-      const badgeDisp = (dState === 'silent' && !hasMktH) ? 'none' : 'inline-flex';
+      // a game that has started or is decided speaks in the past tense: no present-tense tag
+      const past = t.phase === 'started' || t.phase === 'decided';
+      const st = past ? { ...styleFor(dState), badgeText: t.isAplus ? (he ? 'הייתה קריאת A+' : 'Was an A+ call') : (t.phase === 'decided' ? (he ? 'הוכרע' : 'Decided') : (he ? 'התחיל' : 'Started')) } : styleFor(dState);
+      const badgeDisp = past ? 'inline-flex' : ((dState === 'silent' && !hasMktH) ? 'none' : 'inline-flex');
       const lo = hasMktH ? Math.min(t.engH, t.mktH) : t.engH, hi = hasMktH ? Math.max(t.engH, t.mktH) : t.engH;
       const open = t.id === this.state.openTile;
       const ringColor = dState === 'aplus' ? '#35e39a' : (dState === 'value' ? '#f5b23d' : '#8791ab');
@@ -716,10 +722,14 @@ class Component extends DCLogic {
           ? `סך נקודות צפוי (מנוע): ${t.expTotal} · בפועל ${t.actTotal} · פספוס אופייני כ-15 נקודות (שגיאה ממוצעת מ-2019-20, n=8,472). תחזית של המנוע, לא המלצה.`
           : `Expected total (engine): ${t.expTotal} points · actual ${t.actTotal} points · typical miss about 15 points (average error since 2019-20, n=8,472). A forecast from the engine, not a pick.`),
         // each note only when the comparison it names was made: with the winner price (silent) or the totals price
-        callNote: dState === 'silent'
+        callNote: t.phase === 'decided' && t.result
+          ? `${he ? 'סופי' : 'Final'} · ${t.away} ${t.result.ap}–${t.result.hp} ${t.home} · ${t.result.ok === true ? (he ? '✓ צדק' : '✓ correct') : t.result.ok === false ? (he ? '✗ טעה' : '✗ wrong') : ''}`
+          : t.phase === 'started' ? (he ? 'התחיל · התוצאה עוד לא נכנסה' : 'Started · no final score yet')
+          : t.phase === 'pregame' ? (he ? 'לפני המשחק' : 'Before the game')
+          : dState === 'silent'
           ? (gapPct != null ? (he ? `בקו עם השוק · פער ${gapPct}% — שקט` : `In line with market · gap ${gapPct}% — quiet`) : '')
           : (hasMktOver ? (dState === 'aplus' ? (he ? 'Edge חזק על הטוטאל · A+' : 'Strong edge on the total · A+') : (he ? 'ערך על הטוטאל' : 'Value on the total')) : ''),
-        noteDisp: (dState === 'silent' ? gapPct != null : hasMktOver) ? 'block' : 'none',
+        noteDisp: (t.phase || (dState === 'silent' ? gapPct != null : hasMktOver)) ? 'block' : 'none',
         toggle: () => this.toggleTile(t.id),
       };
     });
@@ -809,9 +819,12 @@ class Component extends DCLogic {
       ...L, navTabs, rankTabs, nav, feat, tiles, rankRows, stageBars, howBullets, howExplainers, howRows,
       hasSignals, noSignals: !hasSignals,
       hasFeat, noFeat: !hasFeat,
-      noFeatTitle: he ? 'אין משחק מוביל היום' : 'No featured game today',
-      noFeatBody: he ? 'אין היום משחקי NBA, או שלוח המשחקים של היום לא נטען.'
-                     : "There are no NBA games today, or today's schedule could not be loaded.",
+      // no featured card: with today's games on the board it is "no open A+ call", not "no games" (said only when there are none)
+      noFeatTitle: tiles.length ? (he ? 'אין קריאת A+ פתוחה' : 'No open A+ call') : (he ? 'אין משחק מוביל היום' : 'No featured game today'),
+      noFeatBody: tiles.length
+        ? (he ? 'אין היום קריאת A+ במשחק שעוד לא התחיל. משחקי היום בלוח למטה.' : 'No A+ call today on a game that has not started. Today\'s games are on the board below.')
+        : (he ? 'אין היום משחקי NBA, או שלוח המשחקים של היום לא נטען.'
+              : "There are no NBA games today, or today's schedule could not be loaded."),
       // the hero line reads isOffseason (data-driven); no fixed date: the next game's date only when the data has one
       heroSub: (function () {
         const base = he ? 'שני מודלים לכל משחק, מנצח וסך נקודות. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.'
