@@ -672,7 +672,8 @@ class Component extends DCLogic {
 
     const tiles = raw.map(t => {
       const ex = extra[t.id] || {};
-      const st = styleFor(t.state);
+      // no market price: no tag that claims a comparison with the market ("too close")
+      const st = (t.state === 'silent' && t.mktH == null) ? { ...styleFor(t.state), badgeText: he ? 'שקט' : 'quiet' } : styleFor(t.state);
       const hasMktH = t.mktH != null;
       const hasTotals = t.line != null && t.lambda != null;
       const hasMktOver = t.mktOver != null;
@@ -722,7 +723,7 @@ class Component extends DCLogic {
         callNote: t.state === 'silent'
           ? (gapPct != null
               ? (he ? `בקו עם השוק · פער ${gapPct}% — שתיקה` : `In line with market · gap ${gapPct}% — silent`)
-              : (he ? 'צמוד לשוק — שתיקה' : 'In line with market — silent'))
+              : (he ? 'שקט · אין מחיר שוק' : 'Quiet · no market price'))
           : (t.state === 'aplus' ? (he ? 'קריאת A+ · מנצח' : 'A+ call · winner') : (he ? 'ערך' : 'Value')),
         toggle: () => this.toggleTile(t.id),
         hasResult,
@@ -766,7 +767,7 @@ class Component extends DCLogic {
     const fex = (R.extra || {})[rf.id] || {};
     const reasons = R.featReasons || [];
     const drivers = [
-      { label: (he?'יתרון דירוג (Elo) מול השוק':'Rating edge (Elo) vs market'), val: feat.edgeStr, arrow:'▲', color:'#35e39a' },
+      ...(feat.hasMkt ? [{ label: (he?'יתרון דירוג (Elo) מול השוק':'Rating edge (Elo) vs market'), val: feat.edgeStr, arrow:'▲', color:'#35e39a' }] : []),   // no price, no market row
       (fex.sa && fex.sh)
         ? { label: (he?'פותחים':'Starters')+': '+fex.sa+' · '+fex.sh, val:'', arrow:'●', color:'#8fc4ff' }
         : { label: (he?'שלב ביטחון':'Confidence stage'), val:(he?'שלב ':'stage ')+feat.stageDisplay, arrow:'▲', color:'#35e39a' },
@@ -828,7 +829,7 @@ class Component extends DCLogic {
       ...L, navTabs, rankTabs, nav, feat, tiles, rankRows, rankNote, rankColHeaders, stageBars,
       howBullets, howExtra, howRows,
       featHas, featEmpty: !featHas, slateMsg,
-      featEdge: feat.edgeStr, featEdgeTarget: (feat.edge != null ? Math.abs(feat.edge) : ''),
+      featEdge: feat.edgeStr, featEdgeTarget: (feat.edge != null ? Math.abs(feat.edge) : ''), featEdgeDisp: feat.hasMkt ? 'block' : 'none',
       featEdgePrefix: (feat.edge != null && feat.edge < 0 ? '−' : '+'), clvFinalStr,
       gauge: featHas ? this.gauge(feat.mktUnder, feat.engUnder) : {}, clv: this.clvChart(), cal: this.cal(), drivers, integrity, clvSeg,
       freshness, liveWord, liveDot, scannedN, scannedText,

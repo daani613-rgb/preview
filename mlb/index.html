@@ -172,7 +172,7 @@
                   </div>
                 </div>
                 <div style="display:flex;gap:22px;flex-wrap:wrap">
-                  <div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">{{ edgeLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#35e39a;line-height:.9"><span data-count-target="{{ featEdgeTarget }}" data-count-prefix="{{ featEdgePrefix }}" data-count-suffix="%">{{ featEdge }}</span></div></div>
+                  <div style="display:{{ featEdgeDisp }}"><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">{{ edgeLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#35e39a;line-height:.9"><span data-count-target="{{ featEdgeTarget }}" data-count-prefix="{{ featEdgePrefix }}" data-count-suffix="%">{{ featEdge }}</span></div></div>
                   <div style="width:1px;background:rgba(255,255,255,0.12)"></div>
                   <div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">λ · {{ runsLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#eef1f7;line-height:.9">{{ feat.lambda }}</div></div>
                   <div style="width:1px;background:rgba(255,255,255,0.12)"></div>
@@ -228,7 +228,7 @@
                         <div style="width:{{ t.engA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020">{{ t.away }}&#160;{{ t.engA }}%</div>
                       </div>
                     </div>
-                    <div style="display:flex;align-items:center;gap:11px">
+                    <div style="display:{{ t.mktDisp }};align-items:center;gap:11px">
                       <div style="width:52px;font-size:11px;color:#8791ab;font-weight:600">{{ marketWord }}</div>
                       <div style="flex:1;display:flex;height:30px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:12px;font-weight:700;opacity:.62">
                         <div style="width:{{ t.mktH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c">{{ t.home }}&#160;{{ t.mktH }}%</div>
