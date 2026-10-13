@@ -189,7 +189,7 @@ class Component extends DCLogic {
       h1a: 'לא ניחוש.',
       h1b: 'חיזוי בשיטה.',
       subtitle: 'חמישה מנועים חוזים תוצאות ספורט בשיטת מסחר ממושמעת, מדברים רק על קריאות בביטחון גבוה ושותקים בשאר. מתעדכן בין פעם ביום לכמה פעמים ביום, לפי המנוע. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.',
-      cta1: 'צפה בקריאות של היום',
+      cta1: 'צפה בקריאות הפתוחות',
       cta2: 'איך זה עובד',
       sectionKicker: 'חמשת המנועים',
       sectionTitle: 'ענף אחד לכל מנוע',
@@ -212,7 +212,7 @@ class Component extends DCLogic {
       h1a: 'Not a guess.',
       h1b: 'A method.',
       subtitle: 'Five engines forecast sports outcomes with a disciplined trading method, speaking only on high-confidence calls and silent otherwise. Updated once to several times a day, depending on the engine. Scheduled runs are often delayed or skipped.',
-      cta1: "See today's calls",
+      cta1: 'See open calls',
       cta2: 'How it works',
       sectionKicker: 'The five engines',
       sectionTitle: 'One engine per sport',
@@ -278,7 +278,9 @@ class Component extends DCLogic {
         const first = order.find(sp => this.state.calls[sp]);
         const toEngines = () => { const el = document.getElementById('engines-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
         return {
-          cta1: first ? d.cta1 : (known ? (this.state.lang === 'he' ? 'אין קריאות פתוחות היום' : 'No open calls today') : d.cta1),
+          // "open": an A+ call not started yet on the engine's current slate (NFL: this week), so not "today's"
+          cta1: first ? (this.state.lang === 'he' ? 'צפה בקריאות הפתוחות' : 'See open calls')
+                      : (known ? (this.state.lang === 'he' ? 'אין קריאות פתוחות כרגע' : 'No open calls right now') : d.cta1),
           goLive: first ? () => { window.location.href = './' + first + '/'; } : toEngines,
         };
       })(),
