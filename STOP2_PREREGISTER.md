@@ -84,3 +84,25 @@ calls (5 right); World Cup 50 A+ calls (38 right). If one moves, stop.
   verdict".
 
 Nothing in this file is changed after the first code change; a later finding goes in a dated section.
+
+## 2026-10-13, after the code change: what differs from the text above
+
+Found while building and checking; the expectations above are left as written.
+
+- Tennis slate: as expected in section 1, on the same 2026-10-11 slate (9 tiles): 2 A+, 3 value (Tiafoe, Paul,
+  Alcaraz on the call side; tiles Davidovich Fokina-Tiafoe, Paul-Vacherot, Bergs-Alcaraz), 4 quiet. No difference;
+  noted because test_stop2.py names a tile by its first player, the text above by the called player.
+- Tennis blanking: 44 rows carry 0.0 with no closing price; 4 of them are voided and stay as they are. 40 emptied, as
+  expected; a second run empties 0. Mean -0.155% on 304, 121 positive.
+- Tennis classic page: the mean CLV shows two decimals (-0.16%), as the preview, in place of one (-0.1%).
+- World Cup, quiet with no price: a card that is not quiet (a past A+ call) reads "אין מחיר שוק" / "No market price",
+  without "שקט", which would contradict the call. The classic board keeps its own zone wording "אין מחיר שוק · קריאה
+  בלבד" / "No market price · call only".
+- World Cup classic: the guide's rounded "78%" (winner backtest, two places per language) leaves with the holdout
+  block; it was the same number as 78.3.
+- World Cup classic: the stage name is written after the venue date ("19.07 · הגמר"), in place of the fixed "Group
+  stage" label.
+- MLB classic: the gap over 10 already read "Large gap" there; it now reads "פער גדול · מעבר לחלון" / "Large gap ·
+  outside the window", as the preview.
+- Invariants after the change: tennis 98 A+ (non-voided rows; 100 with the 2 voided) and 2 on the slate; MLB 26 of 39;
+  NFL 6 A+ (5 right); World Cup 50 (38 right). None moved.
