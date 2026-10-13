@@ -19,7 +19,7 @@ const GUIDE_NFL=`
 class Component extends DCLogic {
   state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'games', openTile: null, dateFilter: 'week' };
 
-  componentDidMount() { this.runCountUp(); this.ensureThree(); this._syncGuide(); this._syncStale(); this._syncWeekChip(); this._syncEmptyCells();
+  componentDidMount() { this.runCountUp(); this._deferThree(); this._syncGuide(); this._syncStale(); this._syncWeekChip(); this._syncEmptyCells();
     this._onScroll = () => { if (window.scrollY > 0) document.documentElement.setAttribute('data-nfl-scrolled', ''); else document.documentElement.removeAttribute('data-nfl-scrolled'); };
     window.addEventListener('scroll', this._onScroll, { passive: true }); this._onScroll(); }
   componentDidUpdate(prevProps, prevState) { this.runCountUp(); this._syncGuide(); this._syncStale(); this._syncEmptyCells(); if (prevState && (prevState.dateFilter !== this.state.dateFilter || prevState.lang !== this.state.lang)) this._syncWeekChip(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
@@ -94,6 +94,20 @@ class Component extends DCLogic {
       this._rafC = requestAnimationFrame(tick);
     };
     requestAnimationFrame(run);
+  }
+
+  // three.js (the hero's 3D, about 260 KB over the wire) starts after the first contentful paint, when the main thread
+  // is idle (at most 2.5 s later), so it never competes with the page's own content. The final page is the same.
+  // ensureThree runs once (_threeStarted), so the 3 s fallback cannot start it twice.
+  _deferThree() {
+    const go = () => { if (!this._dead) this.ensureThree(); };
+    const idle = () => (window.requestIdleCallback ? requestIdleCallback(go, { timeout: 2500 }) : setTimeout(go, 300));
+    try {
+      if (performance.getEntriesByName('first-contentful-paint').length) return idle();
+      const po = new PerformanceObserver(l => { if (l.getEntriesByName('first-contentful-paint').length) { po.disconnect(); idle(); } });
+      po.observe({ type: 'paint', buffered: true });
+      setTimeout(() => { try { po.disconnect(); } catch (e) {} idle(); }, 3000);
+    } catch (e) { idle(); }
   }
 
   async ensureThree() {
@@ -250,7 +264,7 @@ class Component extends DCLogic {
       dateFilterLabels: ['This week', 'Results', 'By week', 'All'], filterBarLabel: 'FILTER GAMES', weekRowLabel: 'WEEK',
       heroStats: [
         {v:HO ? `${HO.value}%` : '—', k:HO ? `held out · ${HO.from} to ${HO.to}` : '', color:'#35e39a'},
-        {v: '29.11',        k:'CLV reading', color:'#6f7897'},
+        {v: '29.11',        k:'CLV reading', color:'#79819e'},
       ].filter(s => s.v !== '—'),   // a cell without a source is hidden whole, not shown as a dash
       kpis: [
         {display:`${kv(AP)}`, target:AP ? AP.value : '', dec:1, prefix:'', u:ku(AP), tag:'A+', d:nflAplus('en') + accTxt.en.ap},
@@ -302,7 +316,7 @@ class Component extends DCLogic {
       dateFilterLabels: ['השבוע', 'תוצאות', 'לפי שבוע', 'הכל'], filterBarLabel: 'סינון משחקים', weekRowLabel: 'שבוע',
       heroStats: [
         {v:HO ? `${HO.value}%` : '—', k:HO ? `נתונים מוחזקים · ${HO.from} עד ${HO.to}` : '', color:'#35e39a'},
-        {v: '29.11', k:'קריאת CLV', color:'#6f7897'},
+        {v: '29.11', k:'קריאת CLV', color:'#79819e'},
       ].filter(s => s.v !== '—'),   // a cell without a source is hidden whole, not shown as a dash
       kpis: [
         {display:`${kv(AP)}`, target:AP ? AP.value : '', dec:1, prefix:'', u:ku(AP), tag:'A+', d:nflAplus('he') + accTxt.he.ap},
@@ -689,16 +703,16 @@ class Component extends DCLogic {
       : (p >= 50 ? { bg: 'rgba(245,178,61,0.15)', c: '#f5c67a' } : { bg: 'rgba(255,255,255,0.06)', c: '#8791ab' });
     rankRows = rankRows.map(rr => {
       if (rr.isTier) return rr;
-      const o = Object.assign({ cHasBall: false, cBall: '', cBallBg: '', cBallColor: '', d1: '', d1Color: '#eef1f7', d2: '', d2Color: '#8791ab', d3: '', d3Color: '#6f7897' }, rr);
+      const o = Object.assign({ cHasBall: false, cBall: '', cBallBg: '', cBallColor: '', d1: '', d1Color: '#eef1f7', d2: '', d2Color: '#8791ab', d3: '', d3Color: '#79819e' }, rr);
       if (_isPct(rr.v1)) {
         const st = _ballStyle(parseFloat(rr.v1));
         o.cHasBall = true; o.cBall = rr.v1; o.cBallBg = st.bg; o.cBallColor = st.c;
         o.d1 = rr.v2 || ''; o.d1Color = rr.v2Color || '#8791ab';
-        o.d2 = rr.v3 || ''; o.d2Color = rr.v3Color || '#6f7897';
+        o.d2 = rr.v3 || ''; o.d2Color = rr.v3Color || '#79819e';
       } else {
         o.d1 = rr.v1 || ''; o.d1Color = rr.v1Color || '#eef1f7';
         o.d2 = rr.v2 || ''; o.d2Color = rr.v2Color || '#8791ab';
-        o.d3 = rr.v3 || ''; o.d3Color = rr.v3Color || '#6f7897';
+        o.d3 = rr.v3 || ''; o.d3Color = rr.v3Color || '#79819e';
       }
       return o;
     });

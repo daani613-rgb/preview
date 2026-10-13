@@ -71,6 +71,7 @@
     [style*="max-width: 560px"],[style*="max-width: 440px"]{max-width:100%!important}
   }
 </style>
+<link rel="stylesheet" href="../assets/a11y.css">   <!-- tap targets (KNOWN_DEFECTS 92) -->
 </head>
 <body>
 <div id="dc-root"></div>
@@ -83,7 +84,7 @@
       <div style="display:flex;align-items:center;gap:13px">
         <div style="width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#2fbf78,#4a9eff);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 26px rgba(53,227,154,0.42)">⚽</div>
         <div>
-          <div style="font-family:var(--fm);font-size:11px;letter-spacing:3px;color:#6f7897;text-transform:uppercase">WORLD CUP · A+ PREDICTION ENGINE</div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:3px;color:#79819e;text-transform:uppercase">WORLD CUP · A+ PREDICTION ENGINE</div>
           <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">{{ brand }}</div>
         </div>
       </div>
@@ -92,7 +93,7 @@
           <span style="width:7px;height:7px;border-radius:50%;background:#35e39a;box-shadow:0 0 9px #35e39a;animation:livep 1.7s infinite"></span>
           <span style="font-family:var(--fm);font-size:11px;color:#7fe3b0;font-weight:600">{{ liveLabel }} · {{ asOf }}</span>
         </div>
-        <div style="font-family:var(--fm);font-size:10px;color:#6f7897;padding:5px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.07)">{{ freshStr }}</div>
+        <div style="font-family:var(--fm);font-size:10px;color:#79819e;padding:5px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.07)">{{ freshStr }}</div>
         <div onClick="{{ toggleLang }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;padding:9px 15px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);font-family:var(--fm);font-size:12px;font-weight:600;color:#cfd3e2" style-hover="border-color:#4a9eff;color:#8fc4ff">{{ otherLang }}</div>
       </div>
     </div>
@@ -109,7 +110,7 @@
           <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="3">
             <div>
               <div style="font-family:var(--fm);font-size:26px;font-weight:800;color:{{ s.color }};line-height:1">{{ s.v }}</div>
-              <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-top:4px">{{ s.k }}</div>
+              <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#79819e;margin-top:4px">{{ s.k }}</div>
             </div>
           </sc-for>
         </div>
@@ -144,7 +145,7 @@
                 </div>
                 <div style="font-size:14px;color:#9aa2ba;margin-bottom:20px;max-width:400px;line-height:1.6">{{ feat.blurb }}</div>
                 <div style="margin-bottom:22px;max-width:400px">
-                  <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:10px">{{ driversHead }}</div>
+                  <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#79819e;margin-bottom:10px">{{ driversHead }}</div>
                   <div style="display:flex;flex-direction:column;gap:8px">
                     <sc-for list="{{ drivers }}" as="d" hint-placeholder-count="3">
                       <div style="display:flex;align-items:center;gap:10px">
@@ -156,9 +157,9 @@
                   </div>
                 </div>
                 <div style="display:flex;gap:22px;flex-wrap:wrap">
-                  <div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">{{ edgeLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#35e39a;line-height:.9"><span data-count-target="{{ featEdgeTarget }}" data-count-prefix="{{ featEdgePrefix }}" data-count-suffix="%">{{ featEdge }}</span></div></div>
+                  <div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#79819e;margin-bottom:5px">{{ edgeLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#35e39a;line-height:.9"><span data-count-target="{{ featEdgeTarget }}" data-count-prefix="{{ featEdgePrefix }}" data-count-suffix="%">{{ featEdge }}</span></div></div>
                   <div style="width:1px;background:rgba(255,255,255,0.12)"></div>
-                  <div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">λ · {{ runsLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#eef1f7;line-height:.9">{{ feat.lambda }}</div></div>
+                  <div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#79819e;margin-bottom:5px">λ · {{ runsLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#eef1f7;line-height:.9">{{ feat.lambda }}</div></div>
                   <div style="width:1px;background:rgba(255,255,255,0.12)"></div>
                   <!-- "Stage" cell removed 2026-10-11: feat.stage is a favourite-probability bucket (gen_worldcup_data.py), not a stage -->
                 </div>
@@ -205,28 +206,28 @@
                   <div style="position:relative">
                     <!-- L1 · chead: teams + when + flags -->
                     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:14px">
-                      <div><div style="font-size:17px;font-weight:800">{{ ct.home }} <span style="color:#6f7897;font-weight:600">{{ vsWord }}</span> {{ ct.away }}</div><div style="font-family:var(--fm);font-size:10px;color:#6f7897;margin-top:3px">{{ ct.time }}{{ ct.stageWordSep }}</div></div>
+                      <div><div style="font-size:17px;font-weight:800">{{ ct.home }} <span style="color:#79819e;font-weight:600">{{ vsWord }}</span> {{ ct.away }}</div><div style="font-family:var(--fm);font-size:10px;color:#79819e;margin-top:3px">{{ ct.time }}{{ ct.stageWordSep }}</div></div>
                       <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
                         <span style="display:{{ ct.flagDisp }};align-items:center;padding:4px 9px;border-radius:999px;font-family:var(--fm);font-size:10px;font-weight:700;color:{{ ct.flagColor }};background:{{ ct.flagBg }};border:1px solid {{ ct.flagBorder }};white-space:nowrap">{{ ct.flagText }}</span>
                         <span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-family:var(--fm);font-size:10.5px;font-weight:700;color:{{ ct.badgeColor }};background:{{ ct.badgeBg }};border:1px solid {{ ct.badgeBorder }};white-space:nowrap">{{ ct.badgeText }}</span>
                       </div>
                     </div>
                     <!-- L2 · engine barrow -->
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ engineWord }}<div style="font-size:8.5px;color:#6f7897;font-weight:500">{{ engSubWord }}</div></div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ engineWord }}<div style="font-size:8.5px;color:#79819e;font-weight:500">{{ engSubWord }}</div></div>
                       <div dir="ltr" style="flex:1;display:flex;height:26px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700">
                         <div style="width:{{ ct.ph }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;white-space:nowrap">{{ ct.home }}&#160;{{ ct.ph }}%</div>
                         <div style="width:{{ ct.pd }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.pd }}%</div>
                         <div style="width:{{ ct.engA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.away }}&#160;{{ ct.engA }}%</div>
                       </div></div>
                     <!-- L3 · market barrow (no-vig, real odds) -->
-                    <div style="display:{{ ct.mktDisp }};align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ marketWord }}<div style="font-size:8.5px;color:#6f7897;font-weight:500">{{ mktSubWord }}</div></div>
-                      <div dir="ltr" style="flex:1;display:flex;height:22px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700;opacity:.62">
+                    <div style="display:{{ ct.mktDisp }};align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ marketWord }}<div style="font-size:8.5px;color:#79819e;font-weight:500">{{ mktSubWord }}</div></div>
+                      <div dir="ltr" style="flex:1;display:flex;height:22px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700;opacity:.78">
                         <div style="width:{{ ct.mktH }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;white-space:nowrap">{{ ct.home }}&#160;{{ ct.mktH }}%</div>
                         <div style="width:{{ ct.mktD }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.mktD }}%</div>
                         <div style="width:{{ ct.mktA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.away }}&#160;{{ ct.mktA }}%</div>
                       </div></div>
                     <!-- L4 · axis -->
-                    <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9.5px;color:#6f7897;margin:0 0 10px 56px"><span style="flex:{{ ct.ph }}">{{ homeWord }}</span><span style="flex:{{ ct.pd }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.engA }};text-align:right">{{ awayWord }}</span></div>
+                    <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9.5px;color:#79819e;margin:0 0 10px 56px"><span style="flex:{{ ct.ph }}">{{ homeWord }}</span><span style="flex:{{ ct.pd }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.engA }};text-align:right">{{ awayWord }}</span></div>
                     <!-- L5 · pickline -->
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
                       <div style="font-size:13px;color:#c4c7d2">{{ ct.rc.callWord }}: <b style="color:#eef1f7">{{ ct.rc.pickTeam }}</b></div>
@@ -245,7 +246,7 @@
                         <div style="font-size:11px;color:#c4c7d2;margin-bottom:8px">{{ ct.rc.surpriseMeta }}</div>
                         <div style="font-size:9px;color:#8791ab;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">{{ ct.rc.surpriseBarLbl }}</div>
                         <div dir="ltr" style="display:flex;height:20px;border-radius:6px;overflow:hidden;font-family:var(--fm);font-size:10px;font-weight:700;margin-bottom:2px"><div style="width:{{ ct.rc.surpriseDistH }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistH }}%</div><div style="width:{{ ct.rc.surpriseDistD }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistD }}%</div><div style="width:{{ ct.rc.surpriseDistA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistA }}%</div></div>
-                        <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9px;color:#6f7897;margin-bottom:6px"><span style="flex:{{ ct.rc.surpriseDistH }}">{{ homeWord }}</span><span style="flex:{{ ct.rc.surpriseDistD }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.rc.surpriseDistA }};text-align:right">{{ awayWord }}</span></div>
+                        <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9px;color:#79819e;margin-bottom:6px"><span style="flex:{{ ct.rc.surpriseDistH }}">{{ homeWord }}</span><span style="flex:{{ ct.rc.surpriseDistD }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.rc.surpriseDistA }};text-align:right">{{ awayWord }}</span></div>
                         <div style="font-size:11px;color:#c4c7d2;margin-bottom:6px">{{ ct.rc.surpriseNotlose }}</div>
                         <div style="display:{{ ct.rc.dispSurpriseVgap }};font-size:11px;color:#8ff0c0;margin-bottom:6px">{{ ct.rc.surpriseVgap }}</div>
                         <div style="font-size:10.5px;color:#8791ab;line-height:1.5">{{ ct.rc.surpriseNote1 }}</div>
@@ -305,28 +306,28 @@
                   <div style="position:relative">
                     <!-- L1 · chead: teams + when + flags -->
                     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:14px">
-                      <div><div style="font-size:17px;font-weight:800">{{ ct.home }} <span style="color:#6f7897;font-weight:600">{{ vsWord }}</span> {{ ct.away }}</div><div style="font-family:var(--fm);font-size:10px;color:#6f7897;margin-top:3px">{{ ct.time }}{{ ct.stageWordSep }}</div></div>
+                      <div><div style="font-size:17px;font-weight:800">{{ ct.home }} <span style="color:#79819e;font-weight:600">{{ vsWord }}</span> {{ ct.away }}</div><div style="font-family:var(--fm);font-size:10px;color:#79819e;margin-top:3px">{{ ct.time }}{{ ct.stageWordSep }}</div></div>
                       <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
                         <span style="display:{{ ct.flagDisp }};align-items:center;padding:4px 9px;border-radius:999px;font-family:var(--fm);font-size:10px;font-weight:700;color:{{ ct.flagColor }};background:{{ ct.flagBg }};border:1px solid {{ ct.flagBorder }};white-space:nowrap">{{ ct.flagText }}</span>
                         <span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-family:var(--fm);font-size:10.5px;font-weight:700;color:{{ ct.badgeColor }};background:{{ ct.badgeBg }};border:1px solid {{ ct.badgeBorder }};white-space:nowrap">{{ ct.badgeText }}</span>
                       </div>
                     </div>
                     <!-- L2 · engine barrow -->
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ engineWord }}<div style="font-size:8.5px;color:#6f7897;font-weight:500">{{ engSubWord }}</div></div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ engineWord }}<div style="font-size:8.5px;color:#79819e;font-weight:500">{{ engSubWord }}</div></div>
                       <div dir="ltr" style="flex:1;display:flex;height:26px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700">
                         <div style="width:{{ ct.ph }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;white-space:nowrap">{{ ct.home }}&#160;{{ ct.ph }}%</div>
                         <div style="width:{{ ct.pd }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.pd }}%</div>
                         <div style="width:{{ ct.engA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.away }}&#160;{{ ct.engA }}%</div>
                       </div></div>
                     <!-- L3 · market barrow (no-vig, real odds) -->
-                    <div style="display:{{ ct.mktDisp }};align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ marketWord }}<div style="font-size:8.5px;color:#6f7897;font-weight:500">{{ mktSubWord }}</div></div>
-                      <div dir="ltr" style="flex:1;display:flex;height:22px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700;opacity:.62">
+                    <div style="display:{{ ct.mktDisp }};align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ marketWord }}<div style="font-size:8.5px;color:#79819e;font-weight:500">{{ mktSubWord }}</div></div>
+                      <div dir="ltr" style="flex:1;display:flex;height:22px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700;opacity:.78">
                         <div style="width:{{ ct.mktH }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;white-space:nowrap">{{ ct.home }}&#160;{{ ct.mktH }}%</div>
                         <div style="width:{{ ct.mktD }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.mktD }}%</div>
                         <div style="width:{{ ct.mktA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.away }}&#160;{{ ct.mktA }}%</div>
                       </div></div>
                     <!-- L4 · axis -->
-                    <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9.5px;color:#6f7897;margin:0 0 10px 56px"><span style="flex:{{ ct.ph }}">{{ homeWord }}</span><span style="flex:{{ ct.pd }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.engA }};text-align:right">{{ awayWord }}</span></div>
+                    <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9.5px;color:#79819e;margin:0 0 10px 56px"><span style="flex:{{ ct.ph }}">{{ homeWord }}</span><span style="flex:{{ ct.pd }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.engA }};text-align:right">{{ awayWord }}</span></div>
                     <!-- L5 · pickline -->
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
                       <div style="font-size:13px;color:#c4c7d2">{{ ct.rc.callWord }}: <b style="color:#eef1f7">{{ ct.rc.pickTeam }}</b></div>
@@ -345,7 +346,7 @@
                         <div style="font-size:11px;color:#c4c7d2;margin-bottom:8px">{{ ct.rc.surpriseMeta }}</div>
                         <div style="font-size:9px;color:#8791ab;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">{{ ct.rc.surpriseBarLbl }}</div>
                         <div dir="ltr" style="display:flex;height:20px;border-radius:6px;overflow:hidden;font-family:var(--fm);font-size:10px;font-weight:700;margin-bottom:2px"><div style="width:{{ ct.rc.surpriseDistH }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistH }}%</div><div style="width:{{ ct.rc.surpriseDistD }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistD }}%</div><div style="width:{{ ct.rc.surpriseDistA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistA }}%</div></div>
-                        <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9px;color:#6f7897;margin-bottom:6px"><span style="flex:{{ ct.rc.surpriseDistH }}">{{ homeWord }}</span><span style="flex:{{ ct.rc.surpriseDistD }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.rc.surpriseDistA }};text-align:right">{{ awayWord }}</span></div>
+                        <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9px;color:#79819e;margin-bottom:6px"><span style="flex:{{ ct.rc.surpriseDistH }}">{{ homeWord }}</span><span style="flex:{{ ct.rc.surpriseDistD }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.rc.surpriseDistA }};text-align:right">{{ awayWord }}</span></div>
                         <div style="font-size:11px;color:#c4c7d2;margin-bottom:6px">{{ ct.rc.surpriseNotlose }}</div>
                         <div style="display:{{ ct.rc.dispSurpriseVgap }};font-size:11px;color:#8ff0c0;margin-bottom:6px">{{ ct.rc.surpriseVgap }}</div>
                         <div style="font-size:10.5px;color:#8791ab;line-height:1.5">{{ ct.rc.surpriseNote1 }}</div>
@@ -397,34 +398,34 @@
           </div>
 
           <!-- BY-DATE -->
-          <div style="display:{{ dispByDate }}"><div style="margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-family:var(--fm);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#6f7897">{{ dateSelLabel }}</span><select onChange="{{ onDateSelect }}" data-date-select="1" aria-label="{{ dateSelLabel }}" style="padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.14);color:#e6e9f2;font-family:var(--fm);font-size:12px;color-scheme:dark;cursor:pointer"></select></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;align-items:start"><sc-for list="{{ dateCards }}" as="ct" hint-placeholder-count="3">
+          <div style="display:{{ dispByDate }}"><div style="margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-family:var(--fm);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#79819e">{{ dateSelLabel }}</span><select onChange="{{ onDateSelect }}" data-date-select="1" aria-label="{{ dateSelLabel }}" style="padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.14);color:#e6e9f2;font-family:var(--fm);font-size:12px;color-scheme:dark;cursor:pointer"></select></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;align-items:start"><sc-for list="{{ dateCards }}" as="ct" hint-placeholder-count="3">
                 <div style="position:relative;border-radius:20px;padding:20px;background:{{ ct.cardBg }};border:1px solid {{ ct.cardBorder }};overflow:hidden">
                   <div style="position:absolute;top:0;bottom:0;inset-inline-start:0;width:4px;background:{{ ct.accent }}"></div>
                   <div style="position:relative">
                     <!-- L1 · chead: teams + when + flags -->
                     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:14px">
-                      <div><div style="font-size:17px;font-weight:800">{{ ct.home }} <span style="color:#6f7897;font-weight:600">{{ vsWord }}</span> {{ ct.away }}</div><div style="font-family:var(--fm);font-size:10px;color:#6f7897;margin-top:3px">{{ ct.time }}{{ ct.stageWordSep }}</div></div>
+                      <div><div style="font-size:17px;font-weight:800">{{ ct.home }} <span style="color:#79819e;font-weight:600">{{ vsWord }}</span> {{ ct.away }}</div><div style="font-family:var(--fm);font-size:10px;color:#79819e;margin-top:3px">{{ ct.time }}{{ ct.stageWordSep }}</div></div>
                       <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
                         <span style="display:{{ ct.flagDisp }};align-items:center;padding:4px 9px;border-radius:999px;font-family:var(--fm);font-size:10px;font-weight:700;color:{{ ct.flagColor }};background:{{ ct.flagBg }};border:1px solid {{ ct.flagBorder }};white-space:nowrap">{{ ct.flagText }}</span>
                         <span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-family:var(--fm);font-size:10.5px;font-weight:700;color:{{ ct.badgeColor }};background:{{ ct.badgeBg }};border:1px solid {{ ct.badgeBorder }};white-space:nowrap">{{ ct.badgeText }}</span>
                       </div>
                     </div>
                     <!-- L2 · engine barrow -->
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ engineWord }}<div style="font-size:8.5px;color:#6f7897;font-weight:500">{{ engSubWord }}</div></div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ engineWord }}<div style="font-size:8.5px;color:#79819e;font-weight:500">{{ engSubWord }}</div></div>
                       <div dir="ltr" style="flex:1;display:flex;height:26px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700">
                         <div style="width:{{ ct.ph }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;white-space:nowrap">{{ ct.home }}&#160;{{ ct.ph }}%</div>
                         <div style="width:{{ ct.pd }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.pd }}%</div>
                         <div style="width:{{ ct.engA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.away }}&#160;{{ ct.engA }}%</div>
                       </div></div>
                     <!-- L3 · market barrow (no-vig, real odds) -->
-                    <div style="display:{{ ct.mktDisp }};align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ marketWord }}<div style="font-size:8.5px;color:#6f7897;font-weight:500">{{ mktSubWord }}</div></div>
-                      <div dir="ltr" style="flex:1;display:flex;height:22px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700;opacity:.62">
+                    <div style="display:{{ ct.mktDisp }};align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ marketWord }}<div style="font-size:8.5px;color:#79819e;font-weight:500">{{ mktSubWord }}</div></div>
+                      <div dir="ltr" style="flex:1;display:flex;height:22px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700;opacity:.78">
                         <div style="width:{{ ct.mktH }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;white-space:nowrap">{{ ct.home }}&#160;{{ ct.mktH }}%</div>
                         <div style="width:{{ ct.mktD }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.mktD }}%</div>
                         <div style="width:{{ ct.mktA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.away }}&#160;{{ ct.mktA }}%</div>
                       </div></div>
                     <!-- L4 · axis -->
-                    <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9.5px;color:#6f7897;margin:0 0 10px 56px"><span style="flex:{{ ct.ph }}">{{ homeWord }}</span><span style="flex:{{ ct.pd }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.engA }};text-align:right">{{ awayWord }}</span></div>
+                    <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9.5px;color:#79819e;margin:0 0 10px 56px"><span style="flex:{{ ct.ph }}">{{ homeWord }}</span><span style="flex:{{ ct.pd }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.engA }};text-align:right">{{ awayWord }}</span></div>
                     <!-- L5 · pickline -->
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
                       <div style="font-size:13px;color:#c4c7d2">{{ ct.rc.callWord }}: <b style="color:#eef1f7">{{ ct.rc.pickTeam }}</b></div>
@@ -443,7 +444,7 @@
                         <div style="font-size:11px;color:#c4c7d2;margin-bottom:8px">{{ ct.rc.surpriseMeta }}</div>
                         <div style="font-size:9px;color:#8791ab;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">{{ ct.rc.surpriseBarLbl }}</div>
                         <div dir="ltr" style="display:flex;height:20px;border-radius:6px;overflow:hidden;font-family:var(--fm);font-size:10px;font-weight:700;margin-bottom:2px"><div style="width:{{ ct.rc.surpriseDistH }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistH }}%</div><div style="width:{{ ct.rc.surpriseDistD }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistD }}%</div><div style="width:{{ ct.rc.surpriseDistA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistA }}%</div></div>
-                        <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9px;color:#6f7897;margin-bottom:6px"><span style="flex:{{ ct.rc.surpriseDistH }}">{{ homeWord }}</span><span style="flex:{{ ct.rc.surpriseDistD }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.rc.surpriseDistA }};text-align:right">{{ awayWord }}</span></div>
+                        <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9px;color:#79819e;margin-bottom:6px"><span style="flex:{{ ct.rc.surpriseDistH }}">{{ homeWord }}</span><span style="flex:{{ ct.rc.surpriseDistD }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.rc.surpriseDistA }};text-align:right">{{ awayWord }}</span></div>
                         <div style="font-size:11px;color:#c4c7d2;margin-bottom:6px">{{ ct.rc.surpriseNotlose }}</div>
                         <div style="display:{{ ct.rc.dispSurpriseVgap }};font-size:11px;color:#8ff0c0;margin-bottom:6px">{{ ct.rc.surpriseVgap }}</div>
                         <div style="font-size:10.5px;color:#8791ab;line-height:1.5">{{ ct.rc.surpriseNote1 }}</div>
@@ -498,28 +499,28 @@
                   <div style="position:relative">
                     <!-- L1 · chead: teams + when + flags -->
                     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:14px">
-                      <div><div style="font-size:17px;font-weight:800">{{ ct.home }} <span style="color:#6f7897;font-weight:600">{{ vsWord }}</span> {{ ct.away }}</div><div style="font-family:var(--fm);font-size:10px;color:#6f7897;margin-top:3px">{{ ct.time }}{{ ct.stageWordSep }}</div></div>
+                      <div><div style="font-size:17px;font-weight:800">{{ ct.home }} <span style="color:#79819e;font-weight:600">{{ vsWord }}</span> {{ ct.away }}</div><div style="font-family:var(--fm);font-size:10px;color:#79819e;margin-top:3px">{{ ct.time }}{{ ct.stageWordSep }}</div></div>
                       <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
                         <span style="display:{{ ct.flagDisp }};align-items:center;padding:4px 9px;border-radius:999px;font-family:var(--fm);font-size:10px;font-weight:700;color:{{ ct.flagColor }};background:{{ ct.flagBg }};border:1px solid {{ ct.flagBorder }};white-space:nowrap">{{ ct.flagText }}</span>
                         <span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-family:var(--fm);font-size:10.5px;font-weight:700;color:{{ ct.badgeColor }};background:{{ ct.badgeBg }};border:1px solid {{ ct.badgeBorder }};white-space:nowrap">{{ ct.badgeText }}</span>
                       </div>
                     </div>
                     <!-- L2 · engine barrow -->
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ engineWord }}<div style="font-size:8.5px;color:#6f7897;font-weight:500">{{ engSubWord }}</div></div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ engineWord }}<div style="font-size:8.5px;color:#79819e;font-weight:500">{{ engSubWord }}</div></div>
                       <div dir="ltr" style="flex:1;display:flex;height:26px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700">
                         <div style="width:{{ ct.ph }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;white-space:nowrap">{{ ct.home }}&#160;{{ ct.ph }}%</div>
                         <div style="width:{{ ct.pd }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.pd }}%</div>
                         <div style="width:{{ ct.engA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.away }}&#160;{{ ct.engA }}%</div>
                       </div></div>
                     <!-- L3 · market barrow (no-vig, real odds) -->
-                    <div style="display:{{ ct.mktDisp }};align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ marketWord }}<div style="font-size:8.5px;color:#6f7897;font-weight:500">{{ mktSubWord }}</div></div>
-                      <div dir="ltr" style="flex:1;display:flex;height:22px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700;opacity:.62">
+                    <div style="display:{{ ct.mktDisp }};align-items:center;gap:8px;margin-bottom:6px"><div style="width:48px;font-size:10px;color:#8791ab;font-weight:600">{{ marketWord }}<div style="font-size:8.5px;color:#79819e;font-weight:500">{{ mktSubWord }}</div></div>
+                      <div dir="ltr" style="flex:1;display:flex;height:22px;border-radius:7px;overflow:hidden;font-family:var(--fm);font-size:10.5px;font-weight:700;opacity:.78">
                         <div style="width:{{ ct.mktH }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;white-space:nowrap">{{ ct.home }}&#160;{{ ct.mktH }}%</div>
                         <div style="width:{{ ct.mktD }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.mktD }}%</div>
                         <div style="width:{{ ct.mktA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap">{{ ct.away }}&#160;{{ ct.mktA }}%</div>
                       </div></div>
                     <!-- L4 · axis -->
-                    <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9.5px;color:#6f7897;margin:0 0 10px 56px"><span style="flex:{{ ct.ph }}">{{ homeWord }}</span><span style="flex:{{ ct.pd }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.engA }};text-align:right">{{ awayWord }}</span></div>
+                    <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9.5px;color:#79819e;margin:0 0 10px 56px"><span style="flex:{{ ct.ph }}">{{ homeWord }}</span><span style="flex:{{ ct.pd }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.engA }};text-align:right">{{ awayWord }}</span></div>
                     <!-- L5 · pickline -->
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
                       <div style="font-size:13px;color:#c4c7d2">{{ ct.rc.callWord }}: <b style="color:#eef1f7">{{ ct.rc.pickTeam }}</b></div>
@@ -538,7 +539,7 @@
                         <div style="font-size:11px;color:#c4c7d2;margin-bottom:8px">{{ ct.rc.surpriseMeta }}</div>
                         <div style="font-size:9px;color:#8791ab;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">{{ ct.rc.surpriseBarLbl }}</div>
                         <div dir="ltr" style="display:flex;height:20px;border-radius:6px;overflow:hidden;font-family:var(--fm);font-size:10px;font-weight:700;margin-bottom:2px"><div style="width:{{ ct.rc.surpriseDistH }}%;background:#4a9eff;display:flex;align-items:center;justify-content:center;color:#041020;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistH }}%</div><div style="width:{{ ct.rc.surpriseDistD }}%;background:#a855f7;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistD }}%</div><div style="width:{{ ct.rc.surpriseDistA }}%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;white-space:nowrap">{{ ct.rc.surpriseDistA }}%</div></div>
-                        <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9px;color:#6f7897;margin-bottom:6px"><span style="flex:{{ ct.rc.surpriseDistH }}">{{ homeWord }}</span><span style="flex:{{ ct.rc.surpriseDistD }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.rc.surpriseDistA }};text-align:right">{{ awayWord }}</span></div>
+                        <div dir="ltr" style="display:flex;font-family:var(--fm);font-size:9px;color:#79819e;margin-bottom:6px"><span style="flex:{{ ct.rc.surpriseDistH }}">{{ homeWord }}</span><span style="flex:{{ ct.rc.surpriseDistD }};text-align:center">{{ drawWord }}</span><span style="flex:{{ ct.rc.surpriseDistA }};text-align:right">{{ awayWord }}</span></div>
                         <div style="font-size:11px;color:#c4c7d2;margin-bottom:6px">{{ ct.rc.surpriseNotlose }}</div>
                         <div style="display:{{ ct.rc.dispSurpriseVgap }};font-size:11px;color:#8ff0c0;margin-bottom:6px">{{ ct.rc.surpriseVgap }}</div>
                         <div style="font-size:10.5px;color:#8791ab;line-height:1.5">{{ ct.rc.surpriseNote1 }}</div>
@@ -610,16 +611,16 @@
                 </sc-if>
                 <sc-if value="{{ r.isMatch }}" hint-placeholder-val="{{ true }}">
                   <div style="display:flex;align-items:center;gap:11px;padding:8px 18px;border-top:1px solid rgba(255,255,255,0.05)" style-hover="background:rgba(255,255,255,0.03)">
-                    <span style="flex:0 0 26px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:#6f7897">{{ r.rank }}</span>
+                    <span style="flex:0 0 26px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:#79819e">{{ r.rank }}</span>
                     <span style="flex:0 0 auto;font-family:var(--fm);font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:{{ r.confBg }};color:{{ r.confColor }};white-space:nowrap">{{ r.confPct }}%</span>
-                    <span style="flex:1;min-width:0;font-size:13.5px;color:#eef1f7"><b style="font-weight:800">{{ r.team }}</b> <span style="color:#6f7897;font-weight:600;font-size:12.5px">{{ vsWord }} {{ r.opp }}</span></span>
+                    <span style="flex:1;min-width:0;font-size:13.5px;color:#eef1f7"><b style="font-weight:800">{{ r.team }}</b> <span style="color:#79819e;font-weight:600;font-size:12.5px">{{ vsWord }} {{ r.opp }}</span></span>
                     <span style="flex:0 0 auto;font-family:var(--fm);font-size:11.5px;color:#8791ab;font-weight:600;white-space:nowrap">{{ r.whenLabel }}</span>
                   </div>
                 </sc-if>
                 <sc-if value="{{ r.isPower }}" hint-placeholder-val="{{ true }}">
                   <div style="display:flex;align-items:center;gap:11px;padding:8px 18px;border-top:1px solid rgba(255,255,255,0.05)" style-hover="background:rgba(255,255,255,0.03)">
-                    <span style="flex:0 0 26px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:#6f7897">{{ r.rank }}</span>
-                    <span style="flex:1;min-width:0;font-size:13.5px;color:#eef1f7"><b style="font-weight:800">{{ r.team }}</b> <span style="color:#6f7897;font-weight:600;font-size:12px">{{ r.opp }}</span></span>
+                    <span style="flex:0 0 26px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:#79819e">{{ r.rank }}</span>
+                    <span style="flex:1;min-width:0;font-size:13.5px;color:#eef1f7"><b style="font-weight:800">{{ r.team }}</b> <span style="color:#79819e;font-weight:600;font-size:12px">{{ r.opp }}</span></span>
                     <span style="flex:0 0 auto;font-family:var(--fm);font-size:12.5px;font-weight:700;color:#5aa9ff;font-variant-numeric:tabular-nums">{{ r.elo }}</span>
                     <span style="flex:0 0 auto;font-family:var(--fm);font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:{{ r.trendBg }};color:{{ r.trendColor }};white-space:nowrap">{{ r.trendChip }}</span>
                   </div>
@@ -633,7 +634,7 @@
       <!-- ============ TAB: TRACK RECORD ============ -->
       <div style="display:{{ dispTrack }}">
         <div>
-          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#6f7897;font-weight:600;margin-bottom:16px">{{ validatedHead }}</div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#79819e;font-weight:600;margin-bottom:16px">{{ validatedHead }}</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px">
             <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
               <div style="position:relative;border-radius:18px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.08);overflow:hidden">
@@ -645,7 +646,7 @@
           </div>
 
           <!-- Live tournament hit-rates (fire/scale/caution/CLV) -->
-          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#6f7897;font-weight:600;margin-bottom:14px">{{ trackKpisHead }}</div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#79819e;font-weight:600;margin-bottom:14px">{{ trackKpisHead }}</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:26px">
             <sc-for list="{{ trackKpis }}" as="tk" hint-placeholder-count="4">
               <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">
@@ -677,7 +678,7 @@
               <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1">{{ integrity.brier }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ brierLabel }}</div></div>
               <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1;color:#35e39a">{{ integrity.hit }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ hitLabel }}</div></div>
             </div>
-            <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:12px">{{ clvSegHead }}</div>
+            <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#79819e;margin-bottom:12px">{{ clvSegHead }}</div>
             <div dir="ltr" style="display:flex;flex-direction:column;gap:11px">
               <sc-for list="{{ clvSeg }}" as="s" hint-placeholder-count="4">
                 <div style="display:flex;align-items:center;gap:14px">
@@ -706,7 +707,7 @@
             <div style="border-radius:20px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
                 <div style="font-size:16px;font-weight:700">{{ clvTitle }}</div>
-                <div style="font-family:var(--fm);font-size:20px;font-weight:800;color:#35e39a">{{ clvFinalStr }} <span style="font-size:12px;color:#6f7897">pts</span></div>
+                <div style="font-family:var(--fm);font-size:20px;font-weight:800;color:#35e39a">{{ clvFinalStr }} <span style="font-size:12px;color:#79819e">pts</span></div>
               </div>
               <svg viewBox="0 0 520 200" style="width:100%;height:auto">
                 <defs><linearGradient id="clvfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(53,227,154,0.35)"></stop><stop offset="1" stop-color="rgba(53,227,154,0)"></stop></linearGradient></defs>
@@ -716,7 +717,7 @@
                 <circle cx="{{ clv.dotX }}" cy="{{ clv.dotY }}" r="6" fill="#35e39a"></circle>
                 <circle cx="{{ clv.dotX }}" cy="{{ clv.dotY }}" r="11" fill="none" stroke="#35e39a" stroke-width="2" opacity="0.5"></circle>
               </svg>
-              <div style="font-size:12px;color:#6f7897;margin-top:10px">{{ clvSub }}</div>
+              <div style="font-size:12px;color:#79819e;margin-top:10px">{{ clvSub }}</div>
             </div>
             <!-- stage accuracy -->
             <div style="border-radius:20px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
@@ -728,13 +729,13 @@
           </div>
           <div style="border-radius:20px;padding:24px;margin-top:20px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
             <div style="font-size:16px;font-weight:700;margin-bottom:4px">{{ calTitle }}</div>
-            <div style="font-size:12px;color:#6f7897;margin-bottom:18px">{{ calSub }}</div>
+            <div style="font-size:12px;color:#79819e;margin-bottom:18px">{{ calSub }}</div>
             <div style="display:flex;gap:30px;align-items:center;flex-wrap:wrap">
               <svg viewBox="-16 -16 332 256" style="width:100%;max-width:320px;height:auto">
                 <line x1="0" y1="220" x2="300" y2="220" stroke="rgba(255,255,255,0.14)" stroke-width="1"></line>
                 <line x1="0" y1="0" x2="0" y2="220" stroke="rgba(255,255,255,0.14)" stroke-width="1"></line>
                 <path d="{{ cal.diag }}" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="5 5"></path>
-                <text x="150" y="246" text-anchor="middle" style="font:600 11px var(--fm);fill:#6f7897">{{ predAxis }}</text>
+                <text x="150" y="246" text-anchor="middle" style="font:600 11px var(--fm);fill:#79819e">{{ predAxis }}</text>
               </svg>
               <div style="display:flex;flex-direction:column;gap:12px;min-width:180px">
                 <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#aeb4c8"><span style="width:20px;height:0;border-top:2px dashed rgba(255,255,255,0.6);display:inline-block"></span>{{ perfectLabel }}</div>
@@ -750,7 +751,7 @@
         <!-- Full guide, restored from the live dashboard modal — injected as raw HTML by _syncGuide().
              The old annotated-example (howRows) bullets were removed: How shows ONLY the full guide. -->
         <div style="border-radius:20px;padding:8px 30px 22px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
-          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin:16px 0 2px">{{ guideLabel }}</div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#79819e;margin:16px 0 2px">{{ guideLabel }}</div>
           <div class="guide" data-wc-guide></div>
         </div>
       </div>
@@ -818,8 +819,8 @@
 
 
     <div style="margin-top:44px;padding-top:22px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
-      <div style="font-size:12.5px;color:#6f7897">{{ disclaimer }} · <span onClick="{{ onOpenPrivacy }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;color:#8fc4ff;text-decoration:underline">{{ privacyOpenLabel }}</span></div>
-      <div style="font-family:var(--fm);font-size:11px;color:#4f566e;letter-spacing:1px">PREDICTION ENGINES · 2026</div>
+      <div style="font-size:12.5px;color:#79819e">{{ disclaimer }} · <span onClick="{{ onOpenPrivacy }}" tabindex="0" role="button" onKeyDown="{{ onKey }}" style="cursor:pointer;color:#8fc4ff;text-decoration:underline">{{ privacyOpenLabel }}</span></div>
+      <div style="font-family:var(--fm);font-size:11px;color:#767b8e;letter-spacing:1px">PREDICTION ENGINES · 2026</div>
     </div>
 
   </div>
@@ -845,5 +846,6 @@
 </script>
 <script src="../assets/dc-mini.js"></script>
 <script src="./app.js"></script>
+<script src="../assets/bidi.js"></script>   <!-- minus sign in RTL (KNOWN_DEFECTS 89) -->
 </body>
 </html>

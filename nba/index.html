@@ -52,6 +52,7 @@
     [style*="max-width: 560px"],[style*="max-width: 440px"]{max-width:100%!important}
   }
 </style>
+<link rel="stylesheet" href="../assets/a11y.css">   <!-- tap targets (KNOWN_DEFECTS 92) -->
 </head>
 <body>
 <div id="dc-root"></div>
@@ -64,7 +65,7 @@
       <div style="display:flex;align-items:center;gap:13px">
         <div style="width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#f5b23d,#ff8a4c);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 26px rgba(245,178,61,0.45)">🏀</div>
         <div>
-          <div style="font-family:var(--fm);font-size:11px;letter-spacing:3px;color:#6f7897;text-transform:uppercase">NBA · A+ PREDICTION ENGINE</div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:3px;color:#79819e;text-transform:uppercase">NBA · A+ PREDICTION ENGINE</div>
           <div style="font-size:19px;font-weight:800;letter-spacing:-.4px">{{ brand }}</div>
         </div>
       </div>
@@ -89,7 +90,7 @@
           <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="3">
             <div>
               <div style="font-family:var(--fm);font-size:26px;font-weight:800;color:{{ s.color }};line-height:1">{{ s.v }}</div>
-              <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-top:4px">{{ s.k }}</div>
+              <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#79819e;margin-top:4px">{{ s.k }}</div>
             </div>
           </sc-for>
         </div>
@@ -125,7 +126,7 @@
                 </div>
                 <div style="font-size:14px;color:#9aa2ba;margin-bottom:20px;max-width:400px;line-height:1.6">{{ feat.blurb }}</div>
                 <div style="margin-bottom:22px;max-width:400px">
-                  <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:10px">{{ driversHead }}</div>
+                  <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#79819e;margin-bottom:10px">{{ driversHead }}</div>
                   <div style="display:flex;flex-direction:column;gap:8px">
                     <sc-for list="{{ drivers }}" as="d" hint-placeholder-count="3">
                       <div style="display:flex;align-items:center;gap:10px">
@@ -137,11 +138,11 @@
                   </div>
                 </div>
                 <div style="display:flex;gap:22px;flex-wrap:wrap">
-                  <sc-if value="{{ featEdgeShow }}" hint-placeholder-val="{{ false }}"><div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">{{ edgeLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#35e39a;line-height:.9"><span data-count-target="{{ featEdgeTarget }}" data-count-prefix="{{ featEdgePrefix }}" data-count-suffix="%">{{ featEdge }}</span></div></div></sc-if>
+                  <sc-if value="{{ featEdgeShow }}" hint-placeholder-val="{{ false }}"><div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#79819e;margin-bottom:5px">{{ edgeLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#35e39a;line-height:.9"><span data-count-target="{{ featEdgeTarget }}" data-count-prefix="{{ featEdgePrefix }}" data-count-suffix="%">{{ featEdge }}</span></div></div></sc-if>
                   <!-- lambda "expected points" cell removed 2026-10-11: it came from the rankings cube, not the totals model -->
 
                   <sc-if value="{{ featSepShow }}" hint-placeholder-val="{{ false }}"><div style="width:1px;background:rgba(255,255,255,0.12)"></div></sc-if>
-                  <sc-if value="{{ featStageShow }}" hint-placeholder-val="{{ false }}"><div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:5px">{{ stageLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#eef1f7;line-height:.9">{{ feat.stage }}</div></div></sc-if>
+                  <sc-if value="{{ featStageShow }}" hint-placeholder-val="{{ false }}"><div><div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#79819e;margin-bottom:5px">{{ stageLabel }}</div><div style="font-family:var(--fm);font-size:34px;font-weight:800;color:#eef1f7;line-height:.9">{{ feat.stage }}</div></div></sc-if>
                 </div>
               </div>
               <div style="display:flex;flex-direction:column;align-items:center;justify-content:center">
@@ -182,7 +183,7 @@
                 <div style="position:absolute;inset:0;opacity:{{ t.glowOpacity }};background:radial-gradient(360px 160px at 82% -10%, {{ t.glow }}, transparent 70%);pointer-events:none"></div>
                 <div style="position:relative">
                   <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:18px">
-                    <div style="min-width:0;flex:1"><div style="font-size:19px;font-weight:800;letter-spacing:-.2px;white-space:nowrap">{{ t.away }} <span style="color:#6f7897">@</span> {{ t.home }}</div><div style="font-size:11px;color:#8791ab;margin-top:5px;line-height:1.5">{{ homeWord }}: <b style="color:#c4c7d2">{{ t.home }}</b> · {{ awayWord }}: <b style="color:#c4c7d2">{{ t.away }}</b> <span style="font-family:var(--fm);color:#6f7897">· {{ t.time }}</span></div></div>
+                    <div style="min-width:0;flex:1"><div style="font-size:19px;font-weight:800;letter-spacing:-.2px;white-space:nowrap">{{ t.away }} <span style="color:#79819e">@</span> {{ t.home }}</div><div style="font-size:11px;color:#8791ab;margin-top:5px;line-height:1.5">{{ homeWord }}: <b style="color:#c4c7d2">{{ t.home }}</b> · {{ awayWord }}: <b style="color:#c4c7d2">{{ t.away }}</b> <span style="font-family:var(--fm);color:#79819e">· {{ t.time }}</span></div></div>
                     <span style="display:{{ t.badgeDisp }};align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-family:var(--fm);font-size:11px;font-weight:700;color:{{ t.badgeColor }};background:{{ t.badgeBg }};border:1px solid {{ t.badgeBorder }};white-space:nowrap">{{ t.badgeText }}</span>
                   </div>
                   <div dir="ltr" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
@@ -195,7 +196,7 @@
                     </div>
                     <div style="display:{{ t.mktDisp }};align-items:center;gap:11px">
                       <div style="width:52px;font-size:11px;color:#8791ab;font-weight:600">{{ marketWord }}</div>
-                      <div style="flex:1;display:flex;height:30px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:12px;font-weight:700;opacity:.62">
+                      <div style="flex:1;display:flex;height:30px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:12px;font-weight:700;opacity:.78">
                         <div style="width:{{ t.mktH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c">{{ t.home }}&#160;{{ t.mktH }}%</div>
                         <div style="width:{{ t.mktA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020">{{ t.away }}&#160;{{ t.mktA }}%</div>
                       </div>
@@ -223,7 +224,7 @@
                       <div style="white-space:nowrap">
                         <div style="font-size:14px;font-weight:600">🏆 {{ callWord }} <b style="font-weight:800">{{ t.favCode }}</b></div>
                         <!-- 9-stage badge with name -->
-                        <div style="font-family:var(--fm);font-size:11px;color:#6f7897;margin-top:2px">{{ t.stageLine }} <span style="color:#f5b23d">{{ t.stgName }}</span></div>
+                        <div style="font-family:var(--fm);font-size:11px;color:#79819e;margin-top:2px">{{ t.stageLine }} <span style="color:#f5b23d">{{ t.stgName }}</span></div>
                       </div>
                     </div>
                     <div style="text-align:end">
@@ -236,7 +237,7 @@
                   <div style="display:{{ t.totDisp }};font-size:12px;color:#9aa2ba;line-height:1.5;margin-top:10px">{{ t.totLine }}</div>
                   <div style="display:{{ t.detailDisp }};margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.07)">
                     <div style="font-family:var(--fm);font-size:12px;color:#8791ab;margin-bottom:12px">λ = {{ t.lambda }} {{ runsWord }} · 🔒 {{ lineWord }} {{ t.line }}</div>
-                    <div style="border-inline-start:3px solid #f5b23d;background:rgba(245,178,61,0.08);border-radius:8px;padding:10px 13px;margin-bottom:14px"><div style="font-size:12.5px;color:#f3d29a">🛌 {{ starterPrefix }} {{ t.starterAway }} · {{ t.starterHome }}</div><div style="font-family:var(--fm);font-size:11px;color:#7d8294;margin-top:4px">Elo {{ t.elo }}</div></div>
+                    <div style="border-inline-start:3px solid #f5b23d;background:rgba(245,178,61,0.08);border-radius:8px;padding:10px 13px;margin-bottom:14px"><div style="font-size:12.5px;color:#f3d29a">🛌 {{ starterPrefix }} {{ t.starterAway }} · {{ t.starterHome }}</div><div style="font-family:var(--fm);font-size:11px;color:#898d9e;margin-top:4px">Elo {{ t.elo }}</div></div>
                     <div dir="ltr" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
                       <div style="display:flex;align-items:center;gap:10px"><div style="width:54px;font-size:11px;color:#8791ab">{{ engineWord }}</div><div style="flex:1;display:flex;height:28px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:11px;font-weight:700"><div style="width:{{ t.engOver }}%;background:#35e39a;display:flex;align-items:center;justify-content:center;color:#062012">{{ overWord }}&#160;{{ t.engOver }}%</div><div style="width:{{ t.engUnder }}%;background:#f5b23d;display:flex;align-items:center;justify-content:center;color:#241a06">{{ underWord }}&#160;{{ t.engUnder }}%</div></div></div>
                       <div style="display:{{ t.mktOverDisp }};align-items:center;gap:10px"><div style="width:54px;font-size:11px;color:#8791ab">{{ marketWord }}</div><div style="flex:1;display:flex;height:28px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:11px;font-weight:700;opacity:.72"><div style="width:{{ t.mktOver }}%;background:#35e39a;display:flex;align-items:center;justify-content:center;color:#062012">{{ overWord }}&#160;{{ t.mktOver }}%</div><div style="width:{{ t.mktUnder }}%;background:#f5b23d;display:flex;align-items:center;justify-content:center;color:#241a06">{{ underWord }}&#160;{{ t.mktUnder }}%</div></div></div>
@@ -270,7 +271,7 @@
       <!-- ============ TAB: RESULTS / HISTORY ============ -->
       <div style="display:{{ dispResults }}">
         <div>
-          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin-bottom:14px">{{ resultsHead }}</div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#79819e;margin-bottom:14px">{{ resultsHead }}</div>
           <!-- Date nav pills -->
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
             <sc-for list="{{ resultsData.datePills }}" as="dp" hint-placeholder-count="7">
@@ -280,12 +281,12 @@
           <!-- Games for selected date -->
           <sc-if value="{{ resultsData.hasGames }}">
             <div>
-              <div style="font-family:var(--fm);font-size:11px;color:#6f7897;margin-bottom:14px">{{ resultsData.summaryLabel }}</div>
+              <div style="font-family:var(--fm);font-size:11px;color:#79819e;margin-bottom:14px">{{ resultsData.summaryLabel }}</div>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
                 <sc-for list="{{ resultsData.gameCards }}" as="gc" hint-placeholder-count="4">
                   <div style="border-radius:16px;padding:18px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-                      <div style="font-size:15px;font-weight:800">{{ gc.home }} <span style="color:#6f7897;font-size:13px">vs</span> {{ gc.away }}</div>
+                      <div style="font-size:15px;font-weight:800">{{ gc.home }} <span style="color:#79819e;font-size:13px">vs</span> {{ gc.away }}</div>
                       <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-family:var(--fm);font-size:11px;font-weight:700;color:{{ gc.outcomeColor }};background:{{ gc.outcomeBg }};border:1px solid {{ gc.outcomeBorder }}">{{ gc.outcomeIcon }} {{ gc.outcomeLabel }}</span>
                     </div>
                     <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:#eef1f7;margin-bottom:8px">{{ gc.score }}</div>
@@ -296,7 +297,7 @@
             </div>
           </sc-if>
           <sc-if value="{{ !resultsData.hasGames }}">
-            <div style="text-align:center;padding:40px 24px;color:#6f7897;font-size:14px">{{ resultsData.emptyMsg }}</div>
+            <div style="text-align:center;padding:40px 24px;color:#79819e;font-size:14px">{{ resultsData.emptyMsg }}</div>
           </sc-if>
         </div>
       </div>
@@ -330,11 +331,11 @@
                   </sc-if>
                   <sc-if value="{{ rr.isRow }}">
                     <div style="display:flex;align-items:center;gap:11px;padding:8px 18px;border-top:1px solid rgba(255,255,255,0.05)" style-hover="background:rgba(255,255,255,0.03)">
-                      <span style="flex:0 0 28px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:#6f7897">{{ rr.rank }}</span>
+                      <span style="flex:0 0 28px;text-align:end;font-family:var(--fm);font-size:13px;font-weight:700;color:#79819e">{{ rr.rank }}</span>
                       <span style="flex:1;min-width:0;font-size:13.5px;font-weight:800;color:{{ rr.tierColor }}">{{ rr.team }}</span>
                       <span style="flex:0 0 auto;font-family:var(--fm);font-size:12.5px;font-weight:700;color:#eef1f7;white-space:nowrap">{{ rr.cV1 }}</span>
                       <span style="flex:0 0 auto;font-family:var(--fm);font-size:12px;color:#8791ab;white-space:nowrap">{{ rr.cV2 }}</span>
-                      <span style="flex:0 0 auto;font-family:var(--fm);font-size:11px;color:#6f7897;white-space:nowrap">{{ rr.cV3 }}</span>
+                      <span style="flex:0 0 auto;font-family:var(--fm);font-size:11px;color:#79819e;white-space:nowrap">{{ rr.cV3 }}</span>
                     </div>
                   </sc-if>
                 </div>
@@ -347,7 +348,7 @@
       <!-- ============ TAB: TRACK RECORD ============ -->
       <div style="display:{{ dispTrack }}">
         <div>
-          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#6f7897;font-weight:600;margin-bottom:16px">{{ validatedHead }}</div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2.5px;color:#79819e;font-weight:600;margin-bottom:16px">{{ validatedHead }}</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px">
             <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
               <div style="position:relative;border-radius:18px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.08);overflow:hidden">
@@ -369,7 +370,7 @@
               <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1">{{ integrity.brier }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ brierLabel }}</div></div>
               <div style="border-radius:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)"><div style="font-family:var(--fm);font-size:26px;font-weight:800;line-height:1;color:#35e39a">{{ integrity.hit }}</div><div style="font-size:11px;color:#8791ab;margin-top:6px">{{ hitLabel }}</div></div>
             </div>
-            <div style="display:{{ dispClvSegHead }};font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6f7897;margin-bottom:12px">{{ clvSegHead }}</div>
+            <div style="display:{{ dispClvSegHead }};font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#79819e;margin-bottom:12px">{{ clvSegHead }}</div>
             <div dir="ltr" style="display:{{ dispClvSeg }};flex-direction:column;gap:11px">
               <sc-for list="{{ clvSeg }}" as="s" hint-placeholder-count="4">
                 <div style="display:flex;align-items:center;gap:14px">
@@ -399,7 +400,7 @@
             <div style="border-radius:20px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
                 <div style="font-size:16px;font-weight:700">{{ clvTitle }}</div>
-                <div style="font-family:var(--fm);font-size:20px;font-weight:800;color:#35e39a">{{ clvFinalStr }} <span style="font-size:12px;color:#6f7897">pts</span></div>
+                <div style="font-family:var(--fm);font-size:20px;font-weight:800;color:#35e39a">{{ clvFinalStr }} <span style="font-size:12px;color:#79819e">pts</span></div>
               </div>
               <svg viewBox="0 0 520 200" style="width:100%;height:auto">
                 <defs><linearGradient id="clvfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(53,227,154,0.35)"></stop><stop offset="1" stop-color="rgba(53,227,154,0)"></stop></linearGradient></defs>
@@ -409,7 +410,7 @@
                 <circle cx="{{ clv.dotX }}" cy="{{ clv.dotY }}" r="6" fill="#35e39a"></circle>
                 <circle cx="{{ clv.dotX }}" cy="{{ clv.dotY }}" r="11" fill="none" stroke="#35e39a" stroke-width="2" opacity="0.5"></circle>
               </svg>
-              <div style="font-size:12px;color:#6f7897;margin-top:10px">{{ clvSub }}</div>
+              <div style="font-size:12px;color:#79819e;margin-top:10px">{{ clvSub }}</div>
             </div>
             <!-- stage accuracy -->
             <div style="border-radius:20px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
@@ -418,14 +419,14 @@
                 <span style="font-size:18px;flex-shrink:0;margin-top:1px">📋</span>
                 <div style="font-size:13px;color:#8791ab;line-height:1.6">{{ stageNote }}</div>
               </div>
-              <div style="font-size:12px;color:#6f7897;margin-top:16px;line-height:1.5">{{ stageSub }}</div>
+              <div style="font-size:12px;color:#79819e;margin-top:16px;line-height:1.5">{{ stageSub }}</div>
             </div>
           </div>
 
           <!-- CALIBRATION: real 4-band bars from engine -->
           <div style="border-radius:20px;padding:24px;margin-top:20px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
             <div style="font-size:16px;font-weight:700;margin-bottom:4px">{{ calTitle }}</div>
-            <div style="font-size:12px;color:#6f7897;margin-bottom:20px">{{ calSub }}</div>
+            <div style="font-size:12px;color:#79819e;margin-bottom:20px">{{ calSub }}</div>
             <sc-if value="{{ calData.noData }}">
               <div style="font-size:13px;color:#8791ab;padding:14px;border-radius:9px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">{{ stageNote }}</div>
             </sc-if>
@@ -435,14 +436,14 @@
                   <div>
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
                       <span style="font-family:var(--fm);font-size:11px;color:#8791ab">{{ calPredLabel }} {{ cb.band }}</span>
-                      <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:{{ cb.color }}">{{ calActLabel }} {{ cb.actual }}% <span style="color:#6f7897;font-weight:400">({{ calSampleLabel }} {{ cb.nFormatted }})</span></span>
+                      <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:{{ cb.color }}">{{ calActLabel }} {{ cb.actual }}% <span style="color:#79819e;font-weight:400">({{ calSampleLabel }} {{ cb.nFormatted }})</span></span>
                     </div>
                     <div style="height:8px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden">
                       <div style="height:100%;border-radius:4px;background:{{ cb.color }};width:{{ cb.barW }}px;max-width:100%;opacity:0.85"></div>
                     </div>
                   </div>
                 </sc-for>
-                <div style="font-size:12px;color:#6f7897;margin-top:4px">{{ calFoot }}</div>
+                <div style="font-size:12px;color:#79819e;margin-top:4px">{{ calFoot }}</div>
               </div>
             </sc-if>
           </div>
@@ -454,7 +455,7 @@
         <!-- Full guide, restored from the live NBA dashboard modal — injected as raw HTML by _syncGuide().
              Bilingual (l-he/l-en toggled via data-glang). Old summary bullets removed. -->
         <div style="border-radius:20px;padding:8px 30px 24px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08)">
-          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6f7897;margin:16px 0 6px">{{ guideLabel }}</div>
+          <div style="font-family:var(--fm);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#79819e;margin:16px 0 6px">{{ guideLabel }}</div>
           <div class="ngd" data-nba-guide></div>
         </div>
       </div>
@@ -525,8 +526,8 @@
 
 
     <div style="margin-top:44px;padding-top:22px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
-      <div style="font-size:12.5px;color:#6f7897">{{ disclaimer }}</div>
-      <div style="font-family:var(--fm);font-size:11px;color:#4f566e;letter-spacing:1px">PREDICTION ENGINES · 2026</div>
+      <div style="font-size:12.5px;color:#79819e">{{ disclaimer }}</div>
+      <div style="font-family:var(--fm);font-size:11px;color:#767b8e;letter-spacing:1px">PREDICTION ENGINES · 2026</div>
     </div>
 
   </div>
@@ -535,5 +536,6 @@
 </script>
 <script src="../assets/dc-mini.js"></script>
 <script src="./app.js"></script>
+<script src="../assets/bidi.js"></script>   <!-- minus sign in RTL (KNOWN_DEFECTS 89) -->
 </body>
 </html>

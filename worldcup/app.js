@@ -257,7 +257,7 @@ function signedVal(v,d){const n=Number(v); if(v===null||v===undefined||v===''||!
 class Component extends DCLogic {
   state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'power', signalSub: 'upcoming', openTile: null, showPrivacy: false };
 
-  componentDidMount() { this.runCountUp(); this.ensureThree(); this.ensureChart(); this._initOpenTile(); this._syncDateSelect(); this._syncGuide(); }
+  componentDidMount() { this.runCountUp(); this._deferThree(); this.ensureChart(); this._initOpenTile(); this._syncDateSelect(); this._syncGuide(); }
   componentDidUpdate(prevProps, prevState) { this.runCountUp(); this.ensureChart(); this._syncDateSelect(); this._syncGuide(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
   // Populate the date <select> with real <option> children after each render.
   // (dc-mini can't loop <sc-for> inside <select> — the HTML parser ejects it — so we inject here.)
@@ -341,6 +341,20 @@ class Component extends DCLogic {
       if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
+  }
+
+  // three.js (the hero's 3D, about 260 KB over the wire) starts after the first contentful paint, when the main thread
+  // is idle (at most 2.5 s later), so it never competes with the page's own content. The final page is the same.
+  // ensureThree runs once (_threeStarted), so the 3 s fallback cannot start it twice.
+  _deferThree() {
+    const go = () => { if (!this._dead) this.ensureThree(); };
+    const idle = () => (window.requestIdleCallback ? requestIdleCallback(go, { timeout: 2500 }) : setTimeout(go, 300));
+    try {
+      if (performance.getEntriesByName('first-contentful-paint').length) return idle();
+      const po = new PerformanceObserver(l => { if (l.getEntriesByName('first-contentful-paint').length) { po.disconnect(); idle(); } });
+      po.observe({ type: 'paint', buffered: true });
+      setTimeout(() => { try { po.disconnect(); } catch (e) {} idle(); }, 3000);
+    } catch (e) { idle(); }
   }
 
   async ensureThree() {

@@ -101,7 +101,7 @@ class Component extends DCLogic {
     showPrivacy: false,        // disclaimer & privacy modal
   };
 
-  componentDidMount() { this.runCountUp(); this.ensureThree(); this.ensureChart(); this._syncGuide(); this._syncDateSelect(); }
+  componentDidMount() { this.runCountUp(); this._deferThree(); this.ensureChart(); this._syncGuide(); this._syncDateSelect(); }
   // Inject the full How-it-works guide (bilingual HTML) — dc-mini escapes text, so inject here.
   _syncGuide() {
     const el = document.querySelector('#dc-root [data-tennis-guide]');
@@ -182,6 +182,20 @@ class Component extends DCLogic {
       if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
+  }
+
+  // three.js (the hero's 3D, about 260 KB over the wire) starts after the first contentful paint, when the main thread
+  // is idle (at most 2.5 s later), so it never competes with the page's own content. The final page is the same.
+  // ensureThree runs once (_threeStarted), so the 3 s fallback cannot start it twice.
+  _deferThree() {
+    const go = () => { if (!this._dead) this.ensureThree(); };
+    const idle = () => (window.requestIdleCallback ? requestIdleCallback(go, { timeout: 2500 }) : setTimeout(go, 300));
+    try {
+      if (performance.getEntriesByName('first-contentful-paint').length) return idle();
+      const po = new PerformanceObserver(l => { if (l.getEntriesByName('first-contentful-paint').length) { po.disconnect(); idle(); } });
+      po.observe({ type: 'paint', buffered: true });
+      setTimeout(() => { try { po.disconnect(); } catch (e) {} idle(); }, 3000);
+    } catch (e) { idle(); }
   }
 
   async ensureThree() {
