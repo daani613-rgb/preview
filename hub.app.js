@@ -1,6 +1,6 @@
 /* hub portal */
 class Component extends DCLogic {
-  state = { lang: 'en', st: {} };
+  state = { lang: 'en', st: {}, calls: {} };
 
   // Status from data: the date of each engine's latest real game data, read from the payload it
   // publishes (line 2 of <sport>/app.js = window.REAL). Within 7 days -> in season, else between seasons.
@@ -13,13 +13,21 @@ class Component extends DCLogic {
       nfl: R => (R.games || []).filter(g => g.played).map(g => g.date),
       tennis: R => (R.games || []).filter(g => g.played).map(g => String(g.date).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3')),
     };
+    // an open call on the engine's current slate, read from its own payload (no call: false; unreadable: false)
+    const hasCall = {
+      nfl: R => R.feat != null,
+      nba: R => !!(R.feat && R.feat.kind === 'today'),
+      mlb: R => (R.tiles || []).some(t => t.state === 'aplus'),
+      tennis: R => !!(R.feat && R.feat.open === true),
+      worldcup: R => !!(R.feat && Object.keys(R.feat).length) && !(R.matches || []).every(m => m.decided),
+    };
     Object.keys(pick).forEach(sp => {
       fetch(`./${sp}/app.js`, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject(r.status)).then(txt => {
         const line = txt.split('\n')[1] || '';
         const R = JSON.parse(line.slice(line.indexOf('=') + 1).trim().replace(/;$/, ''));
         const ds = pick[sp](R).filter(x => /^\d{4}-\d{2}-\d{2}/.test(String(x))).map(x => String(x).slice(0, 10)).sort();
-        this.setState(s => ({ st: { ...s.st, [sp]: ds.length ? ds[ds.length - 1] : null } }));
-      }).catch(() => { this.setState(s => ({ st: { ...s.st, [sp]: null } })); });
+        this.setState(s => ({ st: { ...s.st, [sp]: ds.length ? ds[ds.length - 1] : null }, calls: { ...s.calls, [sp]: hasCall[sp](R) } }));
+      }).catch(() => { this.setState(s => ({ st: { ...s.st, [sp]: null }, calls: { ...s.calls, [sp]: false } })); });
     });
   }
 
@@ -263,7 +271,17 @@ class Component extends DCLogic {
     return {
       ...d,
       engines,
-      goLive: () => { window.location.href = './worldcup/'; },
+      // "today's calls" goes to an engine that has an open call now; with none, the button says so and shows the engines
+      ...(() => {
+        const order = ['nfl', 'mlb', 'nba', 'tennis', 'worldcup'];
+        const known = order.every(sp => sp in this.state.calls);
+        const first = order.find(sp => this.state.calls[sp]);
+        const toEngines = () => { const el = document.getElementById('engines-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+        return {
+          cta1: first ? d.cta1 : (known ? (this.state.lang === 'he' ? 'אין קריאות פתוחות היום' : 'No open calls today') : d.cta1),
+          goLive: first ? () => { window.location.href = './' + first + '/'; } : toEngines,
+        };
+      })(),
       goGuide: () => { const el = document.getElementById('engines-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
       onKey: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } },
       otherLang: this.state.lang === 'he' ? 'EN' : 'עב',
