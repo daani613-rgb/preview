@@ -263,6 +263,10 @@ class Component extends DCLogic {
     const backtestHe = `בדיקה לאחור, walk-forward. עונות מבחן ${TS[0]} עד ${TS[1]}, ${intS(HO.games)} משחקים. היסטוריית הדירוגים בשרשרת: ${CH[0]} עד ${CH[1]}. כללי ${pctS(HO.overall)}, A+ ${pctS(HO.aplus)} על ${intS(HO.aplus_n)} קריאות (${pctS(HO.aplus_pct)}). חושב ${hoStamp}.`;
     const liveEn = `Live A+ calls, ${dash(LR.season)} season (${dEn(LR.from)} to ${dEn(LR.to)}): ${dash(LR.correct)} of ${dash(LR.calls)} correct. Recorded before first pitch. ${dash(LR.voided)} calls voided and excluded. Too few calls to state a percentage.${(LR.chains || []).length > 1 ? ' This record spans two rating chains: calls before 2024 and 2025 were added to the ratings, and calls after. The two are counted together here.' : ''}`;
     const liveHe = `קריאות A+ חיות, עונת ${dash(LR.season)} (${dHe(LR.from)} עד ${dHe(LR.to)}): ${dash(LR.correct)} מתוך ${dash(LR.calls)} נכונות. נרשמו לפני המשחק. ${dash(LR.voided)} קריאות נפסלו והוצאו. מעט מדי קריאות כדי לנקוב באחוז.${(LR.chains || []).length > 1 ? ' השיא הזה מורכב משתי שרשראות דירוג: קריאות מלפני שנוספו 2024 ו-2025 לדירוגים, וקריאות מאחרי. השתיים נספרות כאן יחד.' : ''}`;
+    // Gap counter (baseball-engine gaps_check.py): decided games with no frozen pre-game record. No payload, no sentence.
+    const GP = R0.gaps || null;
+    const gapEn = (GP && isNum(GP.n)) ? ` Decided games with no frozen pre-game record: ${GP.n} of ${intS(GP.decided)} since ${dEn(GP.from)}.` : '';
+    const gapHe = (GP && isNum(GP.n)) ? ` משחקים שהוכרעו בלי רשומה קפואה מלפני המשחק: ${GP.n} מתוך ${intS(GP.decided)} מאז ${dHe(GP.from)}.` : '';
     const kNum = v => isNum(v) ? v : '';           // count-up target: empty (no animation) when missing
     const kDisp = (v, dec) => isNum(v) ? v.toFixed(dec) : '—';
     const FT = R0.feat || {};
@@ -288,7 +292,7 @@ class Component extends DCLogic {
       signalKicker: kickEn, edgeLabel: 'Edge vs market', runsLabel: 'expected runs', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'HIGH', underWord: 'LOW', homeWord: 'Home', awayWord: 'Away', starterPrefix: 'starter-aware:',
       validatedHead: 'BACKTEST ACCURACY · HOLDOUT', backtestText: backtestEn,
-      sepLabel: 'Live record is not the backtest', liveHead: 'LIVE RECORD', liveText: liveEn,
+      sepLabel: 'Live record is not the backtest', liveHead: 'LIVE RECORD', liveText: liveEn + gapEn,
       guideNote: 'Example values, illustration only',
       clvTitle: 'Totals CLV, running average', clvSub: `${clvTextEn} No-vig, vs the closing line. ${dash(CV.pos)} of ${clvN} games positive.`,
       calTitle: 'Calibration', calSub: 'Predicted vs observed. The calibration curve is not part of this live feed.',
@@ -354,7 +358,7 @@ class Component extends DCLogic {
       signalKicker: kickHe, edgeLabel: 'Edge מול השוק', runsLabel: 'ריצות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ', starterPrefix: 'מודע-פותח:',
       validatedHead: 'דיוק בבדיקה לאחור · HOLDOUT', backtestText: backtestHe,
-      sepLabel: 'השיא החי אינו הבדיקה לאחור', liveHead: 'שיא חי', liveText: liveHe,
+      sepLabel: 'השיא החי אינו הבדיקה לאחור', liveHead: 'שיא חי', liveText: liveHe + gapHe,
       guideNote: 'ערכים לדוגמה, להמחשה בלבד',
       clvTitle: 'CLV טוטאלים, ממוצע מצטבר', clvSub: `${clvTextHe} ללא vig, מול קו הסגירה. ${dash(CV.pos)} מתוך ${clvN} משחקים חיוביים.`,
       calTitle: 'כיול (Calibration)', calSub: 'חזוי מול נצפה. עקומת הכיול אינה חלק מהפיד החי הזה.',
