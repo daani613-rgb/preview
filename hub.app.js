@@ -1,4 +1,8 @@
 /* hub portal */
+// dates: dd.mm, with a year dd.mm.yyyy, cut from the text (YYYY-MM-DD or YYYYMMDD), so the day shown is the day
+// written and never moves with a time zone (STOP2_PREREGISTER.md)
+const __DM = (s, withYear) => { const m = String(s || '').match(/(\d{4})-?(\d{2})-?(\d{2})/); return m ? (m[3] + '.' + m[2] + (withYear ? '.' + m[1] : '')) : (s || ''); };
+const __TS = s => { const m = String(s || '').match(/(\d{4})-?(\d{2})-?(\d{2})[T ](\d{2}:\d{2})/); return m ? `${m[3]}.${m[2]}.${m[1]} ${m[4]}` : __DM(s, 1); };
 class Component extends DCLogic {
   state = { lang: 'en', st: {}, calls: {} };
 
@@ -250,7 +254,7 @@ class Component extends DCLogic {
       const age = (todayUTC - Date.parse(d + 'T00:00:00Z')) / 86400000;
       const inSeason = age <= 7;
       return { status: inSeason ? 'season' : 'off',
-               text: (inSeason ? (he ? 'בעונה' : 'In season') : (he ? 'בין עונות' : 'Between seasons')) + ' · ' + (he ? 'נתון אחרון ' : 'last data ') + d };
+               text: (inSeason ? (he ? 'בעונה' : 'In season') : (he ? 'בין עונות' : 'Between seasons')) + ' · ' + (he ? 'נתון אחרון ' : 'last data ') + __DM(d, 1) };
     };
     const hrefs = {
       '🏀': './nba/',
