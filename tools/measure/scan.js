@@ -1,0 +1,127 @@
+// Part 2 measurement, run inside a built page. window.__front(opts) -> {neg, tap, contrast} for the visible DOM,
+// over every tab state (preview: the emoji tabs; classic: all <details> open, plus the WC board views).
+// neg: in an RTL context, a minus sign that starts a number with no LRM/LRI before it and no LTR isolate around it.
+// tap: interactive elements (a, button, select, input, summary, [onclick], [role=button|tab], cursor:pointer roots)
+//      whose box is under 44 px in height or width.
+// contrast: text colour vs the effective background (solid colours blended up the tree; a gradient counts with its
+//      first colour stop, flagged "est"); 4.5 for body text, 3 for large text (>= 24px, or >= 18.66px bold).
+window.__front = async function (opts) {
+  opts = opts || {};
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const seen = new Set(), seenText = new Set();   // tap targets and text are tracked apart
+  const neg = [], tap = [], pairs = {};
+  const vis = el => {
+    if (!el || !el.getClientRects().length) return false;
+    const r = el.getBoundingClientRect();
+    if (r.width < 1 || r.height < 1) return false;
+    let e = el;
+    while (e && e.nodeType === 1) {
+      const cs = getComputedStyle(e);
+      if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) return false;
+      e = e.parentElement;
+    }
+    return true;
+  };
+  const parse = c => {
+    const m = c && c.match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    const p = m[1].split(/[ ,/]+/).filter(Boolean).map(Number);
+    return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1];
+  };
+  const blend = (top, bot) => { const a = top[3]; return [top[0] * a + bot[0] * (1 - a), top[1] * a + bot[1] * (1 - a), top[2] * a + bot[2] * (1 - a), 1]; };
+  const lum = c => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
+  const ratio = (a, b) => { const l1 = lum(a), l2 = lum(b); return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05); };
+  const hex = c => '#' + c.slice(0, 3).map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+  const bgOf = el => {
+    const stack = []; let est = false; let e = el;
+    while (e && e.nodeType === 1) {
+      const cs = getComputedStyle(e);
+      const c = parse(cs.backgroundColor);
+      if (c && c[3] > 0) stack.push(c);
+      else if (cs.backgroundImage && cs.backgroundImage.includes('gradient')) {
+        const g = parse(cs.backgroundImage); if (g && g[3] > 0) { stack.push(g); est = true; }
+      }
+      if (c && c[3] >= 1) break;
+      e = e.parentElement;
+    }
+    let bg = [255, 255, 255, 1];
+    for (let i = stack.length - 1; i >= 0; i--) bg = blend(stack[i], bg);
+    return { bg, est };
+  };
+  const opac = el => { let o = 1, e = el; while (e && e.nodeType === 1) { o *= parseFloat(getComputedStyle(e).opacity); e = e.parentElement; } return o; };
+  const label = el => (el.innerText || el.value || el.getAttribute('aria-label') || el.tagName).trim().replace(/\s+/g, ' ').slice(0, 40);
+  const interactiveSel = 'a[href],button,select,input:not([type=hidden]),summary,[onclick],[role=button],[role=tab],label[for]';
+
+  const measure = (state) => {
+    // tap targets
+    const cands = new Set(document.querySelectorAll(interactiveSel));
+    document.querySelectorAll('div,span,li,tr,td,p,img,svg').forEach(e => {
+      if (getComputedStyle(e).cursor === 'pointer' && !(e.parentElement && getComputedStyle(e.parentElement).cursor === 'pointer')) cands.add(e);
+    });
+    for (const el of cands) {
+      if (seen.has(el) || !vis(el)) continue;
+      if (el.matches('a[href^="#"]') && el.getBoundingClientRect().width <= 2) continue;   // skip link, shown on focus only
+      if (el.parentElement && el.parentElement.closest(interactiveSel) && !el.matches(interactiveSel)) continue;
+      seen.add(el);
+      const r = el.getBoundingClientRect();
+      const inline = el.tagName === 'A' && getComputedStyle(el).display === 'inline' && el.parentElement && (el.parentElement.innerText || '').trim().length > (el.innerText || '').trim().length + 15;
+      if (r.height < 44 || r.width < 44) tap.push({ state, tag: el.tagName.toLowerCase(), text: label(el), w: Math.round(r.width), h: Math.round(r.height), inline });
+    }
+    // text nodes: contrast + negatives
+    const tw = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = tw.nextNode())) {
+      const t = n.nodeValue; if (!t || !t.trim()) continue;
+      const el = n.parentElement; if (!el || ['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE'].includes(el.tagName) || !vis(el)) continue;
+      const key = el;
+      if (!seenText.has(key)) {
+        seenText.add(key);
+        const cs = getComputedStyle(el);
+        const clipText = /text/.test(cs.webkitBackgroundClip || cs.backgroundClip || '');      // gradient-clipped text: no single colour
+        const symOnly = !/[\p{L}\p{N}]/u.test(t);                                                 // emoji / symbols only
+        const fg0 = (clipText || symOnly) ? null : parse(cs.color); if (fg0) {
+          const { bg, est } = bgOf(el);
+          const o = opac(el);
+          const fg = blend([fg0[0], fg0[1], fg0[2], fg0[3] * o], bg);
+          const size = parseFloat(cs.fontSize), bold = parseInt(cs.fontWeight) >= 700;
+          const large = size >= 24 || (size >= 18.66 && bold);
+          const r = ratio(fg, bg), need = large ? 3 : 4.5;
+          if (r < need) {
+            const k = hex(fg) + ' on ' + hex(bg) + (large ? ' L' : '') + (est ? ' est' : '');
+            pairs[k] = pairs[k] || { pair: k, ratio: +r.toFixed(2), need, n: 0, ex: t.trim().slice(0, 30), state,
+              src: { tag: el.tagName.toLowerCase(), cls: (el.className && el.className.baseVal === undefined ? el.className : '').slice(0, 40),
+                     raw: cs.color, op: +o.toFixed(2), style: (el.getAttribute('style') || '').slice(0, 90),
+                     pcls: (el.parentElement && typeof el.parentElement.className === 'string' ? el.parentElement.className : '').slice(0, 30) } };
+            pairs[k].n++;
+          }
+        }
+      }
+      // negatives in RTL
+      if (getComputedStyle(el).direction === 'rtl') {
+        const re = /(^|[^\d‎⁦\w.,%֐-׿])([-−])(?=\d)/g; let m;   // a Hebrew prefix (ב-, ל-) is not a minus
+        while ((m = re.exec(t))) {
+          let iso = false, e = el;
+          while (e && e.nodeType === 1) {
+            const cs = getComputedStyle(e);
+            if (cs.direction === 'ltr' && /isolate|embed|plaintext|bidi-override/.test(cs.unicodeBidi)) { iso = true; break; }
+            if (e.getAttribute('dir') === 'ltr') { iso = true; break; }
+            if (cs.direction === 'rtl' && e !== el) break;
+            e = e.parentElement;
+          }
+          if (!iso) neg.push({ state, text: t.trim().slice(Math.max(0, m.index - 12), m.index + 16) });
+        }
+      }
+    }
+  };
+
+  document.querySelectorAll('details').forEach(d => d.open = true);
+  measure('default');
+  if (opts.tabs !== false) {
+    const tabs = [...new Set([...document.querySelectorAll('div,button,a,span')].filter(x => x.children.length <= 2 && /^(⚡|📊|🎯|📖)\s*\S/.test(x.innerText.trim()) && x.innerText.trim().length < 30))];
+    for (const t of tabs) { const name = t.innerText.trim().replace(/\s+/g, ''); t.click(); await wait(700); document.querySelectorAll('details').forEach(d => d.open = true); measure(name); }
+    if (typeof window.setView === 'function') for (const v of ['upcoming', 'results', 'date', 'all']) { try { window.setView(v); await wait(400); measure('view:' + v); } catch (e) {} }
+  }
+  const pl = Object.values(pairs).sort((a, b) => b.n - a.n);
+  return { neg: neg.length, negEx: neg.slice(0, 12), negAll: neg, tap: tap.length, tapNonInline: tap.filter(x => !x.inline).length, tapEx: tap.slice(0, 15), tapAll: tap,
+           contrastPairs: pl.length, contrastEls: pl.reduce((s, p) => s + p.n, 0), contrastEx: pl.slice(0, 12), contrastAll: pl };
+};

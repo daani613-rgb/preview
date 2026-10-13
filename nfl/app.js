@@ -19,7 +19,7 @@ const GUIDE_NFL=`
 class Component extends DCLogic {
   state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'games', openTile: null, dateFilter: 'week' };
 
-  componentDidMount() { this.runCountUp(); this._deferThree(); this._syncGuide(); this._syncStale(); this._syncWeekChip(); this._syncEmptyCells();
+  componentDidMount() { this.runCountUp(); this.ensureThree(); this._syncGuide(); this._syncStale(); this._syncWeekChip(); this._syncEmptyCells();
     this._onScroll = () => { if (window.scrollY > 0) document.documentElement.setAttribute('data-nfl-scrolled', ''); else document.documentElement.removeAttribute('data-nfl-scrolled'); };
     window.addEventListener('scroll', this._onScroll, { passive: true }); this._onScroll(); }
   componentDidUpdate(prevProps, prevState) { this.runCountUp(); this._syncGuide(); this._syncStale(); this._syncEmptyCells(); if (prevState && (prevState.dateFilter !== this.state.dateFilter || prevState.lang !== this.state.lang)) this._syncWeekChip(); if (this._group) this._group.position.x = this.state.lang === 'he' ? -2.6 : 2.6; if (prevState && prevState.tab !== this.state.tab) { const el = document.querySelector('[data-live-content]'); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'tabIn .4s ease both'; } } }
@@ -94,20 +94,6 @@ class Component extends DCLogic {
       this._rafC = requestAnimationFrame(tick);
     };
     requestAnimationFrame(run);
-  }
-
-  // three.js (the hero's 3D, about 260 KB over the wire) starts after the first contentful paint, when the main thread
-  // is idle (at most 2.5 s later), so it never competes with the page's own content. The final page is the same.
-  // ensureThree runs once (_threeStarted), so the 3 s fallback cannot start it twice.
-  _deferThree() {
-    const go = () => { if (!this._dead) this.ensureThree(); };
-    const idle = () => (window.requestIdleCallback ? requestIdleCallback(go, { timeout: 2500 }) : setTimeout(go, 300));
-    try {
-      if (performance.getEntriesByName('first-contentful-paint').length) return idle();
-      const po = new PerformanceObserver(l => { if (l.getEntriesByName('first-contentful-paint').length) { po.disconnect(); idle(); } });
-      po.observe({ type: 'paint', buffered: true });
-      setTimeout(() => { try { po.disconnect(); } catch (e) {} idle(); }, 3000);
-    } catch (e) { idle(); }
   }
 
   async ensureThree() {
