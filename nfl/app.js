@@ -13,7 +13,7 @@ const GUIDE_NFL=`
 `;
 
 class Component extends DCLogic {
-  state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'teams_today', openTile: null, dateFilter: 'week' };
+  state = { view: 'live', lang: 'en', tab: 'signals', rankSub: 'games', openTile: null, dateFilter: 'week' };
 
   componentDidMount() { this.runCountUp(); this.ensureThree(); this._syncGuide(); this._syncStale(); this._syncWeekChip(); this._syncEmptyCells();
     this._onScroll = () => { if (window.scrollY > 0) document.documentElement.setAttribute('data-nfl-scrolled', ''); else document.documentElement.removeAttribute('data-nfl-scrolled'); };
@@ -235,7 +235,7 @@ class Component extends DCLogic {
       sampleLabel: HO ? `games · held out · seasons ${HO.from} to ${HO.to}` : '', drawdownLabel: 'max drawdown', brierLabel: 'Brier score', hitLabel: 'A+ hit rate',
       navTabs: [ {id:'signals',icon:'⚡',label:'Signals'}, {id:'rankings',icon:'📊',label:'Rankings'}, {id:'track',icon:'🎯',label:'Track record'}, {id:'how',icon:'📖',label:'How it works'} ],
       rankTabs: [
-        {id:'teams_today',   group:'week',   icon:'🏙️', label:'Teams', depLabel:'upcoming'},
+        // 'teams_today' removed 2026-10-13: the same list as 'games' in the same order (KNOWN_DEFECTS item 64)
         {id:'games',         group:'week',   icon:'🎲', label:'Games', depLabel:'upcoming'},
         {id:'composite_today', group:'week', icon:'🔢', label:'Composite', depLabel:'upcoming'},
         {id:'totals',        group:'week',   icon:'📈', label:'Totals', depLabel:'upcoming'},
@@ -288,7 +288,6 @@ class Component extends DCLogic {
       sampleLabel: HO ? `משחקים · נתונים מוחזקים · עונות ${HO.from} עד ${HO.to}` : '', drawdownLabel: 'ירידה מקסימלית', brierLabel: 'ציון Brier', hitLabel: 'דיוק A+',
       navTabs: [ {id:'signals',icon:'⚡',label:'סיגנלים'}, {id:'rankings',icon:'📊',label:'דירוגים'}, {id:'track',icon:'🎯',label:'ביצועים'}, {id:'how',icon:'📖',label:'איך זה עובד'} ],
       rankTabs: [
-        {id:'teams_today',   group:'week',   icon:'🏙️', label:'קבוצות', depLabel:'טרם שוחקו'},
         {id:'games',         group:'week',   icon:'🎲', label:'משחקים', depLabel:'טרם שוחקו'},
         {id:'composite_today', group:'week', icon:'🔢', label:'משולב', depLabel:'טרם שוחקו'},
         {id:'totals',        group:'week',   icon:'📈', label:'טוטאל', depLabel:'טרם שוחקו'},
@@ -443,7 +442,10 @@ class Component extends DCLogic {
     const gamesView = _gv.map(g => ({
       matchup: `${g.away} @ ${g.home}`,
       pick: g.favorite ? ((he ? 'קריאה: ' : 'Pick: ') + g.favorite + ' · ' + g.favPct + '%') : '',   // no frozen pre-game row: no pick
-      aplus: !!g.aplus, aplusTag: g.aplus ? 'A+' : '',
+      // A+ from the frozen row (the field the board and the record line read). Not played: the tag; decided: past
+      // tense next to the verdict. Not A+: nothing. No frozen row: no favorite, so neither.
+      aplus: !!g.aplus && !g.played, aplusTag: (g.aplus && !g.played) ? 'A+' : '',
+      aplusPast: (g.aplus && g.played && g.favorite) ? (he ? 'הייתה קריאת A+' : 'Was an A+ call') : '',
       stageStr: g.stage != null ? ('· ' + (he ? 'שלב ' : 'stage ') + g.stage) : '',
       when: (he ? 'ש\' ' : 'Wk ') + g.week + ' · ' + _fmtD(g.date) + (g.time ? ' · ' + g.time + ' ET' : ''),
       windTag: g.windUnder ? (he ? '💨 רוח→תחת' : '💨 wind→under') : '',
@@ -606,6 +608,9 @@ class Component extends DCLogic {
       return out;
     };
 
+    // the week tabs all read this week's games not yet played: say how many (1 on a Monday night, so the four agree)
+    const _nw = (rankings.games || []).length;
+    const _wkCount = he ? (_nw === 1 ? 'משחק אחד השבוע שטרם שוחק. ' : `${_nw} משחקים השבוע שטרם שוחקו. `) : (_nw === 1 ? 'One game of this week not yet played. ' : `${_nw} games of this week not yet played. `);
     if (rankSub === 'teams_today') {
       rankColHeaders = { c1: he ? 'קבוצה' : 'Team', c2: he ? 'הסתב\'' : 'p_win', c3: '' };
       rankNote2 = he ? 'משחקי-השבוע שעוד לא שוחקו: המועדף בכל משחק לפי הסתברות-הניצחון של המנוע. חמישה רבדים לפי ספים קבועים של הסתברות הניצחון: 0.72, 0.64, 0.57, 0.52.' : 'This week\'s games not yet played: the favorite in each, by engine win probability. Five tiers by fixed win-probability thresholds: 0.72, 0.64, 0.57, 0.52.';
@@ -689,6 +694,7 @@ class Component extends DCLogic {
     });
 
     const _weekCube = ['teams_today', 'games', 'composite_today', 'totals'].includes(rankSub);
+    if (['teams_today', 'games', 'composite_today', 'totals'].includes(rankSub) && _nw > 0) rankNote2 = _wkCount + rankNote2;
     const rankEmpty = _weekCube && rankRows.length === 0;
     const rankEmptyMsg = he
       ? 'אין כרגע משחקים שלפנינו — כל משחקי הלוח הנוכחי שוחקו או שלא נקבעו משחקים. התוצאות בכרטיסי המשחקים; הקובייה תתמלא כשייקבעו המשחקים הבאים.'
