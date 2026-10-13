@@ -220,14 +220,14 @@ class Component extends DCLogic {
       signalKicker: `The A+ call · week ${wk}`, edgeLabel: 'Edge vs market', runsLabel: 'expected points', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'HIGH', underWord: 'LOW', homeWord: 'Home', awayWord: 'Away',
       validatedHead: 'ACCURACY: HELD OUT AND BACKTEST',
-      clvTitle: 'CLV for NFL: no data yet', clvWhy: 'Closing-line value compares the price at prediction time with the closing price. No closing-line source is connected for NFL, so there is nothing to chart.', clvNeed: 'Needed: a closing-odds feed captured at each kickoff, stored per game next to the pre-game price.',
+      clvTitle: 'CLV for NFL: the reading is scheduled for 29.11', clvWhy: 'Closing-line value compares the price at prediction time with the closing price. Closing lines are collected for every game; the reading, registered in advance, is on 29.11.', clvNeed: 'Until then there is no CLV figure to show.',
       seasonHead: `THIS SEASON · ${R.season || ''} · LIVE, FORWARD-ONLY`, seasonEmpty: 'No games decided yet this season.',
       calTitle: 'Calibration', calSub: 'Predicted probability vs what actually happened. On the diagonal = perfectly calibrated.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy and calibration are not part of this live feed.',
       detailsWord: 'Total points', runsWord: 'points', lineWord: 'line',
       stageTitle: 'Accuracy by stage', stageSub: 'Per-stage accuracy is not part of this live feed.',
       rankNote: 'Seven ranking cubes. This-week cubes use the current slate only; season-long cubes cover all 32 teams independent of who plays this week.',
-      signalsCaveat: 'The engine speaks only on A+ setups and stays quiet on every other game. Totals value is not yet proven. CLV is not tracked for NFL yet — no closing-line source is connected.',
+      signalsCaveat: 'The engine speaks only on A+ setups and stays quiet on every other game. Totals value is not yet proven. CLV for NFL: the reading is scheduled for 29.11.',
       teamCol: 'Team', pwinCol: 'p_win', annotatedLabel: 'Annotated example — one card', guideLabel: 'The full guide — how to read this page',
       eloExplain: '= who wins (the call).', fipExplain: '= how sure (calibrates it).',
       disclaimer: 'For information and entertainment only · Not betting advice · Play responsibly · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
@@ -246,14 +246,14 @@ class Component extends DCLogic {
       dateFilterLabels: ['This week', 'Results', 'By week', 'All'], filterBarLabel: 'FILTER GAMES', weekRowLabel: 'WEEK',
       heroStats: [
         {v:HO ? `${HO.value}%` : '—', k:HO ? `held out · ${HO.from} to ${HO.to}` : '', color:'#35e39a'},
-        {v: '—',            k:'CLV',        color:'#6f7897'},
+        {v: '29.11',        k:'CLV reading', color:'#6f7897'},
       ].filter(s => s.v !== '—'),   // a cell without a source is hidden whole, not shown as a dash
       kpis: [
         {display:`${kv(AP)}`, target:AP ? AP.value : '', dec:1, prefix:'', u:ku(AP), tag:'A+', d:nflAplus('en') + accTxt.en.ap},
         {display:`${kv(ST)}`, target:ST ? ST.value : '', dec:1, prefix:'', u:ku(ST), d:accTxt.en.st},
         {display:`${kv(HO)}`, target:HO ? HO.value : '', dec:1, prefix:'', u:ku(HO), d:accTxt.en.ho + accTxt.en.bl},
         {display:'—', target:'', u:'', d:'Totals over/under direction · not tracked yet.'},
-        {display:'—', target:'', u:'', d:'CLV · no closing-line source connected for NFL.'},
+        {display:'29.11', target:'', u:'', d:'CLV · the reading is scheduled for 29.11, as registered in advance.'},
       ].filter(k => k.display !== '—'),   // a row without a source is hidden whole, not shown as a dash
       stageBars: [],
       howBullets: [
@@ -264,7 +264,7 @@ class Component extends DCLogic {
         {tag:'05', chip:'#2bb7c4', title:'Value block & colors', body:'Gap under 3% is gray (no value). 3–10% is green (value — there is an explanation). Over 10% is teal (open question: real edge or model error?). The gap alone is not the answer.'},
         {tag:'06', chip:'#b98cff', title:'Power, momentum & composite', body:'Under Rankings: Power = raw Elo for all 32 teams. Momentum = 4-game Elo trend (who is rising, who is fading). Composite blends winner 40% + Elo 30% + totals 20% + data quality 10%, geometric mean.'},
         {tag:'07', chip:'#f5b23d', title:'CLV is the arbiter', body:'Gap size is not the answer — whether there is an explanation is. The clean test of edge is closing-line value: did the engine\'s side get a better price than the close? CLV decides forward.'},
-        {tag:'08', chip:'#8ff0c0', title:'Forward-only', body:'Every result shown was predicted before the game. The track record accumulates forward — nothing is backfilled. CLV is not tracked for NFL yet.'},
+        {tag:'08', chip:'#8ff0c0', title:'Forward-only', body:'Every result shown was predicted before the game. The track record accumulates forward; nothing is backfilled. CLV for NFL: the reading is scheduled for 29.11.'},
       ],
     };
     const he = {
@@ -273,14 +273,14 @@ class Component extends DCLogic {
       signalKicker: `קריאת ה-A+ · שבוע ${wk}`, edgeLabel: 'Edge מול השוק', runsLabel: 'נקודות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ',
       validatedHead: 'דיוק: נתונים מוחזקים ובדיקה היסטורית',
-      clvTitle: 'CLV ל-NFL: אין עדיין נתונים', clvWhy: 'ערך קו הסגירה משווה את המחיר בזמן התחזית למחיר הסגירה. לא מחובר מקור קווי סגירה ל-NFL, ולכן אין מה להציג.', clvNeed: 'נדרש: מקור יחסי סגירה שנלכד בכל פתיחת משחק ונשמר לכל משחק לצד המחיר שלפני המשחק.',
+      clvTitle: 'CLV ל-NFL: הקריאה מתוזמנת ל-29.11', clvWhy: 'ערך קו הסגירה משווה את המחיר בזמן התחזית למחיר הסגירה. קווי הסגירה נאספים לכל משחק, והקריאה, שנרשמה מראש, ב-29.11.', clvNeed: 'עד אז אין מספר CLV להציג.',
       seasonHead: `העונה הזו · ${R.season || ''} · חי, קדימה בלבד`, seasonEmpty: 'עדיין אין משחקים שהוכרעו העונה.',
       calTitle: 'כיול (Calibration)', calSub: 'הסתברות חזויה מול מה שקרה בפועל. על האלכסון = מכויל בול.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
       detailsWord: 'סך נקודות', runsWord: 'נקודות', lineWord: 'קו',
       stageTitle: 'דיוק לפי שלב', stageSub: 'דיוק לפי שלב אינו חלק מהפיד החי הזה.',
       rankNote: 'שבע קוביות דירוג. קוביות תלויות-שבוע משתמשות רק בלוח הנוכחי; קוביות עונה-ארוכה מכסות את כל 32 הקבוצות, ללא תלות במי משחק השבוע.',
-      signalsCaveat: 'הערת יושר: המנוע מדבר רק על מצבי A+ ושותק בכל שאר המשחקים. ערך הטוטאל טרם הוכח. CLV עדיין לא נמדד ל-NFL — לא מחובר מקור קווי סגירה.',
+      signalsCaveat: 'הערת יושר: המנוע מדבר רק על מצבי A+ ושותק בכל שאר המשחקים. ערך הטוטאל טרם הוכח. CLV ל-NFL: הקריאה מתוזמנת ל-29.11.',
       teamCol: 'קבוצה', pwinCol: 'הסתברות', annotatedLabel: 'דוגמה מבוארת — כרטיס אחד', guideLabel: 'המדריך המלא — איך לקרוא את הדף',
       eloExplain: '= מי מנצח (הקריאה).', fipExplain: '= כמה בטוח (מכייל).',
       disclaimer: 'למידע ובידור בלבד · אינו ייעוץ הימורים · שחק באחריות · 18+ · NCPG (ncpgambling.org · 1-800-MY-RESET) · GamCare (gamcare.org.uk)',
@@ -298,14 +298,14 @@ class Component extends DCLogic {
       dateFilterLabels: ['השבוע', 'תוצאות', 'לפי שבוע', 'הכל'], filterBarLabel: 'סינון משחקים', weekRowLabel: 'שבוע',
       heroStats: [
         {v:HO ? `${HO.value}%` : '—', k:HO ? `נתונים מוחזקים · ${HO.from} עד ${HO.to}` : '', color:'#35e39a'},
-        {v: '—', k:'CLV', color:'#6f7897'},
+        {v: '29.11', k:'קריאת CLV', color:'#6f7897'},
       ].filter(s => s.v !== '—'),   // a cell without a source is hidden whole, not shown as a dash
       kpis: [
         {display:`${kv(AP)}`, target:AP ? AP.value : '', dec:1, prefix:'', u:ku(AP), tag:'A+', d:nflAplus('he') + accTxt.he.ap},
         {display:`${kv(ST)}`, target:ST ? ST.value : '', dec:1, prefix:'', u:ku(ST), d:accTxt.he.st},
         {display:`${kv(HO)}`, target:HO ? HO.value : '', dec:1, prefix:'', u:ku(HO), d:accTxt.he.ho + accTxt.he.bl},
         {display:'—', target:'', u:'', d:'כיוון מעל/מתחת · עדיין לא נמדד.'},
-        {display:'—', target:'', u:'', d:'CLV · לא מחובר מקור קווי סגירה ל-NFL.'},
+        {display:'29.11', target:'', u:'', d:'CLV · הקריאה מתוזמנת ל-29.11, כפי שנרשם מראש.'},
       ].filter(k => k.display !== '—'),   // a row without a source is hidden whole, not shown as a dash
       stageBars: [],
       howBullets: [
@@ -316,7 +316,7 @@ class Component extends DCLogic {
         {tag:'05', chip:'#2bb7c4', title:'בלוק-הערך והצבעים', body:'פער מתחת ל-3% אפור (אין ערך). 3–10% ירוק (ערך — יש הסבר). מעל 10% טורקיז (שאלה פתוחה: ערך אמיתי או טעות-מודל?). גודל-הפער לבדו אינו התשובה.'},
         {tag:'06', chip:'#b98cff', title:'כוח, מומנטום ומשולב', body:'תחת דירוגים: כוח = Elo גולמי לכל 32 הקבוצות. מומנטום = מגמת-Elo על 4 משחקים (מי עולה, מי דועך). משולב מערבב מנצח 40% + Elo 30% + טוטאל 20% + איכות-נתונים 10%, ממוצע גאומטרי.'},
         {tag:'07', chip:'#f5b23d', title:'CLV הוא הארביטר', body:'גודל-הפער אינו התשובה — האם יש הסבר הוא התשובה. המבחן הנקי ליתרון הוא ערך-קו-הסגירה: האם הצד של המנוע קיבל מחיר טוב יותר מהסגירה?'},
-        {tag:'08', chip:'#8ff0c0', title:'קדימה בלבד', body:'כל תוצאה נובאה לפני המשחק. רשומת-ההצלחה נצברת קדימה — שום דבר אינו ממולא-בדיעבד. CLV עדיין לא נמדד ל-NFL.'},
+        {tag:'08', chip:'#8ff0c0', title:'קדימה בלבד', body:'כל תוצאה נובאה לפני המשחק. רשומת-ההצלחה נצברת קדימה; שום דבר אינו ממולא-בדיעבד. CLV ל-NFL: הקריאה מתוזמנת ל-29.11.'},
       ],
     };
     return this.state.lang === 'he' ? he : en;
@@ -444,14 +444,16 @@ class Component extends DCLogic {
       pick: g.favorite ? ((he ? 'קריאה: ' : 'Pick: ') + g.favorite + ' · ' + g.favPct + '%') : '',   // no frozen pre-game row: no pick
       // A+ from the frozen row (the field the board and the record line read). Not played: the tag; decided: past
       // tense next to the verdict. Not A+: nothing. No frozen row: no favorite, so neither.
-      aplus: !!g.aplus && !g.played, aplusTag: (g.aplus && !g.played) ? 'A+' : '',
-      aplusPast: (g.aplus && g.played && g.favorite) ? (he ? 'הייתה קריאת A+' : 'Was an A+ call') : '',
+      // a game that kicked off without a final yet speaks like a decided one (what was called before kickoff), with no result
+      aplus: !!g.aplus && !g.played && !g.started, aplusTag: (g.aplus && !g.played && !g.started) ? 'A+' : '',
+      aplusPast: (g.aplus && (g.played || g.started) && g.favorite) ? (he ? 'הייתה קריאת A+' : 'Was an A+ call') : '',
       stageStr: g.stage != null ? ('· ' + (he ? 'שלב ' : 'stage ') + g.stage) : '',
       when: (he ? 'ש\' ' : 'Wk ') + g.week + ' · ' + _fmtD(g.date) + (g.time ? ' · ' + g.time + ' ET' : ''),
       windTag: g.windUnder ? (he ? '💨 רוח→תחת' : '💨 wind→under') : '',
       totalStr: g.totalLine != null ? ('O/U ' + g.totalLine) : '',
       tail: g.played
         ? (g.awayScore != null && g.homeScore != null ? `${he ? 'סופי' : 'Final'} · ${g.away} ${g.awayScore}–${g.homeScore} ${g.home}` : '')
+        : g.started ? (he ? 'התחיל · התוצאה עוד לא נכנסה' : 'Started · no final score yet')
         : (he ? 'טרם שוחק' : 'not played yet'),
       verdict: (!g.played || !g.favorite) ? '' : (g.correct === 1 ? (he ? '✓ צדק' : '✓ correct') : g.correct === 0 ? (he ? '✗ טעה' : '✗ wrong') : (he ? 'תיקו · לא נבדק' : 'tie · not graded')),
       verdictColor: g.correct === 1 ? '#35e39a' : (g.correct === 0 ? '#ff8f8f' : '#8791ab'),
@@ -492,7 +494,8 @@ class Component extends DCLogic {
       lines: t.lines || [],
       windUnder: t.windUnder || false,
       result: t.result || null,
-      played: t.played === true || !!t.result,   // decided: past-tense labels
+      played: t.played === true || !!t.result || t.started === true,   // decided or kicked off: past-tense labels
+      started: t.started === true && !t.result,
       winZone: t.winZone || null, totZone: t.totZone || null,
     }));
     const styleFor = (s) => {
@@ -513,7 +516,8 @@ class Component extends DCLogic {
 
     const tiles = raw.map(t => {
       const ex = extra[t.id] || {};
-      const st = styleFor(t.state);
+      // kicked off, no final yet: no present-tense tag (A+, value, quiet); the note below says what was called before kickoff
+      const st = t.started ? { ...styleFor(t.state), badgeText: he ? 'התחיל' : 'Started' } : styleFor(t.state);
       const hasMktH = t.mktH != null;
       const hasTotals = t.line != null && t.lambda != null;
       const hasMktOver = t.mktOver != null;
@@ -544,7 +548,8 @@ class Component extends DCLogic {
         stageName: STAGE_NAMES[t.stage] || '',
         // Result tail: final score + verdict from the engine payload (decided games only)
         hasResult: !!(t.result && t.result.awayScore != null && t.result.homeScore != null),
-        resultText: t.result ? `${he ? 'סופי' : 'Final'} · ${t.away} ${t.result.awayScore}–${t.result.homeScore} ${t.home}` : '',
+        resultText: t.result ? `${he ? 'סופי' : 'Final'} · ${t.away} ${t.result.awayScore}–${t.result.homeScore} ${t.home}`
+          : t.started ? (he ? 'התחיל · התוצאה עוד לא נכנסה' : 'Started · no final score yet') : '',
         verdict: !t.result ? '' : (t.result.correct === 1 ? (he ? '✓ צדק' : '✓ correct') : t.result.correct === 0 ? (he ? '✗ טעה' : '✗ wrong') : (he ? 'תיקו · לא נבדק' : 'tie · not graded')),
         verdictColor: t.result && t.result.correct === 1 ? '#35e39a' : (t.result && t.result.correct === 0 ? '#ff8f8f' : '#8791ab'),
         // a decided tile speaks in the past tense: what was called before kickoff, then the verdict
@@ -768,10 +773,10 @@ class Component extends DCLogic {
         ? 'הלוח מציג קודם את משחקי השבוע שעוד לא שוחקו, ואחריהם משחקים שהוכרעו. בכל קבוצה קריאות ה-A פלוס קודם, ואחריהן לפי ציון משולב של ערך ושלב כושר. שוויון נשבר לפי שעת הפתיחה ואחריה שמות הקבוצות.'
         : 'The board shows this week\'s games still to play first, then decided games. In each group A plus calls come first, then a combined score of value and form stage. Ties go by kickoff time, then team names.',
       // the counter says in words what it counts: games still to play and decided games on the board, with their A+ calls
-      boardCounter: (function(){var o=tiles.filter(function(t){return !t.played;}),d=tiles.filter(function(t){return t.played;});
+      boardCounter: (function(){var o=tiles.filter(function(t){return !t.played;}),d=tiles.filter(function(t){return !!t.result;}),s=tiles.filter(function(t){return t.started;});
         var ao=o.filter(function(t){return t.state==='aplus';}).length, ad=d.filter(function(t){return t.state==='aplus';}).length;
-        return he ? (o.length+' לשחק'+(ao?' ('+ao+' A+)':'')+' · '+d.length+' הוכרעו'+(ad?' ('+ad+' A+)':''))
-                  : (o.length+' to play'+(ao?' ('+ao+' A+)':'')+' · '+d.length+' decided'+(ad?' ('+ad+' A+)':''));})(),
+        return he ? (o.length+' לשחק'+(ao?' ('+ao+' A+)':'')+(s.length?' · '+s.length+' התחילו':'')+' · '+d.length+' הוכרעו'+(ad?' ('+ad+' A+)':''))
+                  : (o.length+' to play'+(ao?' ('+ao+' A+)':'')+(s.length?' · '+s.length+' started':'')+' · '+d.length+' decided'+(ad?' ('+ad+' A+)':''));})(),
       dispSignals:  tab === 'signals'  ? 'block' : 'none',
       dispRankings: tab === 'rankings' ? 'block' : 'none',
       dispTrack:    tab === 'track'    ? 'block' : 'none',
