@@ -478,7 +478,7 @@ class Component extends DCLogic {
       signalKicker: 'The A+ call', edgeLabel: 'Edge vs market', runsLabel: 'expected goals', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'OVER', underWord: 'UNDER', homeWord: 'Home', awayWord: 'Away', drawWord: 'Draw', starterPrefix: 'form-aware:',
       vsWord: 'vs', groupStageWord: 'Group stage', engSubWord: "what it's worth", mktSubWord: 'what it costs',
-      validatedHead: 'BACKTEST ACCURACY · HOLDOUT',
+      validatedHead: 'A+ RECORD · THE TOURNAMENT',   // live calls, not a backtest (STOP2_PREREGISTER.md section 4)
       clvTitle: 'Threshold edge (not CLV)', clvSub: `Edge vs ${_WTHR} call threshold · ${clvN} A+ calls (${clvPos} correct). No closing-line market feed — this is NOT market CLV.`,
       calTitle: 'Calibration', calSub: 'Predicted probability vs what actually happened. On the diagonal = perfectly calibrated.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'The engine hugs the diagonal — slightly conservative at the high end, which is exactly what you want.',
@@ -542,7 +542,7 @@ class Component extends DCLogic {
       signalKicker: 'קריאת ה-A+', edgeLabel: 'Edge מול השוק', runsLabel: 'שערים צפויים', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'מעל', underWord: 'מתחת', homeWord: 'בית', awayWord: 'חוץ', drawWord: 'תיקו', starterPrefix: 'מודע-כושר:',
       vsWord: 'נגד', groupStageWord: 'שלב הבתים', engSubWord: 'מה שווה', mktSubWord: 'מה עולה',
-      validatedHead: 'דיוק בבדיקה לאחור · HOLDOUT',
+      validatedHead: 'רקורד A+ · הטורניר',
       clvTitle: 'יתרון ביחס לסף (לא CLV)', clvSub: `Edge מול סף ${_WTHR} · ${clvN} קריאות A+ (${clvPos} נכונות). אין קו-שוק חי — זה אינו CLV אמיתי.`,
       calTitle: 'כיול (Calibration)', calSub: 'הסתברות חזויה מול מה שקרה בפועל. על האלכסון = מכויל בול.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'המנוע צמוד לאלכסון — מעט שמרני בקצה הגבוה, בדיוק כפי שרוצים.',
