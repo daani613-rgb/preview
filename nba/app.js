@@ -13,13 +13,14 @@ function seasonsLabel(w, lang){
   const m = w && w.seasons ? String(w.seasons).match(/^(\d{4})-\d{2} to (\d{4})-\d{2}$/) : null;
   if(!m) return "";
   const k = Number(m[2]) - Number(m[1]) + 1, rng = lang==="he" ? String(w.seasons).replace(" to ", " עד ") : w.seasons;
-  return lang==="he" ? ` חלון מתגלגל: ${k} העונות האחרונות, ${rng}.` : ` Rolling window: the last ${k} seasons, ${rng}.`;
+  const kw = k === 2 ? (lang==="he" ? "שתי" : "two") : k;   // the history window: "the last two seasons" (item 61)
+  return lang==="he" ? ` חלון מתגלגל: ${kw} העונות האחרונות, ${rng}.` : ` Rolling window: the last ${kw} seasons, ${rng}.`;
 }
 function nbaRecon(key, lang){
   const w = (_NR.recon || {})[key === 'trackCalls' ? 'track' : key] || null;
   const n = w ? Number(key === 'history' ? w.n : (key === 'trackCalls' ? w.n : w.gamesInWindow)).toLocaleString('en-US') : '—';
   const rng = !w ? '—' : (lang==='he' ? `${w.from} עד ${w.to}` : `${w.from} to ${w.to}`);
-  const win = key === 'history' ? '' : seasonsLabel(w, lang);   // TRACK and calibration use the rolling window; history does not
+  const win = seasonsLabel(w, lang);   // every window names its seasons; history: the last two (KNOWN_DEFECTS item 61)
   // journal season (gap count from gaps_check.py): decided games with no frozen pre-game record. No payload, no sentence.
   const G = key === 'history' ? (_NR.gaps || null) : null;
   const gap = G ? (lang==='he' ? ` העונה, משחקים שהוכרעו בלי רשומה קפואה מלפני המשחק: ${G.n} מתוך ${G.decided} מאז ${G.from}.`
@@ -795,7 +796,7 @@ class Component extends DCLogic {
       pick: ng.pick ? ((he ? 'קריאה: ' : 'Pick: ') + ng.pick + (ng.prob != null ? ' · ' + ng.prob + '%' : '')) : '',
       stage: ng.stage != null ? ((he ? 'שלב ' : 'stage ') + ng.stage + (ng.stageName ? ' · ' + ng.stageName : '')) : '',
       date: ng.date || '',
-      tag: he ? 'המשחק המתוזמן הבא · תצוגה בלבד (לא ביומן)' : 'Next scheduled game · display-only (not journaled)',
+      tag: he ? 'לפני המשחק · המשחק המתוזמן הבא · תצוגה בלבד (לא ביומן)' : 'Before the game · next scheduled game · display-only (not journaled)',
     } : {
       has: false, hasNot: true,
       msg: he ? 'אין משחק מתוזמן בחלון 7 הימים: עונת הפסקה. הכרטיס יתמלא כשהעונה תתקרב.'
