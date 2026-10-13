@@ -106,3 +106,13 @@ Found while building and checking; the expectations above are left as written.
   outside the window", as the preview.
 - Invariants after the change: tennis 98 A+ (non-voided rows; 100 with the 2 voided) and 2 on the slate; MLB 26 of 39;
   NFL 6 A+ (5 right); World Cup 50 (38 right). None moved.
+
+## 2026-10-13, live after the push
+
+- Checked live, not locally: the World Cup board built in CI (board.html as the board's index) shows "Tournament ended · 19.07"
+  in both languages, 72 group and 32 knockout stages, no holdout figure; it carries no A+ label, so the 50 past-tense
+  A+ cards are counted on the preview (50 of 104, both languages, 0 "A+ · strong").
+- Checked live, not locally: MLB in both languages. Preview, 12.10: 4 "Was an A+ call · total", 0 "winner"; an
+  8:00 PM EDT game of 12.10 shows 12.10. Classic: "13.10 · 20:00 ET" for tonight's 8 PM game; "Near a coin flip · the
+  engine's verdict" once, "צמוד" 0. No gap over 10 on today's or yesterday's slate, so the large-gap label is not seen live.
+- Found live: KNOWN_DEFECTS items 99 to 101 (a header left over from the holdout, two date sites missed).
