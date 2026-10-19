@@ -35,3 +35,33 @@ or it excludes the cards by name. The simpler of the two is taken. Expected afte
   and skipped.
 
 Nothing in this file is changed after the first code change; a later finding goes in a dated section.
+
+## 2026-10-19: results (written after the code)
+
+Check 1, confirmed. Live NFL at 390 px, English: the game card computes `display: flex; align-items: center;
+justify-content: center`, card 362 px, widest child 381 px, 9 px out on each side. The build of 5ad9a6e (the commit
+before 45e951f): `display: block`, every child inside the card.
+
+Check 2. `[role=button]` wider than 120 px or with more than 2 children, live, 390 px, English: the game cards (NFL 5,
+MLB 1, tennis 9 in the first tab; all with grid-column in their style, all hit by the rule); the tab bar items "⚡ ..."
+(124 px, own display:flex, not hit); "How it works" on the hub (162 px, no children, hit, harmless); "Disclaimer &
+privacy" on tennis and World Cup (128 px, no children, hit, harmless). Only the cards were caught by mistake.
+
+Check 3, the test (tools/measure/scan.js, `window.__overflow`). A finding against this file: the build before 45e951f
+already fails "scrollWidth <= clientWidth" at 390 px, English: the NFL row "Total points ⌄" ends 42 px past the card
+(10 of 10 cards) and the tennis row "Total games ⌄" 23 px (8 of 18 cards scroll). It is an older defect, not this
+regression, and is what was seen as "Total poin". So the gate is "every direct child's box inside the card" (childOut);
+scrollWidth and the widest descendant are reported apart. Red on live: NFL 10/10 cards at 390 en, MLB 2/2 at 390 en,
+tennis 16/18 at 390 en, 12/18 at 390 he, 6/18 at 1024 en, 4/18 at 1024 he (worst 92 px). NBA and World Cup have no
+game cards today; the hub has none.
+
+The fix: the cards are left out of the rule by name (`:not([style*="grid-column"])`), the simpler of the two: the
+other elements the rule hits are labels that want centring.
+
+Green, local build: childOut 0 on all 24 runs (6 pages x 390/1024 x en/he), the same as the build before 45e951f;
+scroll and descendant figures equal to that build (the older rows above). Tap targets under 44 px on the six Command
+Center pages, both widths, both languages: 0 before and after. "This week" on NFL: 44 px high (en 99 x 44, he 64 x 44).
+The seven classic and root pages do not load a11y.css and were not scanned here.
+
+"↑ Top" (NFL only): a fixed floating button sits over whatever is under it at a given scroll; at 390 px there is no
+free margin to move it to. Recorded and skipped.

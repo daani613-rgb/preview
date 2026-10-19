@@ -1,5 +1,6 @@
 /* Tap targets at least 44 x 44 px (KNOWN_DEFECTS 92). Clickable elements of the Command Center are role="button" (and the
    hub's language pill, .langbtn). One without its own display gets inline-flex so its label stays centred as it grows. */
 [role=button], [role=tab], .langbtn { min-height: 44px; min-width: 44px; box-sizing: border-box; }
-[role=button]:not([style*="display"]), .langbtn { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; }
+/* Item 108: a game card (grid-column in its style) keeps its own block layout; as a centred flex box its rows overflowed both edges. */
+[role=button]:not([style*="display"]):not([style*="grid-column"]), .langbtn { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; }
 input[type=date], select { min-height: 44px; box-sizing: border-box; }
