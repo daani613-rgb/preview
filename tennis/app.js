@@ -730,10 +730,10 @@ class Component extends DCLogic {
     }
     // Freshness display: during the quota pause the slate is not refreshed, so say that; else the build time;
     // with no build time, no time is shown at all (no guess, no file time)
-    const qp = R.quotaPauseUntil ? __DM(R.quotaPauseUntil, 1) : null;
+    const qp = R.quotaPauseUntil ? __DM(R.quotaPauseUntil) : null;   // the payload's date as dd.mm, no arithmetic
     const freshnessLabel = qp
-      ? (he ? `הסלייט מ-${asOfLabel} · משיכת היחסים מושהית עד ${qp} (מכסת OddsPapi), והסלייט לא מתעדכן עד אז`
-            : `Slate of ${asOfLabel} · odds pulls paused until ${qp} (OddsPapi quota), so the slate is not refreshed until then`)
+      ? (he ? `הסלייט מ-${asOfLabel} · משיכת היחסים מושהית (מכסת OddsPapi) וחוזרת ב-${qp}; הסלייט לא מתעדכן עד אז`
+            : `Slate of ${asOfLabel} · odds pulls paused (OddsPapi quota) · Resumes ${qp}; the slate is not refreshed until then`)
       : freshness
       ? (he ? 'עודכן: ' : 'Updated: ') + freshness + ' · today.json'
       : '';
