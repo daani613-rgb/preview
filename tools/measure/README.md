@@ -30,3 +30,8 @@ Runs inside a page (`eval` of the file, then `await window.__front()`), over eve
 - `tap`: clickable elements whose box is under 44 x 44 px (the skip link, shown on focus only, is left out).
 - `contrast`: text colour against the effective background (colours blended up the tree, opacity included);
   4.5:1 for body text, 3:1 for large text. Gradient-clipped text and emoji-only text are not measured.
+
+`window.__overflow()` (item 108, 2026-10-19): every game card ([role=button] with more than two children), over every
+tab: `childOut` (px a direct child's box leaves the card; the gate, fail if > 1), `scroll` (scrollWidth - clientWidth)
+and `descOut` (widest descendant), reported apart because the NFL "Total points" and tennis "Total games" rows already
+overflowed before 45e951f.

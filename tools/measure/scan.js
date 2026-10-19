@@ -125,3 +125,34 @@ window.__front = async function (opts) {
   return { neg: neg.length, negEx: neg.slice(0, 12), negAll: neg, tap: tap.length, tapNonInline: tap.filter(x => !x.inline).length, tapEx: tap.slice(0, 15), tapAll: tap,
            contrastPairs: pl.length, contrastEls: pl.reduce((s, p) => s + p.n, 0), contrastEx: pl.slice(0, 12), contrastAll: pl };
 };
+
+// Item 108 (2026-10-19): card overflow, over every tab state. A card is a visible [role=button] with more than two
+// children. childOut: px by which a direct child's box leaves the card's box (fail if > 1). scroll: scrollWidth minus
+// clientWidth. descOut: the widest overflow of any descendant. scroll and descOut are reported apart: on the build
+// before 45e951f the NFL "Total points" row already overflows (a separate, older defect), so the regression gate is childOut.
+window.__overflow = async function (opts) {
+  opts = opts || {};
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const out = [], seen = new Set();
+  const measure = state => {
+    for (const c of document.querySelectorAll('[role=button]')) {
+      const r = c.getBoundingClientRect();
+      if (c.children.length <= 2 || r.width < 1 || !c.getClientRects().length) continue;
+      const name = (c.innerText || '').trim().split('\n')[0].slice(0, 30), key = state + '|' + name;
+      if (seen.has(key)) continue; seen.add(key);
+      const ext = el => { const b = el.getBoundingClientRect(); return b.width < 1 ? 0 : Math.max(r.left - b.left, b.right - r.right); };
+      let childOut = 0, descOut = 0, descEx = '';
+      for (const k of c.children) childOut = Math.max(childOut, ext(k));
+      for (const d of c.querySelectorAll('*')) { const e = ext(d); if (e > descOut) { descOut = e; descEx = (d.innerText || d.tagName).trim().replace(/\s+/g, ' ').slice(0, 30); } }
+      out.push({ state, card: name, w: Math.round(r.width), display: getComputedStyle(c).display,
+                 childOut: Math.round(childOut), scroll: c.scrollWidth - c.clientWidth, descOut: Math.round(descOut), descEx });
+    }
+  };
+  measure('default');
+  if (opts.tabs !== false) {
+    const tabs = [...new Set([...document.querySelectorAll('div,button,a,span')].filter(x => x.children.length <= 2 && /^(⚡|📊|🎯|📖)\s*\S/.test(x.innerText.trim()) && x.innerText.trim().length < 30))];
+    for (const t of tabs) { const name = t.innerText.trim().replace(/\s+/g, ''); t.click(); await wait(700); measure(name); }
+  }
+  return { cards: out.length, childFail: out.filter(x => x.childOut > 1).length, scrollFail: out.filter(x => x.scroll > 0).length,
+           descFail: out.filter(x => x.descOut > 1).length, maxChildOut: Math.max(0, ...out.map(x => x.childOut)), all: out };
+};
