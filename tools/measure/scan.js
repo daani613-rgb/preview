@@ -114,6 +114,9 @@ window.__front = async function (opts) {
     }
   };
 
+  // opts.inject: fixed HTML appended before measuring, so a style shown only on some days is always measured
+  // (MLB classic: the 'engine-only · not locked' tag, .cflag.eo, 2026-10-20)
+  if (opts.inject) { const d = document.createElement('div'); d.setAttribute('data-scan-inject', '1'); d.innerHTML = opts.inject; (document.querySelector('main') || document.body).appendChild(d); }
   document.querySelectorAll('details').forEach(d => d.open = true);
   measure('default');
   if (opts.tabs !== false) {

@@ -37,3 +37,6 @@ Runs inside a page (`eval` of the file, then `await window.__front()`), over eve
 tab: `childOut` (px a direct child's box leaves the card; the gate, fail if > 1), `scroll` (scrollWidth - clientWidth)
 and `descOut` (widest descendant), reported apart because the NFL "Total points" and tennis "Total games" rows already
 overflowed before 45e951f.
+
+`window.__front({inject: '<html>'})` (2026-10-20): appends fixed HTML before measuring, so a style that shows only on some
+days is measured every time. MLB classic: `inject: '<span class="cflag eo">engine-only · not locked</span>'`.
