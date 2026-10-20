@@ -244,30 +244,30 @@
                 <div style="position:absolute;inset:0;opacity:{{ t.glowOpacity }};background:radial-gradient(360px 160px at 82% -10%, {{ t.glow }}, transparent 70%);pointer-events:none"></div>
                 <div style="position:relative">
                   <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:18px">
-                    <div style="min-width:0;flex:1"><div style="font-size:19px;font-weight:800;letter-spacing:-.2px;white-space:nowrap">{{ t.away }} <span style="color:#79819e">vs</span> {{ t.home }}</div><div style="font-size:11px;color:#8791ab;margin-top:5px;line-height:1.5">{{ t.surface }} · {{ t.round }} <span style="font-family:var(--fm);color:#79819e">· {{ t.time }}</span></div></div>
+                    <div style="min-width:0;flex:1"><div style="font-size:19px;font-weight:800;letter-spacing:-.2px;overflow-wrap:anywhere">{{ t.away }} <span style="color:#79819e">vs</span> {{ t.home }}</div><div style="font-size:11px;color:#8791ab;margin-top:5px;line-height:1.5">{{ t.surface }} · {{ t.round }} <span style="font-family:var(--fm);color:#79819e">· {{ t.time }}</span></div></div>
                     <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-family:var(--fm);font-size:11px;font-weight:700;color:{{ t.badgeColor }};background:{{ t.badgeBg }};border:1px solid {{ t.badgeBorder }};white-space:nowrap">{{ t.badgeText }}</span>
                   </div>
                   <div dir="ltr" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
                     <div style="display:flex;align-items:center;gap:11px">
                       <div style="width:52px;font-size:11px;color:#8791ab;font-weight:600">{{ engineWord }}</div>
                       <div style="flex:1;display:flex;height:30px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:12px;font-weight:700">
-                        <div style="width:{{ t.engH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c">{{ t.home }}&#160;{{ t.engH }}%</div>
-                        <div style="width:{{ t.engA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020">{{ t.away }}&#160;{{ t.engA }}%</div>
+                        <div style="width:{{ t.engH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c;min-width:0;overflow:hidden;white-space:nowrap;padding:0 6px;box-sizing:border-box"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0">{{ t.home }}</span><span style="flex-shrink:0">&#160;{{ t.engH }}%</span></div>
+                        <div style="width:{{ t.engA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020;min-width:0;overflow:hidden;white-space:nowrap;padding:0 6px;box-sizing:border-box"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0">{{ t.away }}</span><span style="flex-shrink:0">&#160;{{ t.engA }}%</span></div>
                       </div>
                     </div>
                     <div style="display:flex;align-items:center;gap:11px">
                       <div style="width:52px;font-size:11px;color:#8791ab;font-weight:600">{{ marketWord }}</div>
                       <div style="flex:1;display:flex;height:30px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:12px;font-weight:700;opacity:.78">
-                        <div style="width:{{ t.mktH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c">{{ t.home }}&#160;{{ t.mktH }}%</div>
-                        <div style="width:{{ t.mktA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020">{{ t.away }}&#160;{{ t.mktA }}%</div>
+                        <div style="width:{{ t.mktH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c;min-width:0;overflow:hidden;white-space:nowrap;padding:0 6px;box-sizing:border-box"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0">{{ t.home }}</span><span style="flex-shrink:0">&#160;{{ t.mktH }}%</span></div>
+                        <div style="width:{{ t.mktA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020;min-width:0;overflow:hidden;white-space:nowrap;padding:0 6px;box-sizing:border-box"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0">{{ t.away }}</span><span style="flex-shrink:0">&#160;{{ t.mktA }}%</span></div>
                       </div>
                     </div>
                   </div>
                   <div style="font-size:12.5px;color:#9aa2ba;padding:10px 13px;border-radius:9px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);margin-bottom:16px">{{ t.callNote }}</div>
-                  <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07)">
+                  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07)">
                     <div style="display:flex;align-items:center;gap:12px">
                       <div style="position:relative;width:50px;height:50px;flex-shrink:0"><svg viewBox="0 0 52 52" style="width:50px;height:50px;transform:rotate(-90deg)"><circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="5"></circle><circle cx="26" cy="26" r="22" fill="none" stroke="{{ t.ringColor }}" stroke-width="5" stroke-linecap="round" stroke-dasharray="{{ t.ringArc }}"></circle></svg><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:13px;font-weight:700;color:#eef1f7">{{ t.callPct }}</div></div>
-                      <div style="white-space:nowrap"><div style="font-size:14px;font-weight:600">🏆 {{ callWord }} <b style="font-weight:800">{{ t.favCode }}</b></div><div style="font-family:var(--fm);font-size:11px;color:#79819e;margin-top:2px">{{ stageWord }} {{ t.stageDisplay }}</div></div>
+                      <div style="min-width:0"><div style="font-size:14px;font-weight:600">🏆 {{ callWord }} <b style="font-weight:800">{{ t.favCode }}</b></div><div style="font-family:var(--fm);font-size:11px;color:#79819e;margin-top:2px">{{ stageWord }} {{ t.stageDisplay }}</div></div>
                     </div>
                     <div style="font-family:var(--fm);font-size:11px;color:#8791ab;display:flex;align-items:center;gap:6px;white-space:nowrap">{{ detailsWord }} <span style="font-size:15px;display:inline-block;transition:transform .25s;transform:{{ t.chevron }}">⌄</span></div>
                   </div>
