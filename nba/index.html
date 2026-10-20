@@ -11,6 +11,12 @@
 { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
 </script>
 <style>
+/* item 110: a bar label follows its segment's real width (ITEM110_PREREGISTER.md): the code goes first, then the
+   percentage; the other segment and the card title carry the reading */
+.pe-seg{container-type:inline-size}
+@container (max-width:55.98px){.pe-seg .pe-code{display:none}}
+@container (max-width:27.98px){.pe-seg .pe-pct{display:none}}
+
   *{box-sizing:border-box}
   body{margin:0;background:#05060d;-webkit-font-smoothing:antialiased}
   :focus-visible{outline:2px solid #7fb5ff;outline-offset:3px;border-radius:6px}
@@ -190,15 +196,15 @@
                     <div style="display:flex;align-items:center;gap:11px">
                       <div style="width:52px;font-size:11px;color:#8791ab;font-weight:600">{{ engineWord }}</div>
                       <div style="flex:1;display:flex;height:30px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:12px;font-weight:700">
-                        <div style="width:{{ t.engH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c">{{ t.home }}&#160;{{ t.engH }}%</div>
-                        <div style="width:{{ t.engA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020">{{ t.away }}&#160;{{ t.engA }}%</div>
+                        <div class="pe-seg" style="width:{{ t.engH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c"><span class="pe-code">{{ t.home }}&#160;</span><span class="pe-pct">{{ t.engH }}%</span></div>
+                        <div class="pe-seg" style="width:{{ t.engA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020"><span class="pe-code">{{ t.away }}&#160;</span><span class="pe-pct">{{ t.engA }}%</span></div>
                       </div>
                     </div>
                     <div style="display:{{ t.mktDisp }};align-items:center;gap:11px">
                       <div style="width:52px;font-size:11px;color:#8791ab;font-weight:600">{{ marketWord }}</div>
                       <div style="flex:1;display:flex;height:30px;border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:12px;font-weight:700;opacity:.78">
-                        <div style="width:{{ t.mktH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c">{{ t.home }}&#160;{{ t.mktH }}%</div>
-                        <div style="width:{{ t.mktA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020">{{ t.away }}&#160;{{ t.mktA }}%</div>
+                        <div class="pe-seg" style="width:{{ t.mktH }}%;background:linear-gradient(90deg,#2fbf78,#35e39a);display:flex;align-items:center;justify-content:center;color:#04150c"><span class="pe-code">{{ t.home }}&#160;</span><span class="pe-pct">{{ t.mktH }}%</span></div>
+                        <div class="pe-seg" style="width:{{ t.mktA }}%;background:linear-gradient(90deg,#4a9eff,#5aa9ff);display:flex;align-items:center;justify-content:center;color:#041020"><span class="pe-code">{{ t.away }}&#160;</span><span class="pe-pct">{{ t.mktA }}%</span></div>
                       </div>
                     </div>
                   </div>

@@ -41,3 +41,31 @@ the bar, changes the layout of the row and the reading of the bar; more change f
 ## Not touched
 
 Engines, payload, line 2 of any app.js, hub.app.js, rootsite, A+ logic, stage filters.
+
+## Added 2026-10-20: the bar definition corrected after the first red run
+
+The first red run on live counted tennis cuts at 1024 px too (14 of 18 cards), for example "Alejandro Davidovich
+Fokina" in a 118 px segment. Checked: the tennis segment is itself a flex box with overflow hidden and two children
+(the name span and the percentage span), so the test took the segment for a bar and its ellipsis name span for a
+segment, and counted the ellipsis, which is the design of item 109, as a cut. That red was the test's error, not the
+page's. Corrected before any green run: a bar's children must all be div elements (the segments); spans inside a
+segment are labels. Everything else in the test is unchanged. The red is run again on live with the corrected test.
+
+## Added 2026-10-20: results
+
+Red, on live with the corrected test (barCut, cards cut):
+| page | 390 en / he | 1024 en / he |
+|---|---|---|
+| NFL | 2 / 2 ("IND 18%" in 46 px) | 0 / 0 |
+| NBA | 2 / 2 ("PHI 18%" in 46 px) | 0 / 0 |
+| tennis | 6 / 6 ("Dalibor Svrcina 14%" in 35 px) | 2 / 2 ("Zizou Bergs 6%" in 22 px) |
+| MLB | no cards on 2026-10-20: not checked | not checked |
+
+The local build of origin's code with the same snapshot of the live line 2 gives the same red, card for card.
+Green, the local build with the fix, same snapshot: barCut 0 on NFL, NBA and tennis, 390 and 1024, English and
+Hebrew; the 109 gates 0; __front at 390 (negative numbers, tap targets, contrast) 0 before and 0 after; no page
+error. Line 2 of the four app.js unchanged.
+
+Shown after the fix, 390 px: NFL "18%" in the 46 px segment ("IND 30%" kept where it fits); NBA "18%"; tennis "JOD
+42%" (106 px), "BUS 30%", "ZAN 31%", "16%" (40 px), and nothing in the 35 px and 15 px segments (the other segment
+and the title carry the reading), as written above. Screenshots: before and after of the IND at MIN card.

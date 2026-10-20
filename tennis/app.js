@@ -838,6 +838,9 @@ class Component extends DCLogic {
       return {
         ...t, ...st,
         engA: 100 - t.engH,
+        // item 110: a 3-letter code for a narrow bar segment: the surname's first three letters (display only)
+        homeCode: (String(t.home || '').trim().split(/\s+/).pop() || '').replace(/[^\p{L}]/gu, '').slice(0, 3).toUpperCase(),
+        awayCode: (String(t.away || '').trim().split(/\s+/).pop() || '').replace(/[^\p{L}]/gu, '').slice(0, 3).toUpperCase(),
         mktA: hasMktH ? 100 - t.mktH : null,   // hidden without a price anyway (mktDisp); no number either (was 50)
         gapLeft: lo, gapWidth: Math.max(1.2, hi - lo),
         open, detailDisp: open ? 'block' : 'none', chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',

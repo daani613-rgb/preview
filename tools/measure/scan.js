@@ -180,9 +180,26 @@ window.__overflow = async function (opts) {
         if ((cs.overflowY === 'visible' && cs.overflow === 'visible') || !d.getClientRects().length || !(d.innerText || '').trim()) continue;
         if (d.scrollHeight > d.clientHeight + 1) { vclip++; if (!vclipEx) vclipEx = (d.innerText || '').trim().replace(/\s+/g, ' ').slice(0, 30); }
       }
+      // item 110: a label cut sideways inside a probability bar (a flex box, overflow hidden, 20 to 34 px high, two
+      // segments or more): the segment's text wider than the segment, or a label shown with under 21 px of it visible
+      let barCut = 0, barCutEx = '';
+      for (const b of c.querySelectorAll('*')) {
+        const bs = getComputedStyle(b), bh = b.getBoundingClientRect().height;
+        if (bs.display !== 'flex' || bs.overflowX !== 'hidden' || bh < 20 || bh > 34 || b.children.length < 2
+            || [...b.children].some(k => k.tagName !== 'DIV')) continue;   // segments are divs; a label's spans are not a bar
+        for (const s of b.children) {
+          if (s.getBoundingClientRect().width < 1) continue;
+          let cut = s.scrollWidth > s.clientWidth + 1 && (s.innerText || '').trim();
+          for (const l of s.querySelectorAll('*')) {
+            if (!l.getClientRects().length || !(l.innerText || '').trim()) continue;
+            if (l.scrollWidth > l.clientWidth + 1 && l.clientWidth < 21) cut = true;
+          }
+          if (cut) { barCut++; if (!barCutEx) barCutEx = (s.innerText || '').trim().replace(/\s+/g, ' ').slice(0, 30) + ' @' + Math.round(s.getBoundingClientRect().width) + 'px'; }
+        }
+      }
       out.push({ state, card: name, w: Math.round(r.width), display: getComputedStyle(c).display,
                  childOut: Math.round(childOut), scroll: c.scrollWidth - c.clientWidth, descOut: Math.round(descOut), descEx,
-                 overlap, overlapEx, vclip, vclipEx });
+                 overlap, overlapEx, vclip, vclipEx, barCut, barCutEx });
     }
   };
   measure('default');
@@ -193,5 +210,6 @@ window.__overflow = async function (opts) {
   return { cards: out.length, childFail: out.filter(x => x.childOut > 1).length, scrollFail: out.filter(x => x.scroll > 0).length,
            descFail: out.filter(x => x.descOut > 1).length, maxChildOut: Math.max(0, ...out.map(x => x.childOut)),
            overlapFail: out.filter(x => x.overlap > 0).length, vclipFail: out.filter(x => x.vclip > 0).length,
-           gate109: out.filter(x => x.descOut > 1 || x.overlap > 0 || x.vclip > 0).length, all: out };
+           gate109: out.filter(x => x.descOut > 1 || x.overlap > 0 || x.vclip > 0).length,
+           barCutFail: out.filter(x => x.barCut > 0).length, barCutEx: (out.find(x => x.barCut > 0) || {}).barCutEx || '', all: out };
 };
