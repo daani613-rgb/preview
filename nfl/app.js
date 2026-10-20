@@ -4,6 +4,10 @@ window.REAL = {"aplusRule": {"engine": "nfl", "probMin": 0.7, "probScale": "2-wa
 // written and never moves with a time zone (STOP2_PREREGISTER.md)
 const __DM = (s, withYear) => { const m = String(s || '').match(/(\d{4})-?(\d{2})-?(\d{2})/); return m ? (m[3] + '.' + m[2] + (withYear ? '.' + m[1] : '')) : (s || ''); };
 const __TS = s => { const m = String(s || '').match(/(\d{4})-?(\d{2})-?(\d{2})[T ](\d{2}:\d{2})/); return m ? `${m[3]}.${m[2]}.${m[1]} ${m[4]}` : __DM(s, 1); };
+// a game or tile whose kickoff has passed by the reader's clock, with no final yet, reads as started also between runs;
+// its numbers are the ones already in the payload, the frozen pre-game row (nfl-engine/NFL_STARTED_PREREGISTER.md)
+(function () { const R = window.REAL || {}; const kicked = x => x && !x.played && !x.result && !x.started && x.kickoffUtc && Date.now() >= Date.parse(x.kickoffUtc);
+  (R.games || []).forEach(g => { if (kicked(g)) g.started = true; }); (R.tiles || []).forEach(t => { if (kicked(t)) t.started = true; }); })();
 
 // "A+ on this page means: …" from the payload's A+ rule field (nfl_stages constants via nfl_build.py)
 function nflAplus(lang){
@@ -37,7 +41,7 @@ class Component extends DCLogic {
     const old = !!(root && bt) && (Date.now() - Date.parse(bt)) > 24 * 3600 * 1000;
     if (!old) { if (el) el.remove(); return; }
     if (!el) { el = document.createElement('div'); el.id = 'nfl-stale'; el.style.cssText = 'margin:12px auto;max-width:1200px;padding:10px 14px;border:1px solid #f5b23d;border-radius:8px;color:#f5b23d;font:600 13px var(--fm,monospace)'; root.parentNode.insertBefore(el, root); }
-    const ts = bt.slice(0, 16).replace('T', ' '), he = this.state.lang === 'he';
+    const ts = __TS(bt), he = this.state.lang === 'he';   // dd.mm.yyyy HH:MM (NFL_STARTED_PREREGISTER.md)
     el.dir = he ? 'rtl' : 'ltr';
     el.textContent = he ? `הנתונים אינם מעודכנים. בנייה אחרונה ${ts} UTC.` : `Data is not current. Last build ${ts} UTC.`;
   }
