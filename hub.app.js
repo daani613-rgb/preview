@@ -25,13 +25,21 @@ class Component extends DCLogic {
       tennis: R => !!(R.feat && R.feat.open === true),
       worldcup: R => !!(R.feat && Object.keys(R.feat).length) && !(R.matches || []).every(m => m.decided),
     };
-    Object.keys(pick).forEach(sp => {
-      fetch(`./${sp}/app.js`, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject(r.status)).then(txt => {
+    // status.json first (about 0.2 KB per engine, written by its generator with these same rules,
+    // STATUS_JSON_PREREGISTER.md); missing, not JSON or not of that shape: the payload, as before.
+    const okStatus = (j, sp) => !!j && j.v === 1 && j.engine === sp && typeof j.open_call === 'boolean'
+      && (j.last_data_date === null || /^\d{4}-\d{2}-\d{2}$/.test(String(j.last_data_date))) && !!j.hub && typeof j.hub === 'object';
+    const fromPayload = sp => fetch(`./${sp}/app.js`, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject(r.status)).then(txt => {
         const line = txt.split('\n')[1] || '';
         const R = JSON.parse(line.slice(line.indexOf('=') + 1).trim().replace(/;$/, ''));
         const ds = pick[sp](R).filter(x => /^\d{4}-\d{2}-\d{2}/.test(String(x))).map(x => String(x).slice(0, 10)).sort();
         this.setState(s => ({ st: { ...s.st, [sp]: ds.length ? ds[ds.length - 1] : null }, calls: { ...s.calls, [sp]: hasCall[sp](R) } }));
       }).catch(() => { this.setState(s => ({ st: { ...s.st, [sp]: null }, calls: { ...s.calls, [sp]: false } })); });
+    Object.keys(pick).forEach(sp => {
+      fetch(`./${sp}/status.json`, { cache: 'no-store' }).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(j => {
+        if (!okStatus(j, sp)) throw new Error('status.json shape');
+        this.setState(s => ({ st: { ...s.st, [sp]: j.last_data_date }, calls: { ...s.calls, [sp]: j.open_call } }));
+      }).catch(() => fromPayload(sp));
     });
   }
 
