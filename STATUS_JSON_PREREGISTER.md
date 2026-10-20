@@ -164,3 +164,28 @@ What changed in the order of 2026-10-14 (carried out from 2026-10-20 instead):
   written in a dated section; the proof stays "hash equal before and after".
 - The rest (stop, five engines one at a time nfl, baseball, nba, tennis, worldcup; a natural run of NFL and MLB; a
   fresh seed from the live line 2 for the rest; stop; hubs) is unchanged.
+
+## Added 2026-10-20: no seeding; each engine writes its own status.json (decision of Samuel)
+
+The five engine changes were pushed to main on 2026-10-20 one at a time (nfl 8e4fa6b, baseball 500b3db, nba
+55a6b87, tennis bed8b05, worldcup 2ba0464), each checked on origin (the generator call, the workflow line, status_json.py
+equal to the measured file). No manual run, no counted call.
+
+- Tennis ran on bed8b05 at 20:49Z (a run that is not live; the pause skips the preview publish only on a live run)
+  and wrote tennis/status.json (built_utc 2026-10-20T20:50:09Z); test_status.js against the live line 2: 5 of 5.
+- Decision: the seed of step 5 is cancelled for all five engines. Each engine's status.json comes from a natural
+  run of its workflow. A real run is better evidence than a seed, and the hubs fall back to app.js while the file is
+  missing, so there is no time pressure.
+- If an engine has not written status.json by 2026-10-22 18:00Z: report why, then decide whether to seed. Not before.
+- Before the hub push: rebase on origin; line 2 of the five app.js equal to origin after the rebase; the four
+  variants (before, present, missing, broken) measured again on the build after the rebase; the page text hashes of
+  both hubs measured on the live pages right before the change.
+
+Measured on 2026-10-20 before the rebase, one snapshot of the live files, local build:
+| variant | preview en / he | root en / he | app.js | status.json | KB preview / root |
+|---|---|---|---|---|---|
+| before (origin code) | f4ced2c09a4f / 8a9504f60c2b | 7bbeeefdd698 / 86b493ed09bf | 5 | 0 | 304 / 289 |
+| present | equal | equal | 0 | 5 | 18 / 2 |
+| missing | equal | equal | 5 | 5 (404) | 308 / 293 |
+| broken | equal | equal | 5 | 5 | 306 / 291 |
+The "before" hashes are equal to the live pages measured at the same time.
