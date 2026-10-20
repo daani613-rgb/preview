@@ -151,7 +151,19 @@ window.__overflow = async function (opts) {
       while ((n = tw.nextNode())) {
         if (!n.nodeValue.trim()) continue;
         const rg = document.createRange(); rg.selectNodeContents(n);
-        const bs = [...rg.getClientRects()].filter(b => b.width >= 1 && b.height >= 1);   // one box per line
+        // one box per line, cut to what the overflow boxes between the text and the card let show (an ellipsis-cut
+        // name's range still spans its full width)
+        let clip = { left: -1e9, top: -1e9, right: 1e9, bottom: 1e9 };
+        for (let e = n.parentElement; e && e !== c.parentElement; e = e.parentElement) {
+          const cs = getComputedStyle(e);
+          if (cs.overflow !== 'visible' || cs.overflowX !== 'visible' || cs.overflowY !== 'visible') {
+            const q = e.getBoundingClientRect();
+            clip = { left: Math.max(clip.left, q.left), top: Math.max(clip.top, q.top), right: Math.min(clip.right, q.right), bottom: Math.min(clip.bottom, q.bottom) };
+          }
+        }
+        const bs = [...rg.getClientRects()].map(b => ({ left: Math.max(b.left, clip.left), top: Math.max(b.top, clip.top),
+                                                        right: Math.min(b.right, clip.right), bottom: Math.min(b.bottom, clip.bottom) }))
+                                           .filter(b => b.right - b.left >= 1 && b.bottom - b.top >= 1);
         if (bs.length) runs.push({ bs, t: n.nodeValue.trim().slice(0, 24) });
       }
       let overlap = 0, overlapEx = '';

@@ -34,3 +34,14 @@ It must fail on live (NFL, tennis).
 0; before and after screenshots of the same row at 390 px, English and Hebrew.
 
 Nothing in this file is changed after the first code change; a later finding goes in a dated section.
+
+## 2026-10-20: two corrections to the test, found while running it (after the first code change)
+
+- A text run that wraps over two lines was compared by its one bounding box, which covers both lines, so it
+  "overlapped" a word on its first line (NFL "Home" / "25.10 · 13:00 ET"). The comparison is now per line box.
+- A name cut with an ellipsis keeps a range box as wide as the full text, past the box that clips it, so on the
+  fixed build it "overlapped" its own percentage. Each line box is now cut to the overflow boxes between the text
+  and the card, that is, to what can be seen. With both corrections the live page still fails (NFL 8 of 10
+  cards at 390 px in English; tennis 18 of 18 at 390 px, 8 at 1024 px), with the same pairs as before.
+- What the gates do not check, said here: a name cut with an ellipsis in a tennis bar is cut on purpose (the full
+  names are in the title above it), and is not counted.
