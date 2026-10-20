@@ -631,6 +631,7 @@ class Component extends DCLogic {
       fatigue: t.fatigue || null, surprise: t.surprise || null,
       expTotal: t.expTotal != null ? t.expTotal : null, actTotal: t.actTotal != null ? t.actTotal : null,
       cellAcc: t.cellAcc != null ? t.cellAcc : null, cellN: t.cellN != null ? t.cellN : null,   // no band: null, not 0
+      accSrc: t.accSrc || null,   // what the figure is: 'cell' (side x band x stage) or 'band' (CALIB); none: older payload
       // a game past its journal tip-off is started, also between runs (the payload changes only once a day)
       phase: (t.phase === 'pregame' && t.tipoffUtc && Date.now() >= Date.parse(t.tipoffUtc)) ? 'started' : (t.phase || null),
       result: t.result || null, isAplus: !!t.isAplus,   // today's games (PICKS): pregame / started / decided
@@ -694,7 +695,10 @@ class Component extends DCLogic {
       // Cell accuracy display
       // no calibration band for this probability: no cell accuracy at all (not "small sample")
       const cellAccDisp = t.cellN == null ? '' : t.cellN >= 30
-        ? (he ? `דיוק-תא ${t.cellAcc}% (n=${t.cellN})` : `Cell accuracy ${t.cellAcc}% (n=${t.cellN})`)
+        // the label follows the figure's source, marked in the data (nba-engine/CALIB_MEASURE_PREREGISTER.md, 2026-10-20)
+        ? (t.accSrc === 'cell' ? (he ? `קריאות דומות עד היום: ${t.cellAcc}% נכונות מתוך ${t.cellN}` : `Similar calls so far: ${t.cellAcc}% right of ${t.cellN}`)
+          : t.accSrc === 'band' ? (he ? `הטווח הזה עד היום: ${t.cellAcc}% נכונות מתוך ${t.cellN}` : `This band so far: ${t.cellAcc}% right of ${t.cellN}`)
+          : (he ? `דיוק-תא ${t.cellAcc}% (n=${t.cellN})` : `Cell accuracy ${t.cellAcc}% (n=${t.cellN})`))
         : (he ? 'מדגם קטן' : 'small sample');
 
       return {
