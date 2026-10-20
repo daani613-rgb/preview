@@ -130,6 +130,8 @@ window.__front = async function (opts) {
 // children. childOut: px by which a direct child's box leaves the card's box (fail if > 1). scroll: scrollWidth minus
 // clientWidth. descOut: the widest overflow of any descendant. scroll and descOut are reported apart: on the build
 // before 45e951f the NFL "Total points" row already overflows (a separate, older defect), so the regression gate is childOut.
+// Item 109 (2026-10-20): descOut > 1 becomes a gate, with overlap (two text runs whose own boxes intersect by more
+// than 2 x 2 px) and vclip (an element with overflow other than visible whose scrollHeight > clientHeight + 1).
 window.__overflow = async function (opts) {
   opts = opts || {};
   const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -144,8 +146,28 @@ window.__overflow = async function (opts) {
       let childOut = 0, descOut = 0, descEx = '';
       for (const k of c.children) childOut = Math.max(childOut, ext(k));
       for (const d of c.querySelectorAll('*')) { const e = ext(d); if (e > descOut) { descOut = e; descEx = (d.innerText || d.tagName).trim().replace(/\s+/g, ' ').slice(0, 30); } }
+      // item 109: text runs that overlap (boxes of the text itself), and text cut in height by an overflow box
+      const runs = [], tw = document.createTreeWalker(c, NodeFilter.SHOW_TEXT); let n;
+      while ((n = tw.nextNode())) {
+        if (!n.nodeValue.trim()) continue;
+        const rg = document.createRange(); rg.selectNodeContents(n);
+        const bs = [...rg.getClientRects()].filter(b => b.width >= 1 && b.height >= 1);   // one box per line
+        if (bs.length) runs.push({ bs, t: n.nodeValue.trim().slice(0, 24) });
+      }
+      let overlap = 0, overlapEx = '';
+      const hit = (A, B) => Math.min(A.right, B.right) - Math.max(A.left, B.left) > 2 && Math.min(A.bottom, B.bottom) - Math.max(A.top, B.top) > 2;
+      for (let i = 0; i < runs.length; i++) for (let j = i + 1; j < runs.length; j++) {
+        if (runs[i].bs.some(A => runs[j].bs.some(B => hit(A, B)))) { overlap++; if (!overlapEx) overlapEx = runs[i].t + ' / ' + runs[j].t; }
+      }
+      let vclip = 0, vclipEx = '';
+      for (const d of [c, ...c.querySelectorAll('*')]) {
+        const cs = getComputedStyle(d);
+        if ((cs.overflowY === 'visible' && cs.overflow === 'visible') || !d.getClientRects().length || !(d.innerText || '').trim()) continue;
+        if (d.scrollHeight > d.clientHeight + 1) { vclip++; if (!vclipEx) vclipEx = (d.innerText || '').trim().replace(/\s+/g, ' ').slice(0, 30); }
+      }
       out.push({ state, card: name, w: Math.round(r.width), display: getComputedStyle(c).display,
-                 childOut: Math.round(childOut), scroll: c.scrollWidth - c.clientWidth, descOut: Math.round(descOut), descEx });
+                 childOut: Math.round(childOut), scroll: c.scrollWidth - c.clientWidth, descOut: Math.round(descOut), descEx,
+                 overlap, overlapEx, vclip, vclipEx });
     }
   };
   measure('default');
@@ -154,5 +176,7 @@ window.__overflow = async function (opts) {
     for (const t of tabs) { const name = t.innerText.trim().replace(/\s+/g, ''); t.click(); await wait(700); measure(name); }
   }
   return { cards: out.length, childFail: out.filter(x => x.childOut > 1).length, scrollFail: out.filter(x => x.scroll > 0).length,
-           descFail: out.filter(x => x.descOut > 1).length, maxChildOut: Math.max(0, ...out.map(x => x.childOut)), all: out };
+           descFail: out.filter(x => x.descOut > 1).length, maxChildOut: Math.max(0, ...out.map(x => x.childOut)),
+           overlapFail: out.filter(x => x.overlap > 0).length, vclipFail: out.filter(x => x.vclip > 0).length,
+           gate109: out.filter(x => x.descOut > 1 || x.overlap > 0 || x.vclip > 0).length, all: out };
 };
