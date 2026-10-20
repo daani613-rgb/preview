@@ -123,3 +123,44 @@ The order for 2026-10-14:
    hash equal (6fd4c6fafc72 / 38e49745dd42), console clean.
 8. The real NBA map, `build_nba_map.py --yes`: a separate approval, not before the end of step 7; the count reported
    before and after.
+
+## Added 2026-10-20: the engine change rebuilt and measured again (after the loss of the local folder)
+
+The engine change of 2026-10-13 was lost with the local folder on 2026-10-19 and never pushed. Rebuilt from the
+transcript, unchanged: `preview_build/status_json.py` (the same file in the five engines), the try-wrapped call before
+the last print of each `gen_<sport>_data.py`, and the one workflow line after `node --check prevrepo/<sport>/app.js` in
+each `daily.yml`. Each insertion asserted once and only once; the five `daily.yml` parse as YAML. The engines commit
+named files only, so `preview_build/status.json` is not committed to an engine repo.
+
+Red, on this repo as it is (commit 8e347a2): test_status.js, 5 FAILED, status.json ENOENT for the five engines.
+
+Green, measured on copies of the five repos at their current HEAD, no network (socket blocked), clock frozen at
+2026-10-20 21:00:00Z:
+
+| engine | payload bytes | stdout sha256, old gen | stdout sha256, new gen | status.json |
+|---|---|---|---|---|
+| nfl | 112,265 | b9450e50154da900 | b9450e50154da900 | 293 B |
+| nba | 49,083 | 796ea86b11c244bd | 796ea86b11c244bd | 157 B |
+| mlb | 1,149,377 | 463a766999be63ff | 463a766999be63ff | 209 B |
+| tennis | 254,212 | 3b12764a96720e85 | 3b12764a96720e85 | 241 B |
+| worldcup | 330,093 | d506fdeac383dea9 | d506fdeac383dea9 | 223 B |
+
+- The payload injected into line 2 of a copy of this repo, status.json beside it: test_status.js 25 of 25.
+- A write that fails (STATUS_OUT in a folder that does not exist): exit 0, stdout byte-identical to the old
+  generator, one line `status.json not written: FileNotFoundError` on stderr, for the five.
+- Existing tests that run a generator, on the copies: nba test_opening_page.py and tennis test_pause_extension.py pass.
+- Limits of the harness: the builds that need the network were run with it blocked. MLB: `totals/today_totals.json`
+  (ignored by git, written by the totals step that reads the MLB schedule) was given as `{"date":"2026-10-20",
+  "games":[]}`; `today_all.json` at HEAD is an empty list too (no MLB game on 2026-10-20). NFL: `nfl_build.py` ran
+  on the committed games.csv. World Cup: `dump_ratings.py`, `worldcup_surprise_layer.py --csv
+  international_results.csv`, `worldcup_dashboard.py`, `board_build.py`. The old and new generators read the same
+  inputs, so the byte comparison holds; the values of status.json are of this local build, not of the live pages.
+
+What changed in the order of 2026-10-14 (carried out from 2026-10-20 instead):
+- Step 1 is done: the `/v4/account` read and the NBA map build of 2026-10-20 (count 226 after it). Step 8 is done
+  (the map is pushed). Neither is repeated.
+- The page text hashes in step 7 (83ddfbe8d3bc / fb1e6c41763b, 6fd4c6fafc72 / 38e49745dd42) were measured on
+  2026-10-13; the pages changed since. They are measured again on the live pages right before the hub push and
+  written in a dated section; the proof stays "hash equal before and after".
+- The rest (stop, five engines one at a time nfl, baseball, nba, tennis, worldcup; a natural run of NFL and MLB; a
+  fresh seed from the live line 2 for the rest; stop; hubs) is unchanged.
