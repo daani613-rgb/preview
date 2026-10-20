@@ -255,7 +255,7 @@ class Component extends DCLogic {
 
   labels() {
     const R = window.REAL || {};
-    const off = R.isOffseason === true;   // read only; season strings below depend on it and carry no fixed date
+    const off = R.isOffseason === true && !(R.gamesToday > 0);   // read only; games today leave the offseason view (NBA_OPENING_PAGE_PREREGISTER.md)
     const acc = R.accuracy || {};
     const clvCollecting = !R.clv || R.clv.n === 0 || R.clvCollecting === true;
     const aplusAcc = acc.aplus != null ? acc.aplus : null;      // no hand-written fallback
@@ -521,7 +521,7 @@ class Component extends DCLogic {
     const L = this.labels();
     const he = this.state.lang === 'he';
     const R = window.REAL || {};
-    const isOffseason = R.isOffseason === true;
+    const isOffseason = R.isOffseason === true && !(R.gamesToday > 0);   // games today: not the offseason view
     const V = this.state.view;
     const hasSignals = !isOffseason && (R.tiles || []).length > 0;
     const stAccent = '#f5b23d', stIcon = '🏀';
@@ -596,7 +596,8 @@ class Component extends DCLogic {
 
     const rf = R.feat || {};
     const fEngPick = rf.engPick != null ? rf.engPick : null;   // no engine value, no number (was a fallback of 60)
-    const hasFeat = R.feat != null && fEngPick != null;      // no featured game: the card is not rendered
+    const featStarted = !!rf.tipoffUtc && Date.now() >= Date.parse(rf.tipoffUtc);   // its tile then says Started
+    const hasFeat = R.feat != null && fEngPick != null && !featStarted;      // no featured game: the card is not rendered
     const fMktPick = rf.mktPick != null ? rf.mktPick : null;
     const fEdge    = (rf.edge != null && !isOffseason) ? rf.edge : null;
     // A historical winner-pick card (rf.kind === 'historical'): the % is the engine's WIN probability for
@@ -630,7 +631,9 @@ class Component extends DCLogic {
       fatigue: t.fatigue || null, surprise: t.surprise || null,
       expTotal: t.expTotal != null ? t.expTotal : null, actTotal: t.actTotal != null ? t.actTotal : null,
       cellAcc: t.cellAcc != null ? t.cellAcc : null, cellN: t.cellN != null ? t.cellN : null,   // no band: null, not 0
-      phase: t.phase || null, result: t.result || null, isAplus: !!t.isAplus,   // today's games (PICKS): pregame / started / decided
+      // a game past its journal tip-off is started, also between runs (the payload changes only once a day)
+      phase: (t.phase === 'pregame' && t.tipoffUtc && Date.now() >= Date.parse(t.tipoffUtc)) ? 'started' : (t.phase || null),
+      result: t.result || null, isAplus: !!t.isAplus,   // today's games (PICKS): pregame / started / decided
     }));
 
     const styleFor = (s) => {
