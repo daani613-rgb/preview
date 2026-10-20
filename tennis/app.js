@@ -308,9 +308,17 @@ class Component extends DCLogic {
     // rows in the figure logged without a start time cannot be confirmed as written before the match started
     const nsEn = RC.noStart ? ` Of these ${RC.n} matches, ${RC.noStart} were logged without a start time, so they cannot be confirmed as written before the match started.` : '';
     const nsHe = RC.noStart ? ` מתוך ${RC.n} המשחקים האלה, ${RC.noStart} נרשמו ביומן בלי שעת פתיחה, ולכן אי אפשר לאשר שנכתבו לפני תחילת המשחק.` : '';
-    // 63.7 / 77.3 / 77.4 / 61,182 (R.accuracy) have no script that produces them -> not shown
-    const NOBT_EN = 'No backtest figure is published for tennis yet. The earlier number could not be reproduced from the data.';
-    const NOBT_HE = 'לא מתפרסם מספר בדיקה לאחור לטניס. את המספר הקודם לא הצלחנו לשחזר מהנתונים.';
+    // No backtest figure is shown (the old 63.7 / 77.3 / 77.4 / 61,182 had no script, KNOWN_DEFECTS 102). The journal's
+    // own figures are: R.accuracy, built by gen_tennis_data.py from the settled, non-voided rows of clv_journal.csv.
+    // The count right is read back from the rounded rate: exact while n < 1,000.
+    const A = R.accuracy || {};
+    const jn = A.journal_n || 0, jc = jn && A.journal_acc != null ? Math.round(A.journal_acc * jn / 100) : null;
+    const an = A.journal_aplus_n || 0, ac = an && A.journal_aplus_acc != null ? Math.round(A.journal_aplus_acc * an / 100) : null;
+    const accTile = (he) => jc == null
+      ? {display:'—', target:null, dec:0, prefix:'', u:'', d: he ? 'אין עדיין משחקים שהוכרעו ביומן.' : 'No decided match in the journal yet.'}
+      : {display:String(A.journal_acc), target:A.journal_acc, dec:1, prefix:'', u:'%',
+         d: he ? `${jc} מתוך ${jn} משחקים שהוכרעו נכונים` + (ac != null ? ` · A+ ${ac} מתוך ${an}` : '') + ' · מהיומן, כל קריאה נכתבה לפני המשחק.'
+               : `${jc} of ${jn} decided matches right` + (ac != null ? ` · A+ ${ac} of ${an}` : '') + ' · from the journal, each call written before its match.'};
     // the kicker says what the featured card is (gen, NFL rule): an A+ call still to play, another match still to
     // play, or, when nothing is left to play, a decided one (KNOWN_DEFECTS item 52)
     const FT = R.feat || null;
@@ -330,7 +338,7 @@ class Component extends DCLogic {
       heroTitle: QP ? 'The tennis engine.' : 'The tennis engine, live.', heroSub: QP ? 'Two models per match, the winner and total games. Odds pulls are paused, so the slate is not refreshed. Edges are measured against Pinnacle.' : 'Two models per match, the winner and total games. Updated several times a day. Scheduled runs are often delayed or skipped. Edges are measured against Pinnacle.',
       signalKicker: kickEn, edgeLabel: 'Edge vs Pinnacle', runsLabel: 'expected games', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Pinnacle', callWord: 'Call', stageWord: 'stage', overWord: 'OVER', underWord: 'UNDER', homeWord: 'Fav', awayWord: 'Dog', starterPrefix: 'surface · Elo blend:',
-      validatedHead: 'BACKTEST ACCURACY · HOLDOUT',
+      validatedHead: 'THE JOURNAL · WRITTEN BEFORE THE MATCH',
       clvTitle: 'Cumulative CLV', clvSub: `No-vig, vs Pinnacle's closing line · ${RC.n} closed-line matches (${RC.pos} positive). >0 = engine beat the market's move.${nsEn}${gapEn}`,
       calTitle: 'Calibration', calSub: 'Reference diagonal shown. The engine curve and per-stage calibration are not part of this live feed.',
       predAxis: 'Predicted win probability →', perfectLabel: 'Perfect calibration', calFoot: 'Per-stage accuracy and calibration are not part of this live feed.',
@@ -363,7 +371,7 @@ class Component extends DCLogic {
       dateLabels: ['Today', 'Results', 'By date'],
       heroStats: [ {v:hcl, k:'CLV · winner market', color:'#f5b23d'} ],   // the backtest tile had no number: gone
       kpis: [
-        {display:'—', target:null, dec:0, prefix:'', u:'', d:NOBT_EN},
+        accTile(false),
         {display:'—', target:null, dec:0, prefix:'', u:'', d:'Totals over/under — INDICATIVE only · step-6b · no value-zone yet.'},
         {display:cf, target:RC.meanPct, dec:2, prefix:(RC.meanPct>=0?'+':''), u:'%', d:`Mean CLV per match, winner market · ${RC.n} matches with a closing price (${RC.pos} above 0) · vs the Pinnacle closing line.${nsEn}`},
       ],
@@ -375,7 +383,7 @@ class Component extends DCLogic {
       heroTitle: 'מנוע החיזוי של הטניס', heroSub: QP ? 'שני מודלים לכל משחק, מנצח וסך גיימים. משיכת היחסים מושהית, ולכן הסלייט לא מתעדכן. ה-Edge נמדד מול Pinnacle.' : 'שני מודלים לכל משחק, מנצח וסך גיימים. מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות. ה-Edge נמדד מול Pinnacle.',
       signalKicker: kickHe, edgeLabel: 'Edge מול Pinnacle', runsLabel: 'גיימים צפויים', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'Pinnacle', callWord: 'קריאה', stageWord: 'שלב', overWord: 'מעל', underWord: 'מתחת', homeWord: 'מועדף', awayWord: 'מוחלש', starterPrefix: 'משטח · שילוב-Elo:',
-      validatedHead: 'דיוק בבדיקה לאחור · HOLDOUT',
+      validatedHead: 'היומן · נכתב לפני המשחק',
       clvTitle: 'CLV מצטבר', clvSub: `ללא-vig, מול קו הסגירה של Pinnacle · ${RC.n} משחקים עם קו-סגירה (${RC.pos} חיוביים). מעל 0 = המנוע ניצח את תנועת השוק.${nsHe}${gapHe}`,
       calTitle: 'כיול (Calibration)', calSub: 'מוצג האלכסון כקו ייחוס. עקומת המנוע וכיול לפי שלב אינם חלק מהפיד החי הזה.',
       predAxis: '← הסתברות ניצחון חזויה', perfectLabel: 'כיול מושלם', calFoot: 'דיוק לפי שלב וכיול אינם חלק מהפיד החי הזה.',
@@ -407,7 +415,7 @@ class Component extends DCLogic {
       dateLabels: ['היום', 'תוצאות', 'לפי תאריך'],
       heroStats: [ {v:hcl, k:'CLV · שוק המנצח', color:'#f5b23d'} ],
       kpis: [
-        {display:'—', target:null, dec:0, prefix:'', u:'', d:NOBT_HE},
+        accTile(true),
         {display:'—', target:null, dec:0, prefix:'', u:'', d:'מעל/מתחת לגיימים — אינדיקטיבי בלבד · step-6b · אין value-zone עדיין.'},
         {display:cf, target:RC.meanPct, dec:2, prefix:(RC.meanPct>=0?'+':''), u:'%', d:`CLV ממוצע למשחק, שוק המנצח · ${RC.n} משחקים עם מחיר סגירה (${RC.pos} מעל 0) · מול קו הסגירה של Pinnacle.${nsHe}`},
       ],
