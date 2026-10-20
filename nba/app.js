@@ -703,7 +703,9 @@ class Component extends DCLogic {
 
       return {
         ...t, ...st, engA: 100 - t.engH, gapLeft: lo, gapWidth: Math.max(1.2, hi - lo),
-        dState, badgeDisp, cellDisp: t.cellN == null ? 'none' : 'block',
+        // the cell line is hidden: its table counts each past game under a stage that already holds that game's result
+        // (KNOWN_DEFECTS 112, nba-engine/CELLACC_MEASURE_PREREGISTER.md); it returns once build_tables is fixed
+        dState, badgeDisp, cellDisp: 'none',
         open, detailDisp: (open && hasTotals) ? 'block' : 'none', toggleDisp: hasTotals ? 'flex' : 'none',
         chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
         ringColor, ringArc: `${(CIRC * t.callPct / 100).toFixed(1)} ${CIRC.toFixed(1)}`,
