@@ -137,7 +137,7 @@ window.__overflow = async function (opts) {
   const wait = ms => new Promise(r => setTimeout(r, ms));
   const out = [], seen = new Set();
   const measure = state => {
-    for (const c of document.querySelectorAll('[role=button]')) {
+    for (const c of document.querySelectorAll(opts.cards || '[role=button]')) {   // opts.cards: the classic pages' card selector
       const r = c.getBoundingClientRect();
       if (c.children.length <= 2 || r.width < 1 || !c.getClientRects().length) continue;
       const name = (c.innerText || '').trim().split('\n')[0].slice(0, 30), key = state + '|' + name;
