@@ -18,7 +18,9 @@ Protocol used for 103:
 - `--slow`: CPU 4x slower, 1.6 Mbps down, 750 kbps up, 150 ms round trip.
 - GPU: the default ANGLE backend of the machine (on macOS, Metal). SwiftShader (software) inflates the three.js cost.
 - One browser at a time: nothing else heavy runs during a measurement.
-- Served from a local static server of the built site (`python3 -m http.server`).
+- Served compressed, as GitHub Pages serves it: `python3 gzserve.py <port> <site dir>` (gzip for text files).
+  `python3 -m http.server` does not compress: on 2026-10-13 it made MLB's app.js 1.6 MB on the wire against
+  123 KB live, and the slow-phone paint about six times longer (correction of KNOWN_DEFECTS 103).
 
 Browser: `CHROME_BIN` (any Chromium; default: the Playwright headless shell path of the machine it was written on).
 Node 20 needs `--experimental-websocket`.
