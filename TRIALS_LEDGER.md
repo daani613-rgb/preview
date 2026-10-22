@@ -297,3 +297,19 @@ Thresholds (02_MASTER_PLAN.md section 2):
 
 None registered. Each is added with its own pre-registration commit, after the season split is approved.
 
+## Confirmation family (PREREG_CONFIRM_FAMILY.md, research 88504b4): ten tests, Holm over 10, one-sided
+
+| id | from | engine | test | data | status | registered in | result |
+|---|---|---|---|---|---|---|---|
+| C01 | E052 | WC | MOV Elo, frozen | internationals 2026-07-20 to 2026-10-06, n 365 | read once 2026-10-22 | research 88504b4 | z -0.18, p 0.428: not decided (final) |
+| C02 | E056 | WC | Glicko-2, frozen | same | read once 2026-10-22 | research 88504b4 | z -0.01, p 0.494: not decided (final) |
+| C03 | E057 | WC | Bradley-Terry, frozen | same | read once 2026-10-22 | research 88504b4 | z +0.29, p 0.614: not decided (final) |
+| C04 | E060 | WC | ensemble, frozen | same | read once 2026-10-22 | research 88504b4 | z -0.53, p 0.297: not decided (final) |
+| C05 | E034 | MLB | MOV Elo, frozen | 2024-2025, n 4,866 | read once 2026-10-22 | research 88504b4 | z -1.91, p 0.028: not decided (final) |
+| C06 | E108 | NBA | b2b away coefficient | 2024-25, n 1,321 | read once 2026-10-22 | research 88504b4 | z +2.33, p 0.0098: not decided (final) |
+| C07 | E051 | TEN | ensemble, frozen | TML from 2026-11-30, live | registered; decisive at n 5,197 or 2028-12-31 | research 88504b4 | |
+| C08 | E071 | TEN | high-stage coefficient | TML from 2026-11-30, live | registered; decisive at n 16,445 or 2028-12-31 | research 88504b4 | |
+| C09 | E113 | TEN | previous-tournament coefficient | TML from 2026-11-30, live | registered; decisive at n 6,388 or 2028-12-31 | research 88504b4 | |
+| C10 | E115 | TEN | Slam x logit p coefficient | TML from 2026-11-30, live | registered; progress after AO 2027; decisive at 773 Slam matches or 2028-12-31 | research 88504b4 | |
+| CP1-CP8 | E051, E071, E113, E115 | TEN | against Pinnacle: log loss and CLV (Holm over 8) | tennis journal from 2026-11-30 | registered; read with C07-C10 | research 88504b4 | |
+
