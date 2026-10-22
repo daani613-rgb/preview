@@ -23,3 +23,7 @@ Written 2026-10-22, before the page is committed. A separate first commit, on it
   pending. No number.
 - **Check:** the page renders at 390 px in en and he with the paragraph visible in the reader's language, and no page
   error.
+- **Result (16:43Z):** the paragraph is inside the "1. The lock" card, visible in the reader's language at 390 px (en and
+  he), with no page error. Screenshots: research ux_2026-10-22/shots/measure_exception_{en,he}.png.
+  - The first render put it outside the card, because the card's `</div>` closed on the same line as the Hebrew
+    paragraph. Moved inside and re-rendered.

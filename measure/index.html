@@ -41,7 +41,9 @@
 
   <div class="card"><h2><span data-l="en">1. The lock</span><span data-l="he">1. הנעילה</span></h2>
     <p data-l="en">Each engine writes its probability for a game to a journal before the game starts. After the start, the page shows that written row, not a fresh calculation. A game that started with no row written before it is counted as a gap, not filled in later.</p>
-    <p data-l="he">כל מנוע כותב את ההסתברות שלו למשחק ליומן לפני שהמשחק מתחיל. אחרי הפתיחה הדף מציג את השורה שנכתבה, לא חישוב חדש. משחק שהתחיל בלי שורה שנכתבה לפניו נספר כפער, ולא מושלם בדיעבד.</p></div>
+    <p data-l="he">כל מנוע כותב את ההסתברות שלו למשחק ליומן לפני שהמשחק מתחיל. אחרי הפתיחה הדף מציג את השורה שנכתבה, לא חישוב חדש. משחק שהתחיל בלי שורה שנכתבה לפניו נספר כפער, ולא מושלם בדיעבד.</p>
+    <p data-l="en"><b>Known exception (found 2026-10-22, fix pending):</b> the prediction is locked, but the result attached to it is not always right. In MLB, on some doubleheader days a row carries the other game's score, and some postponed or cancelled games never get a result; in tennis, some matches played on a later day never get one. These rows are listed in the project's defect log.</p>
+    <p data-l="he"><b>חריג ידוע (נמצא ב-22.10.2026, תיקון ממתין):</b> התחזית נעולה, אבל התוצאה שמוצמדת אליה לא תמיד נכונה. ב-MLB, בחלק מהימים הכפולים שורה נושאת את התוצאה של המשחק האחר, וחלק מהמשחקים שנדחו או בוטלו לא מקבלים תוצאה בכלל; בטניס, חלק מהמשחקים ששוחקו ביום מאוחר יותר לא מקבלים תוצאה. השורות האלה רשומות ביומן הפגמים של הפרויקט.</p></div>
 
   <div class="card"><h2><span data-l="en">2. CLV: beating the closing price</span><span data-l="he">2. CLV: לנצח את מחיר הסגירה</span></h2>
     <p data-l="en">The market's price moves until the game starts. If the price on our side moved toward us after we read it, that is positive closing-line value (CLV). We remove the bookmaker's margin first, and we read every CLV against that margin: a small positive CLV below the margin is not a profit.</p>
