@@ -38,7 +38,8 @@ class Component extends DCLogic {
     Object.keys(pick).forEach(sp => {
       fetch(`./${sp}/status.json`, { cache: 'no-store' }).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(j => {
         if (!okStatus(j, sp)) throw new Error('status.json shape');
-        this.setState(s => ({ st: { ...s.st, [sp]: j.last_data_date }, calls: { ...s.calls, [sp]: j.open_call } }));
+        this.setState(s => ({ st: { ...s.st, [sp]: j.last_data_date }, calls: { ...s.calls, [sp]: j.open_call },
+                              built: { ...(s.built || {}), [sp]: j.built_utc || null } }));   // C_HUB_STALE_PREREGISTER.md
       }).catch(() => fromPayload(sp));
     });
   }
@@ -252,7 +253,7 @@ class Component extends DCLogic {
       '🏈': { c1:'#a78bfa', c2:'#c4b0ff', glow:'rgba(167,139,250,0.22)', chip:'rgba(167,139,250,0.12)', chipB:'rgba(167,139,250,0.3)' },
       '🎾': { c1:'#c4f542', c2:'#d9fa78', glow:'rgba(196,245,66,0.2)', chip:'rgba(196,245,66,0.12)', chipB:'rgba(196,245,66,0.3)' },
     };
-    const statusColors = { season:'#34e08a', off:'#8f8fa1', none:'#8f8fa1' };
+    const statusColors = { season:'#34e08a', off:'#8f8fa1', none:'#8f8fa1', stale:'#f5b23d' };
     const he = this.state.lang === 'he';
     const slug = { '🏀':'nba', '⚽':'worldcup', '⚾':'mlb', '🏈':'nfl', '🎾':'tennis' };
     const today = new Date(); const todayUTC = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
@@ -261,8 +262,12 @@ class Component extends DCLogic {
       if (!d) return { status: 'none', text: '—' };
       const age = (todayUTC - Date.parse(d + 'T00:00:00Z')) / 86400000;
       const inSeason = age <= 7;
-      return { status: inSeason ? 'season' : 'off',
-               text: (inSeason ? (he ? 'בעונה' : 'In season') : (he ? 'בין עונות' : 'Between seasons')) + ' · ' + (he ? 'נתון אחרון ' : 'last data ') + __DM(d, 1) };
+      // C_HUB_STALE_PREREGISTER.md: status.json written more than 36 h ago -> "not updated"
+      const b = (this.state.built || {})[sp]; const bt = b ? Date.parse(b) : NaN;
+      const stale = !isNaN(bt) && (Date.now() - bt) > 36 * 3600 * 1000;
+      return { status: inSeason ? 'season' : 'off', stale,
+               text: (inSeason ? (he ? 'בעונה' : 'In season') : (he ? 'בין עונות' : 'Between seasons')) + ' · ' + (he ? 'נתון אחרון ' : 'last data ') + __DM(d, 1)
+                     + (stale ? ' · ' + (he ? 'לא עודכן 36+ שעות' : 'Not updated for 36+ h') : '') };
     };
     const hrefs = {
       '🏀': './nba/',
@@ -276,7 +281,7 @@ class Component extends DCLogic {
       ...palette[e.emoji],
       isLive: statusOf(slug[e.emoji]).status === 'season',
       statusText: statusOf(slug[e.emoji]).text,
-      statusColor: statusColors[statusOf(slug[e.emoji]).status],
+      statusColor: statusOf(slug[e.emoji]).stale ? statusColors.stale : statusColors[statusOf(slug[e.emoji]).status],
       href: hrefs[e.emoji],
       open: () => { window.location.href = hrefs[e.emoji]; },
     }));
