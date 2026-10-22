@@ -291,7 +291,7 @@ class Component extends DCLogic {
     const totDec  = totPct != null ? 1 : 0;
     const cf = clvAvgEn;
     const en = {
-      dir: 'ltr', brand: 'Command Center', liveLabel: 'LIVE',
+      dir: 'ltr', brand: 'Command Center', hdrEngine: 'MLB · A+ PREDICTION ENGINE', hdrFooter: 'PREDICTION ENGINES · 2026', liveLabel: 'LIVE',
       heroTitle: 'The MLB engine, live.', heroSub: 'Two models per game, winner and total runs. Updated several times a day. Scheduled runs are often delayed or skipped.',
       signalKicker: kickEn, edgeLabel: 'Edge vs market', runsLabel: 'expected runs', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'HIGH', underWord: 'LOW', homeWord: 'Home', awayWord: 'Away', starterPrefix: 'starter-aware:',
@@ -357,7 +357,7 @@ class Component extends DCLogic {
       ],
     };
     const he = {
-      dir: 'rtl', brand: 'מרכז שליטה', liveLabel: 'חי',
+      dir: 'rtl', brand: 'מרכז שליטה', hdrEngine: 'MLB · מנוע חיזוי A+', hdrFooter: 'מנועי חיזוי · 2026', liveLabel: 'חי',
       heroTitle: 'מנוע החיזוי של MLB', heroSub: 'שני מודלים לכל משחק, מנצח וסך ריצות. מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.',
       signalKicker: kickHe, edgeLabel: 'Edge מול השוק', runsLabel: 'ריצות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ', starterPrefix: 'מודע-פותח:',

@@ -334,7 +334,7 @@ class Component extends DCLogic {
     const gapHe = GP ? ` משחקים שהתחילו בלי רשומה קפואה מלפני המשחק: ${GP.n} מתוך ${GP.started} מאז ${String(GP.from).slice(6,8)}.${String(GP.from).slice(4,6)}.` : '';
 
     const en = {
-      dir: 'ltr', brand: 'Command Center', liveLabel: QP ? 'PAUSED' : 'LIVE',
+      dir: 'ltr', brand: 'Command Center', hdrFooter: 'PREDICTION ENGINES · 2026', liveLabel: QP ? 'PAUSED' : 'LIVE',
       heroTitle: QP ? 'The tennis engine.' : 'The tennis engine, live.', heroSub: QP ? 'Two models per match, the winner and total games. Odds pulls are paused, so the slate is not refreshed. Edges are measured against Pinnacle.' : 'Two models per match, the winner and total games. Updated several times a day. Scheduled runs are often delayed or skipped. Edges are measured against Pinnacle.',
       signalKicker: kickEn, edgeLabel: 'Edge vs Pinnacle', runsLabel: 'expected games', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Pinnacle', callWord: 'Call', stageWord: 'stage', overWord: 'OVER', underWord: 'UNDER', homeWord: 'Fav', awayWord: 'Dog', starterPrefix: 'surface · Elo blend:',
@@ -379,7 +379,7 @@ class Component extends DCLogic {
       howRows: [],
     };
     const he = {
-      dir: 'rtl', brand: 'מרכז שליטה', liveLabel: QP ? 'מושהה' : 'חי',
+      dir: 'rtl', brand: 'מרכז שליטה', hdrFooter: 'מנועי חיזוי · 2026', liveLabel: QP ? 'מושהה' : 'חי',
       heroTitle: 'מנוע החיזוי של הטניס', heroSub: QP ? 'שני מודלים לכל משחק, מנצח וסך גיימים. משיכת היחסים מושהית, ולכן הסלייט לא מתעדכן. ה-Edge נמדד מול Pinnacle.' : 'שני מודלים לכל משחק, מנצח וסך גיימים. מתעדכן כמה פעמים ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות. ה-Edge נמדד מול Pinnacle.',
       signalKicker: kickHe, edgeLabel: 'Edge מול Pinnacle', runsLabel: 'גיימים צפויים', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'Pinnacle', callWord: 'קריאה', stageWord: 'שלב', overWord: 'מעל', underWord: 'מתחת', homeWord: 'מועדף', awayWord: 'מוחלש', starterPrefix: 'משטח · שילוב-Elo:',

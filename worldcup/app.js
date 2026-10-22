@@ -472,7 +472,7 @@ class Component extends DCLogic {
     const _ended = R.tournamentEnded || null;
     const _dm = d => d ? `${d.slice(8, 10)}.${d.slice(5, 7)}` : '';
     const en = {
-      dir: 'ltr', brand: 'Command Center', liveLabel: _ended ? `Tournament ended · ${_dm(_ended)}` : 'LIVE', asOf,
+      dir: 'ltr', brand: 'Command Center', hdrEngine: 'WORLD CUP · A+ PREDICTION ENGINE', hdrFooter: 'PREDICTION ENGINES · 2026', liveLabel: _ended ? `Tournament ended · ${_dm(_ended)}` : 'LIVE', asOf,
       freshnessLabel: 'Data updated', freshnessStr,
       heroTitle: _ended ? 'The World Cup engine.' : 'The World Cup engine, live.', heroSub: 'Two models per match, the 1X2 result and total goals. Updated once a day. Scheduled runs are often delayed or skipped.',
       signalKicker: 'The A+ call', edgeLabel: 'Edge vs market', runsLabel: 'expected goals', stageLabel: 'Stage',
@@ -536,7 +536,7 @@ class Component extends DCLogic {
       byGroupNote: 'By-group standings: not present in the live board (board_build.py has no group-standings cube). OMITTED — no source.',
     };
     const he = {
-      dir: 'rtl', brand: 'מרכז שליטה', liveLabel: _ended ? `הטורניר הסתיים · ${_dm(_ended)}` : 'חי', asOf,
+      dir: 'rtl', brand: 'מרכז שליטה', hdrEngine: 'מונדיאל · מנוע חיזוי A+', hdrFooter: 'מנועי חיזוי · 2026', liveLabel: _ended ? `הטורניר הסתיים · ${_dm(_ended)}` : 'חי', asOf,
       freshnessLabel: 'נתונים עודכנו', freshnessStr,
       heroTitle: 'מנוע החיזוי של המונדיאל', heroSub: 'שני מודלים לכל משחק, תוצאה (1X2) וסך שערים. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.',
       signalKicker: 'קריאת ה-A+', edgeLabel: 'Edge מול השוק', runsLabel: 'שערים צפויים', stageLabel: 'שלב',

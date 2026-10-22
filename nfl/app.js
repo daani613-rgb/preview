@@ -223,7 +223,7 @@ class Component extends DCLogic {
     const wk        = R.curWeek != null ? R.curWeek : '—';
 
     const en = {
-      dir: 'ltr', brand: 'Command Center', liveLabel: 'LIVE',
+      dir: 'ltr', brand: 'Command Center', hdrEngine: 'NFL · A+ PREDICTION ENGINE', hdrFooter: 'PREDICTION ENGINES · 2026', liveLabel: 'LIVE',
       heroTitle: 'The NFL engine, live.', heroSub: `Two models per game, winner and total points. ${accTxt.en.ho ? accTxt.en.ho + ' ' : ''}Updated once a day. Scheduled runs are often delayed or skipped.`,
       signalKicker: `The A+ call · week ${wk}`, edgeLabel: 'Edge vs market', runsLabel: 'expected points', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'HIGH', underWord: 'LOW', homeWord: 'Home', awayWord: 'Away',
@@ -276,7 +276,7 @@ class Component extends DCLogic {
       ],
     };
     const he = {
-      dir: 'rtl', brand: 'מרכז שליטה', liveLabel: 'חי',
+      dir: 'rtl', brand: 'מרכז שליטה', hdrEngine: 'NFL · מנוע חיזוי A+', hdrFooter: 'מנועי חיזוי · 2026', liveLabel: 'חי',
       heroTitle: 'מנוע החיזוי של NFL', heroSub: `שני מודלים לכל משחק, מנצח וסך נקודות. ${accTxt.he.ho ? accTxt.he.ho + ' ' : ''}מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.`,
       signalKicker: `קריאת ה-A+ · שבוע ${wk}`, edgeLabel: 'Edge מול השוק', runsLabel: 'נקודות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ',
