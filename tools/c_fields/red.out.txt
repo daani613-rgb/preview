@@ -1,0 +1,9 @@
+FAIL no fixed RESULT_UNDER_REVIEW set
+FAIL no fixed NO_RESULT_ROWS set
+FAIL reads status and totReview from the entry
+PASS label he/en: Result under review
+FAIL label he/en: Void:
+FAIL label he/en: Not counted
+FAIL label he/en: No result yet
+
+6 FAILED
