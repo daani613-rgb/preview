@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How we measure · Prediction Engines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/a11y.css">
+<style>
+  :root{--f:'Space Grotesk','Heebo',system-ui,sans-serif;--fm:'JetBrains Mono',monospace}
+  html[lang="he"]{--f:'Heebo','Space Grotesk',system-ui,sans-serif}
+  body{margin:0;background:#050509;color:#e8e9f0;font-family:var(--f);-webkit-font-smoothing:antialiased;overflow-x:hidden;
+       background-image:radial-gradient(1200px 700px at 70% -10%, rgba(124,109,255,0.22), transparent 60%)}
+  .wrap{max-width:860px;margin:0 auto;padding:28px 20px 64px}
+  .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px}
+  .kick{font-family:var(--fm);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8a86b8}
+  .lang{border:1px solid rgba(255,255,255,0.18);background:transparent;color:#e8e9f0;border-radius:999px;padding:10px 16px;
+        font-family:var(--fm);font-size:13px;min-width:44px;min-height:44px;cursor:pointer}
+  .lang:focus-visible{outline:2px solid #9d8cff;outline-offset:2px}
+  h1{font-size:40px;line-height:1.1;letter-spacing:-1px;margin:0 0 14px}
+  .lead{font-size:17px;line-height:1.65;color:#c9cbd8;margin:0 0 28px}
+  .card{border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.03);border-radius:20px;padding:22px 22px;margin:0 0 16px}
+  .card h2{font-size:20px;margin:0 0 8px}
+  .card p{font-size:15px;line-height:1.7;color:#c9cbd8;margin:0}
+  .find{border-color:rgba(245,178,61,0.45);background:rgba(245,178,61,0.06)}
+  .num{font-family:var(--fm);color:#fff}
+  .src{font-family:var(--fm);font-size:12px;color:#8a8fa8;margin-top:10px}
+  a{color:#b9adff}
+  [data-l]{display:none} html[lang="en"] [data-l="en"], html[lang="he"] [data-l="he"]{display:block}
+  html[lang="en"] span[data-l="en"], html[lang="he"] span[data-l="he"]{display:inline}
+  @media (max-width:520px){h1{font-size:30px}.wrap{padding:20px 16px 48px}}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="kick"><span data-l="en">Prediction Engines · method</span><span data-l="he">מנועי חיזוי · שיטה</span></div>
+    <button class="lang" id="lang" type="button" aria-label="Switch language / החלף שפה"><span data-l="en">עב</span><span data-l="he">EN</span></button>
+  </div>
+
+  <h1><span data-l="en">How we measure</span><span data-l="he">איך אנחנו מודדים</span></h1>
+  <p class="lead" data-l="en">Every number on these pages comes from a record that cannot be changed after the fact, is compared with the betting market, and is tested only after the test was written down. Here is what each of those means, and what it has shown so far.</p>
+  <p class="lead" data-l="he">כל מספר בדפים האלה מגיע מרשומה שאי אפשר לשנות בדיעבד, נמדד מול שוק ההימורים, ונבדק רק אחרי שהבדיקה נכתבה מראש. כך זה עובד, ומה זה הראה עד עכשיו.</p>
+
+  <div class="card"><h2><span data-l="en">1. The lock</span><span data-l="he">1. הנעילה</span></h2>
+    <p data-l="en">Each engine writes its probability for a game to a journal before the game starts. After the start, the page shows that written row, not a fresh calculation. A game that started with no row written before it is counted as a gap, not filled in later.</p>
+    <p data-l="he">כל מנוע כותב את ההסתברות שלו למשחק ליומן לפני שהמשחק מתחיל. אחרי הפתיחה הדף מציג את השורה שנכתבה, לא חישוב חדש. משחק שהתחיל בלי שורה שנכתבה לפניו נספר כפער, ולא מושלם בדיעבד.</p>
+    <p data-l="en"><b>Known exception (found 2026-10-22, fix pending):</b> the prediction is locked, but the result attached to it is not always right. In MLB, on some doubleheader days a row carries the other game's score, and some postponed or cancelled games never get a result; in tennis, some matches played on a later day never get one. These rows are listed in the project's defect log.</p>
+    <p data-l="he"><b>חריג ידוע (נמצא ב-22.10.2026, תיקון ממתין):</b> התחזית נעולה, אבל התוצאה שמוצמדת אליה לא תמיד נכונה. ב-MLB, בחלק מהימים הכפולים שורה נושאת את התוצאה של המשחק האחר, וחלק מהמשחקים שנדחו או בוטלו לא מקבלים תוצאה בכלל; בטניס, חלק מהמשחקים ששוחקו ביום מאוחר יותר לא מקבלים תוצאה. השורות האלה רשומות ביומן הפגמים של הפרויקט.</p></div>
+
+  <div class="card"><h2><span data-l="en">2. CLV: beating the closing price</span><span data-l="he">2. CLV: לנצח את מחיר הסגירה</span></h2>
+    <p data-l="en">The market's price moves until the game starts. If the price on our side moved toward us after we read it, that is positive closing-line value (CLV). We remove the bookmaker's margin first, and we read every CLV against that margin: a small positive CLV below the margin is not a profit.</p>
+    <p data-l="he">מחיר השוק זז עד תחילת המשחק. אם המחיר בצד שלנו זז לכיווננו אחרי שקראנו אותו, זה ערך קו סגירה (CLV) חיובי. קודם מסירים את עמלת סוכן ההימורים, וכל CLV נקרא מול העמלה: CLV חיובי קטן מהעמלה אינו רווח.</p></div>
+
+  <div class="card"><h2><span data-l="en">3. Writing the test first</span><span data-l="he">3. כותבים את הבדיקה קודם</span></h2>
+    <p data-l="en">Before any test is run, we commit a pre-registration: the data, the measure and the bar a result must pass. Only then do we run it. The bar rises with the number of tests we have run, so a lucky result is not counted as a finding.</p>
+    <p data-l="he">לפני שבדיקה רצה, נשמרת הצהרה מוקדמת: הנתונים, המדד והרף שתוצאה צריכה לעבור. רק אחר כך מריצים. הרף עולה עם מספר הבדיקות שכבר רצו, כך שתוצאה של מזל לא נספרת כממצא.</p></div>
+
+  <div class="card"><h2><span data-l="en">4. The trials ledger</span><span data-l="he">4. יומן הניסויים</span></h2>
+    <p data-l="en">Every test ever run is listed in one ledger, including the ones that failed: <span class="num">109</span> past trials, <span class="num">171</span> registered research tests (some could not run for lack of data), and a family of <span class="num">10</span> confirmation tests. A test that is not in the ledger does not exist.</p>
+    <p data-l="he">כל בדיקה שרצה אי פעם רשומה ביומן אחד, כולל אלה שנכשלו: <span class="num">109</span> ניסויי עבר, <span class="num">171</span> בדיקות מחקר רשומות (חלקן לא יכלו לרוץ מחוסר נתונים), ומשפחה של <span class="num">10</span> מבחני אישור. בדיקה שלא רשומה ביומן לא קיימת.</p>
+    <div class="src">TRIALS_LEDGER.md</div></div>
+
+  <div class="card find"><h2><span data-l="en">5. What it has shown</span><span data-l="he">5. מה זה הראה</span></h2>
+    <p data-l="en">So far, the engines do not add information beyond the market's price. Wherever an engine's probability was compared with a price, the price was as good or better. Against Pinnacle on the 2016 MLB season, the engine's log loss was worse than the closing price on <span class="num">2,425</span> games (z <span class="num">+4.42</span>), and the best mix of engine and price gave the engine a weight of <span class="num">0</span>. Six confirmation tests were read once; none was confirmed. We publish this because it is what we measured.</p>
+    <p data-l="he">עד עכשיו, המנועים לא מוסיפים מידע מעבר למחיר השוק. בכל מקום שהסתברות של מנוע הושוותה למחיר, המחיר היה טוב לפחות כמוה. מול Pinnacle בעונת MLB 2016, ה-log loss של המנוע היה גרוע ממחיר הסגירה על <span class="num">2,425</span> משחקים (z <span class="num">+4.42</span>), והשילוב הטוב ביותר של מנוע ומחיר נתן למנוע משקל <span class="num">0</span>. שישה מבחני אישור נקראו פעם אחת, ואף אחד לא אושר. אנחנו מפרסמים את זה כי זה מה שנמדד.</p>
+    <div class="src">RESULTS_2026-10-22 · PREREG_B_MLB2016_PINNACLE · PREREG_CONFIRM_FAMILY</div></div>
+</div>
+<script>
+  (function(){var b=document.getElementById('lang');b.addEventListener('click',function(){var h=document.documentElement;var l=h.lang==='he'?'en':'he';h.lang=l;h.dir=l==='he'?'rtl':'ltr';});})();
+</script>
+</body></html>
