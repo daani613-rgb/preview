@@ -331,3 +331,13 @@ None registered. Each is added with its own pre-registration commit, after the s
   The line assigns an empty list to a name that nothing reads (`X if False else []` never evaluates X).
 - **Proof:** the --check output of the reconstructed version and of 8516585 are byte-identical (sha256 a66978098371b62c,
   both). It is the same text as the original check run.
+
+## 2.6 timing, market only (PREREG_2_6_TIMING_MARKET.md, research), registered 2026-10-22 before any call
+
+| id | family | engine | idea | data | status | registered in | result |
+|---|---|---|---|---|---|---|---|
+| E160 | 2.6 | NBA | distance of the line from the close by hours before start | OddsPapi historical, Pinnacle, 2026-27 fixtures already started | registered; waits for ODDSPAPI_KEY in the environment | research PREREG_2_6_TIMING_MARKET.md | |
+| E161 | 2.6 | NBA | direction of the favourite's move by horizon and price bin | same | registered; waits for the key | research PREREG_2_6_TIMING_MARKET.md | |
+| E162 | 2.6 | TEN | distance of the line from the close by hours before start | OddsPapi historical, Pinnacle, the 367 journal fixtures | registered; waits for the key | research PREREG_2_6_TIMING_MARKET.md | |
+| E163 | 2.6 | TEN | direction of the favourite's move by horizon and price bin | same | registered; waits for the key | research PREREG_2_6_TIMING_MARKET.md | |
+| E164 | 2.6 | MLB | timing | none without a billed fixture call | not runnable | research PREREG_2_6_TIMING_MARKET.md | not runnable: no OddsPapi fixture ids stored |
