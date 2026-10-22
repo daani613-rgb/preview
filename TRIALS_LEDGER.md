@@ -252,46 +252,46 @@ Thresholds (02_MASTER_PLAN.md section 2):
 | E117 | 2.6 | TEN | A+ CLV diagnosis: surface and tournament level via the TML join | 2026 tennis journal, 82 A+ rows with CLV | registered (PREREG_2_6) | this commit | S2/S3: no bin >= 3.9; grass = all G, not separable |
 | E118 | 2.6 | TEN | A+ CLV diagnosis: best_of (3 or 5) | 2026 tennis journal, 82 A+ rows with CLV | registered (PREREG_2_6) | this commit | S4: no bin >= 3.9 |
 | E119 | 2.6 | TEN | A+ CLV diagnosis: market move early to close against the pick (NOT MEASURABLE: no price before our early write; replaced by S5 disagreement at the early price, PREREG_2_6_TENNIS_APLUS_CLV.md) | 2026 tennis journal, 82 A+ rows with CLV | registered (PREREG_2_6) | this commit | S5 (replacement): no bin >= 3.9 |
-| E120 | 2.7 | NFL | A+ confidence threshold | simulation on exploration data | planned, waits for approval | this commit | |
-| E121 | 2.7 | NFL | A+ disagreement-with-market threshold | simulation on exploration data | planned, waits for approval | this commit | |
-| E122 | 2.7 | NFL | A+ combined with stage | simulation on exploration data | planned, waits for approval | this commit | |
-| E123 | 2.7 | NFL | A+ threshold and disagreement jointly | simulation on exploration data | planned, waits for approval | this commit | |
-| E124 | 2.7 | NFL | A+ excluding thin markets | simulation on exploration data | planned, waits for approval | this commit | |
-| E125 | 2.7 | NFL | A+ by odds bin | simulation on exploration data | planned, waits for approval | this commit | |
-| E126 | 2.7 | NFL | fractional Kelly with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | planned, waits for approval | this commit | |
-| E127 | 2.7 | NFL | flat stake with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | planned, waits for approval | this commit | |
-| E128 | 2.7 | NBA | A+ confidence threshold | simulation on exploration data | planned, waits for approval | this commit | |
-| E129 | 2.7 | NBA | A+ disagreement-with-market threshold | simulation on exploration data | planned, waits for approval | this commit | |
-| E130 | 2.7 | NBA | A+ combined with stage | simulation on exploration data | planned, waits for approval | this commit | |
-| E131 | 2.7 | NBA | A+ threshold and disagreement jointly | simulation on exploration data | planned, waits for approval | this commit | |
-| E132 | 2.7 | NBA | A+ excluding thin markets | simulation on exploration data | planned, waits for approval | this commit | |
-| E133 | 2.7 | NBA | A+ by odds bin | simulation on exploration data | planned, waits for approval | this commit | |
-| E134 | 2.7 | NBA | fractional Kelly with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | planned, waits for approval | this commit | |
-| E135 | 2.7 | NBA | flat stake with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | planned, waits for approval | this commit | |
-| E136 | 2.7 | MLB | A+ confidence threshold | simulation on exploration data | planned, waits for approval | this commit | |
-| E137 | 2.7 | MLB | A+ disagreement-with-market threshold | simulation on exploration data | planned, waits for approval | this commit | |
-| E138 | 2.7 | MLB | A+ combined with stage | simulation on exploration data | planned, waits for approval | this commit | |
-| E139 | 2.7 | MLB | A+ threshold and disagreement jointly | simulation on exploration data | planned, waits for approval | this commit | |
-| E140 | 2.7 | MLB | A+ excluding thin markets | simulation on exploration data | planned, waits for approval | this commit | |
-| E141 | 2.7 | MLB | A+ by odds bin | simulation on exploration data | planned, waits for approval | this commit | |
-| E142 | 2.7 | MLB | fractional Kelly with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | planned, waits for approval | this commit | |
-| E143 | 2.7 | MLB | flat stake with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | planned, waits for approval | this commit | |
-| E144 | 2.7 | TEN | A+ confidence threshold | simulation on exploration data | planned, waits for approval | this commit | |
-| E145 | 2.7 | TEN | A+ disagreement-with-market threshold | simulation on exploration data | planned, waits for approval | this commit | |
-| E146 | 2.7 | TEN | A+ combined with stage | simulation on exploration data | planned, waits for approval | this commit | |
-| E147 | 2.7 | TEN | A+ threshold and disagreement jointly | simulation on exploration data | planned, waits for approval | this commit | |
-| E148 | 2.7 | TEN | A+ excluding thin markets | simulation on exploration data | planned, waits for approval | this commit | |
-| E149 | 2.7 | TEN | A+ by odds bin | simulation on exploration data | planned, waits for approval | this commit | |
-| E150 | 2.7 | TEN | fractional Kelly with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | planned, waits for approval | this commit | |
-| E151 | 2.7 | TEN | flat stake with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | planned, waits for approval | this commit | |
-| E152 | 2.7 | WC | A+ confidence threshold | simulation on exploration data | planned, waits for approval | this commit | |
-| E153 | 2.7 | WC | A+ disagreement-with-market threshold | simulation on exploration data | planned, waits for approval | this commit | |
-| E154 | 2.7 | WC | A+ combined with stage | simulation on exploration data | planned, waits for approval | this commit | |
-| E155 | 2.7 | WC | A+ threshold and disagreement jointly | simulation on exploration data | planned, waits for approval | this commit | |
-| E156 | 2.7 | WC | A+ excluding thin markets | simulation on exploration data | planned, waits for approval | this commit | |
-| E157 | 2.7 | WC | A+ by odds bin | simulation on exploration data | planned, waits for approval | this commit | |
-| E158 | 2.7 | WC | fractional Kelly with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | planned, waits for approval | this commit | |
-| E159 | 2.7 | WC | flat stake with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | planned, waits for approval | this commit | |
+| E120 | 2.7 | NFL | A+ confidence threshold | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E121 | 2.7 | NFL | A+ disagreement-with-market threshold | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E122 | 2.7 | NFL | A+ combined with stage | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E123 | 2.7 | NFL | A+ threshold and disagreement jointly | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E124 | 2.7 | NFL | A+ excluding thin markets | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E125 | 2.7 | NFL | A+ by odds bin | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E126 | 2.7 | NFL | fractional Kelly with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E127 | 2.7 | NFL | flat stake with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E128 | 2.7 | NBA | A+ confidence threshold | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no NBA prices (PREREG_2_7) |
+| E129 | 2.7 | NBA | A+ disagreement-with-market threshold | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no NBA prices (PREREG_2_7) |
+| E130 | 2.7 | NBA | A+ combined with stage | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no NBA prices (PREREG_2_7) |
+| E131 | 2.7 | NBA | A+ threshold and disagreement jointly | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no NBA prices (PREREG_2_7) |
+| E132 | 2.7 | NBA | A+ excluding thin markets | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no NBA prices (PREREG_2_7) |
+| E133 | 2.7 | NBA | A+ by odds bin | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no NBA prices (PREREG_2_7) |
+| E134 | 2.7 | NBA | fractional Kelly with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no NBA prices (PREREG_2_7) |
+| E135 | 2.7 | NBA | flat stake with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no NBA prices (PREREG_2_7) |
+| E136 | 2.7 | MLB | A+ confidence threshold | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E137 | 2.7 | MLB | A+ disagreement-with-market threshold | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E138 | 2.7 | MLB | A+ combined with stage | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E139 | 2.7 | MLB | A+ threshold and disagreement jointly | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E140 | 2.7 | MLB | A+ excluding thin markets | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no MLB odds (PREREG_2_7) |
+| E141 | 2.7 | MLB | A+ by odds bin | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E142 | 2.7 | MLB | fractional Kelly with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no MLB odds (PREREG_2_7) |
+| E143 | 2.7 | MLB | flat stake with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no MLB odds (PREREG_2_7) |
+| E144 | 2.7 | TEN | A+ confidence threshold | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E145 | 2.7 | TEN | A+ disagreement-with-market threshold | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E146 | 2.7 | TEN | A+ combined with stage | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E147 | 2.7 | TEN | A+ threshold and disagreement jointly | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E148 | 2.7 | TEN | A+ excluding thin markets | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E149 | 2.7 | TEN | A+ by odds bin | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E150 | 2.7 | TEN | fractional Kelly with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E151 | 2.7 | TEN | flat stake with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E152 | 2.7 | WC | A+ confidence threshold | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E153 | 2.7 | WC | A+ disagreement-with-market threshold | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E154 | 2.7 | WC | A+ combined with stage | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md | not runnable: no stage in the World Cup journal (PREREG_2_7) |
+| E155 | 2.7 | WC | A+ threshold and disagreement jointly | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E156 | 2.7 | WC | A+ excluding thin markets | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E157 | 2.7 | WC | A+ by odds bin | simulation on exploration data | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E158 | 2.7 | WC | fractional Kelly with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
+| E159 | 2.7 | WC | flat stake with margin, max drawdown | simulation on historical prices (NFL) or the 2026 journals | registered (PREREG_2_7) | research PREREG_2_7_SELECTION.md |  |
 
 ## Confirmation trials (b) and (c)
 
