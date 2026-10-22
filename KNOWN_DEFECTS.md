@@ -44,7 +44,7 @@ Counts over items 1 to 115: **closed 74**, **open 39**, **undecidable 0**, **rec
 | 34 | closed | tennis-engine 5f5eb0e, yes; preview_build/gen_tennis_data.py:581 `round(pick_elo) if pick_elo else None` | Elo 0 is no longer published. |
 | 35 | closed | tennis-engine 5f5eb0e, yes; gen_tennis_data.py:31, :440-441, :490 | The typed 1500 and the matches-10 default were removed. |
 | 36 | open, decision | tennis-engine tennis_dashboard.py:17 (Platt constants) | Platt is protected; to Samuel (remove with D6 on 30.11). |
-| 37 | closed | tennis-engine 318fcd7 (kd-037, D7) | Pushed 22.10; the classic page changes at the next tennis run (05:37Z, 23.10), when the live check is made. |
+| 37 | closed | tennis-engine 318fcd7 (kd-037, D7) | סגור, אומת חי 2026-10-22 20:46Z (tennis-dashboard c4bb39b, after the tennis run of 20:45Z): no ACCURACY constant in the page. |
 | 38 | closed | preview ea8f97e, yes; tennis/app.js:372 and :416 | The constant-dash KPI tile is gone. |
 | 39 | closed | tennis-engine 5f5eb0e, yes; gen_tennis_data.py:172 | The Normal-approximation ladder was removed. |
 | 40 | closed | preview d46b0ca, yes; `git grep howBullets origin/main -- tennis/` finds nothing | The howBullets block was deleted. |
@@ -90,7 +90,7 @@ Counts over items 1 to 115: **closed 74**, **open 39**, **undecidable 0**, **rec
 | 80 | closed | tennis-engine ce8016c, yes; gen_tennis_data.py:117-129 | Preview "value" follows the classic rule. |
 | 81 | closed | tennis-engine ce8016c, yes; gen_tennis_data.py:329-335; preview tennis/app.js:376 | One mean CLV per match with n. |
 | 82 | open, decision | tennis gen_tennis_data.py:513; tennis_dashboard | Scientific text; declaration ready (PREREG_DRAFT_KD72_KD82_TEXTS.md); to Samuel. |
-| 83 | open, dated | tennis-engine 318fcd7 (text and pause notice) | Text and pause notice pushed (live check at the 05:37Z run). The 19 rows: D6, with the tennis restart on 30.11; owner Samuel. |
+| 83 | closed | tennis-engine 318fcd7 (text and pause notice) | סגור, אומת חי 2026-10-22 20:46Z (tennis-dashboard c4bb39b): 19 rows read 'No result recorded', 0 'Not played yet'; the pause notice in en and he. The 19 rows themselves: D6, with the tennis restart on 30.11. |
 | 84 | closed | nba-engine c6c996f, yes, gen_nba_data.py:275-315; preview c494f07, yes | Today's tiles built from PICKS by phase. |
 | 85 | open, decision | nba-engine dashboard.html:301 | Replacing a typed KPI with a computed one can change a published number; to Samuel. |
 | 86 | open, decision | nba-engine dashboard.py:507 | Which day is 'today' (display date rule); to Samuel, with 59. |
