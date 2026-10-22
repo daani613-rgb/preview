@@ -838,7 +838,7 @@ class Component extends DCLogic {
     return {
       ...L, navTabs, rankTabs, nav, feat, tiles, rankRows, rankNote, rankColHeaders, stageBars,
       howBullets, howExtra, howRows,
-      featHas, featEmpty: !featHas, slateMsg,
+      featHas, featEmpty: !featHas && !boardIsJournal, slateMsg,   // KD 2: today's empty-slate note only on today's view
       featEdge: feat.edgeStr, featEdgeTarget: (feat.edge != null ? Math.abs(feat.edge) : ''), featEdgeDisp: feat.hasMkt ? 'block' : 'none',
       featEdgePrefix: (feat.edge != null && feat.edge < 0 ? '−' : '+'), clvFinalStr,
       gauge: featHas ? this.gauge(feat.mktUnder, feat.engUnder) : {}, clv: this.clvChart(), cal: this.cal(), drivers, integrity, clvSeg,
