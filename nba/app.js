@@ -265,7 +265,7 @@ class Component extends DCLogic {
     const freshTs = __TS(R.freshTs || R.asOf || '');
 
     const en = {
-      dir: 'ltr', brand: 'Command Center', liveLabel: 'LIVE',
+      dir: 'ltr', brand: 'Command Center', hdrEngine: 'NBA · A+ PREDICTION ENGINE', hdrFooter: 'PREDICTION ENGINES · 2026', liveLabel: 'LIVE',
       heroTitle: 'The NBA engine, live.', heroSub: `Two models per game, winner and total points. Updated once a day. Scheduled runs are often delayed or skipped.`,
       signalKicker: 'The A+ call · season signals', edgeLabel: 'Edge vs market', runsLabel: 'expected points', stageLabel: 'Stage',
       engineWord: 'Engine', marketWord: 'Market', callWord: 'Call', stageWord: 'stage', overWord: 'HIGH', underWord: 'LOW', homeWord: 'Home', awayWord: 'Away', starterPrefix: 'rest-aware:',
@@ -338,7 +338,7 @@ class Component extends DCLogic {
       freshTs,
     };
     const he = {
-      dir: 'rtl', brand: 'מרכז שליטה', liveLabel: 'חי',
+      dir: 'rtl', brand: 'מרכז שליטה', hdrEngine: 'NBA · מנוע חיזוי A+', hdrFooter: 'מנועי חיזוי · 2026', liveLabel: 'חי',
       heroTitle: 'מנוע החיזוי של NBA', heroSub: `שני מודלים לכל משחק, מנצח וסך נקודות. מתעדכן פעם ביום. ריצות מתוזמנות מתעכבות או נדחות לעיתים קרובות.`,
       signalKicker: 'קריאות A+ · אות העונה', edgeLabel: 'Edge מול השוק', runsLabel: 'נקודות צפויות', stageLabel: 'שלב',
       engineWord: 'מנוע', marketWord: 'שוק', callWord: 'קריאה', stageWord: 'שלב', overWord: 'גבוה', underWord: 'נמוך', homeWord: 'בית', awayWord: 'חוץ', starterPrefix: 'מודע-מנוחה:',
