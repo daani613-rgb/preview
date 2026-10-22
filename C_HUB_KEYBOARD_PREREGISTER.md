@@ -38,3 +38,12 @@ local only.
 - **Look:** the screenshots before (the live page) and after (this branch) are the same to the eye
   (research ux_2026-10-22/shots/hub_kbd_{before,after}_en_390.png). They are not byte-identical, because of the
   animated background.
+
+## Added 2026-10-22 16:23Z, before the change: keep focus on the language toggle after a switch
+- **The open point** (Result above): after Enter on the toggle, the page re-renders and focus returns to the body.
+- **The change (hub.app.js only):** toggleLang notes whether the toggle had focus. If it did, it focuses the new .langbtn
+  in the next animation frame after setState. Nothing else changes.
+- **The test:** kbd_check.js's `enter.focused`, at 390 px in en and he.
+  - Red: false now. Green: true after.
+  - Also: the language still switches, there is no page error, and the stops and unreachable counts are unchanged
+    (8, 0).
