@@ -209,21 +209,21 @@ Thresholds (02_MASTER_PLAN.md section 2):
 | E074 | 2.4 | TEN | other stage bounds (exploration seasons only) | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
 | E075 | 2.4 | TEN | stage against the market | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
 | E076 | 2.4 | NBA | monotonicity of accuracy and calibration by stage (no A+ stage) | 2010-11 to 2018-19 | planned, waits for approval | this commit | |
-| E077 | 2.5 | NFL | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E078 | 2.5 | NFL | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E079 | 2.5 | NFL | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E080 | 2.5 | NBA | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E081 | 2.5 | NBA | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E082 | 2.5 | NBA | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E083 | 2.5 | MLB | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E084 | 2.5 | MLB | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E085 | 2.5 | MLB | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E086 | 2.5 | TEN | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E087 | 2.5 | TEN | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E088 | 2.5 | TEN | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E089 | 2.5 | WC | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E090 | 2.5 | WC | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
-| E091 | 2.5 | WC | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E077 | 2.5 | NFL | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | w* 0.00 [0.00,0.01]: no information beyond the price (PREREG_2_5 results) |
+| E078 | 2.5 | NFL | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | X .05 n555 return -0.068 z-1.67; X .10 n317 -0.068 z-1.15; margin 3.5%: none (PREREG_2_5 results) |
+| E079 | 2.5 | NFL | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | >=0.62 n950 engine-market +0.0292 z+4.06: market better (PREREG_2_5 results) |
+| E080 | 2.5 | NBA | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | NBA 3 rows: counts only (PREREG_2_5 results) |
+| E081 | 2.5 | NBA | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | NBA 3 rows: counts only (PREREG_2_5 results) |
+| E082 | 2.5 | NBA | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | NBA 3 rows: counts only (PREREG_2_5 results) |
+| E083 | 2.5 | MLB | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | w* 0.00 [0.00,0.38]: none (PREREG_2_5 results) |
+| E084 | 2.5 | MLB | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | no odds; X .05 n260 ll gain -0.0026 z-0.26; X .10 n36 z-0.30: none (PREREG_2_5 results) |
+| E085 | 2.5 | MLB | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | >=0.62 n146 -0.0019 z-0.22: no difference (PREREG_2_5 results) |
+| E086 | 2.5 | TEN | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | w* 0.05 [0.00,0.48], gain +0.0001 z+0.10: none (PREREG_2_5 results) |
+| E087 | 2.5 | TEN | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | X .05 n140 return -0.021 z-0.26; X .10 n88 -0.046 z-0.42; margin 3.0%: none (PREREG_2_5 results) |
+| E088 | 2.5 | TEN | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | >=0.62 n223 +0.0326 z+1.93: market better or equal (PREREG_2_5 results) |
+| E089 | 2.5 | WC | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | w* 0.00 [0.00,0.94]: none (n 95) (PREREG_2_5 results) |
+| E090 | 2.5 | WC | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | X .05 n40 return -0.046 z-0.33; X .10 n19 -0.047 z-0.21; margin 5.5%: none (PREREG_2_5 results) |
+| E091 | 2.5 | WC | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | >=0.62 n45 +0.0042 z+0.15: no difference (PREREG_2_5 results) |
 | E092 | 2.6 | NFL | timing: hours before start against distance to close | stored data in exploration seasons only | planned, waits for approval | this commit | |
 | E093 | 2.6 | MLB | timing: hours before start against distance to close | stored data in exploration seasons only | planned, waits for approval | this commit | |
 | E094 | 2.6 | TEN | timing: hours before start against distance to close | stored data in exploration seasons only | planned, waits for approval | this commit | |
