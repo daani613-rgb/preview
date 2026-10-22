@@ -453,6 +453,16 @@ One line per defect. Status: fixed locally 2026-10-12 (pending push), or open.
     - **Not changed:** liveRecord, because all 13 rows are silent on the winner.
     - **The rows themselves are not touched:** they are in the locked journal.
     - **The fix:** proposed (key and settle by game_pk). It waits for approval (decision D4).
+  - **Added 2026-10-22 15:25Z: the root is postponed games** (the same research file).
+    - **The finding:** 19 of the 20 PENDING journal rows will never settle as the code stands:
+      - 9 were postponed and played in a later doubleheader;
+      - 5 were made up as single games, each with a second settled row under the same game_pk;
+      - 1 was cancelled;
+      - 4 are postseason games with no data in StatsAPI.
+    - **What a reader sees:** 11 of the 19 are totals A+ calls, shown in the journal view as unresolved.
+    - **The fix must also:**
+      - settle a postponed game's own row on its make-up date, by game_pk;
+      - void cancelled or unneeded games, with a reason.
 - **57.** MLB: what is shown must equal what was checked. The journal locks `p_home` at its first write, one to two days before the game, while `today_all.json` keeps recomputing until first pitch, so a "today" tile moves at first pitch from the recomputed value to the frozen one (2026-10-12 LAN @ MIL: 0.562 before, 0.534 after). The rule to apply: a game that has a journal row shows that row's frozen value from the moment the row exists, not a recomputed value that is replaced at first pitch. When the journal locks is a question about the rating rule and is not changed without asking. Open.
 - **58.** MLB: the "today" tiles' totals values come from `totals/today_totals.json`, rebuilt every run and not kept in git, so whether they are recomputed after first pitch cannot be measured. To do: keep the file in git, then measure it the way `today_all.json` was measured (item 53). Open.
 - **59.** MLB: "today" in the pipeline is the runner's UTC date (`datetime.date.today()` in `baseball_daily.py`), so an evening game in US Eastern time drops off the "today" board once UTC passes midnight, while it is still being played (CLE @ TBA of 2026-10-12, first pitch 00:00Z on 10-13, was not in `today_all.json` of the 01:07Z run on 10-13). Open (record only).
