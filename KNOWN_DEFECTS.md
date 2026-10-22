@@ -4,7 +4,7 @@ Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothi
 
 ## Status (measured 2026-10-22, from the code and the commits at origin/main, not from the text)
 
-Counts over items 1 to 115: **closed 74**, **open 38**, **undecidable 3**. Item 115, and the later entries of 103, 105, 106, 110 and 114, exist only in this local copy (not yet on origin/main). Record-only items (a known behaviour kept on purpose) are marked "(record only)". Method: four read-only checks of the code and commit history, with five claims re-checked by hand (items 31, 36, 56, 104, 115). Per-item tables: the research repository, kd_2026-10-22/.
+Counts over items 1 to 115: **closed 74**, **open 39**, **undecidable 0**, **record only 2** (11 and 19, decided 2026-10-22 overnight; 49 decided open by measurement). Item 115, and the later entries of 103, 105, 106, 110 and 114, exist only in this local copy (not yet on origin/main). Record-only items (a known behaviour kept on purpose) are marked "(record only)". Method: four read-only checks of the code and commit history, with five claims re-checked by hand (items 31, 36, 56, 104, 115). Per-item tables: the research repository, kd_2026-10-22/.
 
 | item | status | evidence (commit, on main, file:line at origin/main) | reason |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Counts over items 1 to 115: **closed 74**, **open 38**, **undecidable 3**. Item 
 | 8 | closed | nba-engine a977540, 0ebcf2e, f5ba06d, yes; preview_build/gen_nba_data.py:255-264; 71a084a (item 18) | Fields with no source are gone from the tiles. |
 | 9 | open | baseball-engine stages.py:44-50; predict_baseball.py:62 | classify_stage has no look-ahead guard of its own. |
 | 10 | closed | baseball-engine 330d1e8, yes; games_2024.csv, games_2025.csv in the tree; predict_baseball.py:24 | The chain runs 2010-2026 with no gap. |
-| 11 | undecidable (record only) | baseball-engine 330d1e8, yes; baseball_log.csv 42 rows, all `2010_2023+2026` | A disclosure about the log, not a code defect; the log does not span two chains yet. |
+| 11 | record only | baseball-engine baseball_log.csv at origin/main: 42 rows, all chain_version 2010_2023+2026, none 2010_2026_full (decided 2026-10-22 overnight) | The situation recorded has not happened yet: the log holds one chain. |
 | 12 | closed | baseball-engine 330d1e8, yes; log_baseball.py:21-23 | FIELDS matches the header. |
 | 13 | closed | nba-engine a4929a2, yes; .github/workflows/daily.yml:44 | The key is set in the Build dashboard step. |
 | 14 | closed | preview edfc4a8, yes; nba/app.js:598, :600, nba/index.html:114, :835; nba-engine gen_nba_data.py:491-493 | No featured card without a featured game. |
@@ -26,7 +26,7 @@ Counts over items 1 to 115: **closed 74**, **open 38**, **undecidable 3**. Item 
 | 16 | closed | nba-engine 7254266, yes; dashboard.py:227, 601; dashboard.html:849, 853-854; gen_nba_data.py:221-223 | Both pages read the is_aplus flag. |
 | 17 | open | nba-engine preview_build/gen_nba_data.py:427-434 (cubes `data: []`); note fixed a4929a2 (:421-422) | The three day cubes are still never built. |
 | 18 | closed | nba-engine 71a084a, yes; dashboard.py:141-187; dashboard.html:488, :698 | Expected total connected, dead branch removed. |
-| 19 | undecidable (record only) | nba-engine dashboard.py:141-187 (71a084a, yes); other engines have only test_stages_v2.py | The item records a pattern, not a defect. |
+| 19 | record only | (decided 2026-10-22 overnight) | A pattern worth copying, not a defect. |
 | 20 | closed | tennis-engine 565cb5e, yes; gen_tennis_data.py:118-124; tennis_dashboard.html:408; tennis_dashboard.py:167; preview d46b0ca, yes; tennis/app.js:772 | The pages use the engine's A+ flag. |
 | 21 | closed | preview d46b0ca, yes; tennis/app.js:820, :836 | Results found by date and names. |
 | 22 | closed | tennis-engine 565cb5e, yes; gen_tennis_data.py:290-293; preview tennis/app.js:1001 | An empty slate no longer raises IndexError. |
@@ -56,7 +56,7 @@ Counts over items 1 to 115: **closed 74**, **open 38**, **undecidable 3**. Item 
 | 46 | closed | nfl-engine 301a161, yes; nfl_build.py:227; gen_nfl_data.py:53-54; nfl_template.html:450-451 | Both pages read one list, week.aplus_open. |
 | 47 | closed | nfl-engine 301a161, yes; nfl_template.html:312 | A tie is no longer read as wrong. |
 | 48 | open | preview 2c22d7a, yes (nfl/app.js:746-753); nfl-engine 27f72a4, yes (nfl_build.py:322-338); still at nfl_template.html:425-441 | The classic page still has no live season record. |
-| 49 | undecidable | none | Missed or late scheduled runs are GitHub Actions runtime behaviour, not visible in code or commits. |
+| 49 | open | gh API, scheduled runs 2026-10-08 to 2026-10-21 (research kd_2026-10-22/item49_runs_2026-10-08_to_21.md): MLB 66 of 98, NFL 26 of 28; NBA 14 of 14 (1 failed), tennis 42/42, WC daily 14/14, goals 28/28 | Decided by measurement 2026-10-22 overnight: missed runs remain for MLB and NFL. |
 | 50 | closed | tennis-engine 5f5eb0e, yes; gen_tennis_data.py:308; preview tennis/app.js:752 | The English 'Today' fallback was removed. |
 | 51 | closed | tennis-engine 5f5eb0e, yes; tennis_dashboard.html:456; tennis_dashboard.py:54 | Both pages show p_home; conf_cal is not shown. |
 | 52 | closed | tennis-engine 5f5eb0e, yes (gen_tennis_data.py:287-293); preview ea8f97e, yes (tennis/app.js:322-328) | The featured card follows the NFL rule. |
