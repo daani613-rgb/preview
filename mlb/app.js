@@ -658,7 +658,9 @@ class Component extends DCLogic {
       lines: t.lines || [],
       // journal entries carry their own result tail; today's tiles look it up below
       _played: t.played, _scoreStr: t.scoreStr, _winCorrect: t.winCorrect, _totCorrect: t.totCorrect, _clvStr: t.clvStr,
-      _date: t.date,   // for RESULT_UNDER_REVIEW (C_MLB_REVIEW_PREREGISTER.md)
+      _date: t.date,
+      // journal fields for the labels (C_MLB_FIELDS_PREREGISTER.md); absent in an older payload
+      _status: t.status || '', _voidReason: he ? (t.voidReason || t.voidReasonEn) : (t.voidReasonEn || t.voidReason), _totReview: t.totReview || null,
       aplusMkt: t.aplusMkt || null,   // which market the A+ mark is on (win / tot)
     }));
 
@@ -670,13 +672,8 @@ class Component extends DCLogic {
     const extra = R.extra || {};
     const CIRC = 2 * Math.PI * 22;
 
-    // C_MLB_REVIEW_PREREGISTER.md: 13 journal rows (date|home|away) that carry the other doubleheader game's score,
-    // measured against MLB StatsAPI by game_pk (research PROPOSAL_MLB_DOUBLEHEADER_KEY.md). A stopgap until decision D4:
-    // their score and marks read "Result under review"; the locked journal is not touched.
-    // C_MLB_PENDING_PREREGISTER.md: 19 PENDING rows that will never settle (postponed, cancelled or not needed;
-    // research PROPOSAL_MLB_DOUBLEHEADER_KEY.md). A stopgap until D4: past-tense tag and a "no result" line.
-    const NO_RESULT_ROWS = new Set(["2026-06-18|ATL|SFN", "2026-06-21|CHN|TOR", "2026-06-22|NYN|CHN", "2026-06-25|SLN|ARI", "2026-07-10|PIT|MIL", "2026-07-17|CLE|PIT", "2026-07-18|NYA|LAN", "2026-07-21|BOS|BAL", "2026-07-21|NYA|PIT", "2026-07-27|CIN|CLE", "2026-07-28|NYN|ATL", "2026-09-22|BAL|TOR", "2026-09-26|BOS|CHN", "2026-09-27|NYA|BAL", "2026-10-08|NYA|TBA", "2026-10-09|MIL|SDN", "2026-10-16|CLE|TBA", "2026-10-16|LAN|MIL", "2026-10-20|TBA|CLE"]);
-    const RESULT_UNDER_REVIEW = new Set(["2026-07-07|SLN|MIL", "2026-07-11|PIT|MIL", "2026-07-17|BOS|TBA", "2026-07-18|CLE|PIT", "2026-07-19|NYA|LAN", "2026-07-22|BOS|BAL", "2026-07-28|CIN|CLE", "2026-08-17|CIN|SLN", "2026-08-29|NYA|BOS", "2026-08-29|SFN|ARI", "2026-09-04|CLE|DET", "2026-09-22|NYA|TBA", "2026-09-25|BOS|CHN"]);
+    // C_MLB_FIELDS_PREREGISTER.md: the labels follow the journal's own fields (status, void reason, tot_review), not
+    // fixed key lists (they replaced C_MLB_REVIEW / C_MLB_PENDING, the D15 stopgap).
     // Build result tail from journalByDate for today
     const todayDate = dateForSel.today;
     const todayJournal = journalByDate[todayDate] || [];
@@ -686,10 +683,14 @@ class Component extends DCLogic {
     const tiles = raw.map(t => {
       const ex = extra[t.id] || {};
       // decided or not, the A+ tag names its market; a decided one speaks in the past tense (STOP2_PREREGISTER.md)
-      const _noRes = boardIsJournal && NO_RESULT_ROWS.has(`${t._date}|${t.home}|${t.away}`);
-      const _dec = boardIsJournal ? (!!t._played || _noRes) : !!(journalById[t.id] && journalById[t.id].played);
+      const _void = boardIsJournal && t._status === 'VOID';
+      const _excl = boardIsJournal && t._status === 'EXCLUDED';
+      const _noRes = boardIsJournal && !t._played && !_void && !_excl && !!t._date && t._date < dateForSel.today;
+      const _dec = boardIsJournal ? (!!t._played || _noRes || _void || _excl) : !!(journalById[t.id] && journalById[t.id].played);
       const _mktW = t.aplusMkt === 'tot' ? (he ? 'טוטאל' : 'total') : (he ? 'מנצח' : 'winner');
-      const st = t.state === 'aplus'
+      const st = _excl
+        ? { ...styleFor('silent'), badgeText: he ? 'לא נספר' : 'Not counted' }
+        : t.state === 'aplus'
         ? { ...styleFor(t.state), badgeText: (_dec ? (he ? 'הייתה קריאת A+' : 'Was an A+ call') : 'A+') + ' · ' + _mktW }
         : (t.state === 'silent' && t.mktH == null) ? { ...styleFor(t.state), badgeText: he ? 'שקט' : 'quiet' } : styleFor(t.state);
       const hasMktH = t.mktH != null;
@@ -697,7 +698,7 @@ class Component extends DCLogic {
       const hasMktOver = t.mktOver != null;
       const lo = hasMktH ? Math.min(t.engH, t.mktH) : t.engH, hi = hasMktH ? Math.max(t.engH, t.mktH) : t.engH;
       const open = t.id === this.state.openTile;
-      const ringColor = t.state === 'aplus' ? '#35e39a' : (t.state === 'value' ? '#f5b23d' : '#8791ab');
+      const ringColor = (t.state === 'aplus' && !_excl) ? '#35e39a' : (t.state === 'value' ? '#f5b23d' : '#8791ab');
       const gapPct = hasMktH ? Math.abs(t.engH - t.mktH) : null;
       const elo = ex.elo != null ? ('Elo ' + ex.elo) : '';
       // Result tail: journal board carries it inline (t._*); today's live tiles look it up by id.
@@ -706,18 +707,14 @@ class Component extends DCLogic {
         : journalById[t.id];
       const hasResult = jEntry && jEntry.played;
       let resultTail = null;
-      if (_noRes) {
-        resultTail = { scoreStr: he ? 'אין תוצאה: המשחק נדחה או בוטל' : 'No result: game postponed or cancelled', winOk: false, winMiss: false,
-                       winLabel: '·', winColor: '#8791ab', totOk: false, totMiss: false, totPush: false, totLabel: '·', totColor: '#8791ab', clvStr: null };
-      }
-      if (hasResult) {
+      const _neutral = (txt) => ({ scoreStr: txt, winOk: false, winMiss: false, winLabel: '·', winColor: '#8791ab',
+                                   totOk: false, totMiss: false, totPush: false, totLabel: '·', totColor: '#8791ab', clvStr: null });
+      if (_noRes) resultTail = _neutral(he ? 'אין תוצאה עדיין' : 'No result yet');
+      if (_void) resultTail = _neutral((he ? 'בוטל: ' : 'Void: ') + (t._voidReason || (he ? 'ללא סיבה' : 'no reason given')));
+      if (_excl) resultTail = _neutral(he ? 'לא נספר: אותו משחק כמו שורה מוקדמת יותר' : 'Not counted: the same game as an earlier row');
+      if (hasResult && !_excl && !_void) {
         const wc = jEntry.winCorrect;
         const tc2 = jEntry.totCorrect;
-        const _review = boardIsJournal && RESULT_UNDER_REVIEW.has(`${t._date}|${t.home}|${t.away}`);
-        if (_review) {
-          resultTail = { scoreStr: he ? 'תוצאה בבדיקה' : 'Result under review', winOk: false, winMiss: false, winLabel: '·', winColor: '#8791ab',
-                         totOk: false, totMiss: false, totPush: false, totLabel: '·', totColor: '#8791ab', clvStr: jEntry.clvStr || null };
-        } else
         resultTail = {
           scoreStr: jEntry.scoreStr || '—',
           winOk: wc === '1', winMiss: wc === '0',
@@ -728,9 +725,13 @@ class Component extends DCLogic {
           totColor: tc2 === '1' ? '#35e39a' : (tc2 === '0' ? '#e06060' : '#8791ab'),
           clvStr: jEntry.clvStr || null,
         };
+        if (boardIsJournal && t._totReview === 'uncertain') {   // the total only: winner and score stand
+          resultTail = { ...resultTail, totOk: false, totMiss: false, totPush: false,
+                         totLabel: he ? 'תוצאה בבדיקה ·' : 'Result under review ·', totColor: '#8791ab' };
+        }
       }
       return {
-        ...t, ...st, engA: 100 - t.engH, gapLeft: lo, gapWidth: Math.max(1.2, hi - lo),
+        ...t, ...st, state: _excl ? 'silent' : t.state, aplusMkt: _excl ? null : t.aplusMkt, engA: 100 - t.engH, gapLeft: lo, gapWidth: Math.max(1.2, hi - lo),
         open, detailDisp: open ? 'block' : 'none', chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
         ringColor, ringArc: `${(CIRC * t.callPct / 100).toFixed(1)} ${CIRC.toFixed(1)}`,
         hasMktH, mktDisp: hasMktH ? 'flex' : 'none',
@@ -747,16 +748,16 @@ class Component extends DCLogic {
         lines: (t.lines || []).map(ln => ({ ...ln, lock: ln.locked ? '🔒 ' : '', lcolor: ln.locked ? '#f5b23d' : '#8791ab', lfill: ln.locked ? 'linear-gradient(90deg,#f5b23d,#ffcf6b)' : '#4a9eff' })),
         span: open ? '1 / -1' : 'auto',
         starterAway: ex.sa || '', starterHome: ex.sh || '', elo,
-        callNote: t.state === 'silent'
+        callNote: _excl ? (he ? 'לא נספר' : 'Not counted') : t.state === 'silent'
           ? (gapPct != null
               ? (gapPct > 10 ? (he ? `פער גדול · מעבר לחלון · ${gapPct}%` : `Large gap · outside the window · ${gapPct}%`)
                  : (he ? `בקו עם השוק · פער ${gapPct}% — שתיקה` : `In line with market · gap ${gapPct}% — silent`))
               : (he ? 'שקט · אין מחיר שוק' : 'Quiet · no market price'))
           : (t.state === 'aplus' ? ((_dec ? (he ? 'הייתה קריאת A+' : 'Was an A+ call') : (he ? 'קריאת A+' : 'A+ call')) + ' · ' + _mktW) : (he ? 'ערך' : 'Value')),
         toggle: () => this.toggleTile(t.id),
-        hasResult: hasResult || _noRes,   // _noRes rows show their 'no result' line (C_MLB_PENDING_PREREGISTER)
+        hasResult: !!resultTail,   // a played row, or its no-result / void / not-counted line (C_MLB_FIELDS_PREREGISTER)
         resultTail,
-        resultDisp: (hasResult || _noRes) ? 'block' : 'none',   // _noRes: C_MLB_PENDING_PREREGISTER
+        resultDisp: resultTail ? 'block' : 'none',
         resultLabel: L.resultLabel,
         winCorrectLabel: L.winCorrectLabel,
         totCorrectLabel: L.totCorrectLabel,

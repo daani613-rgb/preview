@@ -1,0 +1,9 @@
+PASS no fixed RESULT_UNDER_REVIEW set
+PASS no fixed NO_RESULT_ROWS set
+PASS reads status and totReview from the entry
+PASS label he/en: Result under review
+PASS label he/en: Void:
+PASS label he/en: Not counted
+PASS label he/en: No result yet
+
+ALL TESTS PASS
