@@ -14,3 +14,12 @@ Written 2026-10-22, before the page is committed. A separate first commit, on it
   - rendered at 390 and 1024 in en and he: no page error, no horizontal scroll, scan.js tap/contrast/minus 0;
   - html lang/dir follow the switch;
   - screenshots in research ux_2026-10-22/shots/measure_*.png.
+
+## Added 2026-10-22 16:43Z, before the change: a known-exceptions line under "The lock" (decision D9, option a)
+- **Why:** tonight's journal findings (research PROPOSAL_MLB_DOUBLEHEADER_KEY.md, TENNIS_UNSETTLED_2026-10-22.md).
+  The prediction is locked, but in MLB the result attached can be another game's (doubleheaders), and in MLB and
+  tennis some moved or cancelled games never get a result.
+- **The change:** one paragraph in en and he, after the lock paragraph, saying exactly that, and that a fix is
+  pending. No number.
+- **Check:** the page renders at 390 px in en and he with the paragraph visible in the reader's language, and no page
+  error.
