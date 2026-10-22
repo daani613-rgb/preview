@@ -224,30 +224,30 @@ Thresholds (02_MASTER_PLAN.md section 2):
 | E089 | 2.5 | WC | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | w* 0.00 [0.00,0.94]: none (n 95) (PREREG_2_5 results) |
 | E090 | 2.5 | WC | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | X .05 n40 return -0.046 z-0.33; X .10 n19 -0.047 z-0.21; margin 5.5%: none (PREREG_2_5 results) |
 | E091 | 2.5 | WC | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | >=0.62 n45 +0.0042 z+0.15: no difference (PREREG_2_5 results) |
-| E092 | 2.6 | NFL | timing: hours before start against distance to close | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E093 | 2.6 | MLB | timing: hours before start against distance to close | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E094 | 2.6 | TEN | timing: hours before start against distance to close | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E095 | 2.6 | WC | timing: hours before start against distance to close | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E096 | 2.6 | NFL | favourite/longshot by odds bin | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E097 | 2.6 | NBA | favourite/longshot by odds bin | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E098 | 2.6 | MLB | favourite/longshot by odds bin | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E099 | 2.6 | TEN | favourite/longshot by odds bin | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E100 | 2.6 | WC | favourite/longshot by odds bin | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E101 | 2.6 | NFL | early-season bias in totals | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E102 | 2.6 | MLB | early-season bias in totals | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E103 | 2.6 | NBA | early-season bias in totals | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E104 | 2.6 | NFL | market type (spread / winner / total) where the engine is farthest | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E105 | 2.6 | MLB | market type (spread / winner / total) where the engine is farthest | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E106 | 2.6 | TEN | market type (spread / winner / total) where the engine is farthest | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E107 | 2.6 | NFL | rest, travel, short week | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E108 | 2.6 | NBA | rest, travel, short week | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E109 | 2.6 | MLB | rest, travel, short week | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E110 | 2.6 | MLB | weather and late pitcher change on totals | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E111 | 2.6 | NFL | weather on totals | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E112 | 2.6 | TEN | tennis factor: surface | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E113 | 2.6 | TEN | tennis factor: fatigue from previous tournament | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E114 | 2.6 | TEN | tennis factor: retirements | stored data in exploration seasons only | planned, waits for approval | this commit | |
-| E115 | 2.6 | TEN | tennis factor: Slam against smaller events | stored data in exploration seasons only | planned, waits for approval | this commit | |
+| E092 | 2.6 | NFL | timing: hours before start against distance to close | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md | not runnable: exploration prices carry no timestamp; 2026 closed (PREREG_2_6_MARKET) |
+| E093 | 2.6 | MLB | timing: hours before start against distance to close | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E094 | 2.6 | TEN | timing: hours before start against distance to close | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E095 | 2.6 | WC | timing: hours before start against distance to close | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E096 | 2.6 | NFL | favourite/longshot by odds bin | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E097 | 2.6 | NBA | favourite/longshot by odds bin | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md | not runnable: no NBA prices (PREREG_2_6_MARKET) |
+| E098 | 2.6 | MLB | favourite/longshot by odds bin | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E099 | 2.6 | TEN | favourite/longshot by odds bin | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E100 | 2.6 | WC | favourite/longshot by odds bin | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E101 | 2.6 | NFL | early-season bias in totals | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E102 | 2.6 | MLB | early-season bias in totals | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md | not runnable: MLB journal starts 2026-06-18 (PREREG_2_6_MARKET) |
+| E103 | 2.6 | NBA | early-season bias in totals | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md | not runnable: no NBA totals prices (PREREG_2_6_MARKET) |
+| E104 | 2.6 | NFL | market type (spread / winner / total) where the engine is farthest | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E105 | 2.6 | MLB | market type (spread / winner / total) where the engine is farthest | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E106 | 2.6 | TEN | market type (spread / winner / total) where the engine is farthest | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E107 | 2.6 | NFL | rest, travel, short week | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E108 | 2.6 | NBA | rest, travel, short week | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E109 | 2.6 | MLB | rest, travel, short week | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E110 | 2.6 | MLB | weather and late pitcher change on totals | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md | not runnable: no weather field; pitcher_changed empty (PREREG_2_6_MARKET) |
+| E111 | 2.6 | NFL | weather on totals | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E112 | 2.6 | TEN | tennis factor: surface | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E113 | 2.6 | TEN | tennis factor: fatigue from previous tournament | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E114 | 2.6 | TEN | tennis factor: retirements | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
+| E115 | 2.6 | TEN | tennis factor: Slam against smaller events | stored data in exploration seasons only | registered (PREREG_2_6_MARKET) | research PREREG_2_6_MARKET.md |  |
 | E116 | 2.6 | TEN | A+ CLV diagnosis: pick odds bucket (4 bins) | 2026 tennis journal, 82 A+ rows with CLV | registered (PREREG_2_6) | this commit | S1: < 1.40 bins z -2.39/-2.54; none >= 3.9 (PREREG_2_6 results) |
 | E117 | 2.6 | TEN | A+ CLV diagnosis: surface and tournament level via the TML join | 2026 tennis journal, 82 A+ rows with CLV | registered (PREREG_2_6) | this commit | S2/S3: no bin >= 3.9; grass = all G, not separable |
 | E118 | 2.6 | TEN | A+ CLV diagnosis: best_of (3 or 5) | 2026 tennis journal, 82 A+ rows with CLV | registered (PREREG_2_6) | this commit | S4: no bin >= 3.9 |
