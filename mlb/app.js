@@ -658,6 +658,7 @@ class Component extends DCLogic {
       lines: t.lines || [],
       // journal entries carry their own result tail; today's tiles look it up below
       _played: t.played, _scoreStr: t.scoreStr, _winCorrect: t.winCorrect, _totCorrect: t.totCorrect, _clvStr: t.clvStr,
+      _date: t.date,   // for RESULT_UNDER_REVIEW (C_MLB_REVIEW_PREREGISTER.md)
       aplusMkt: t.aplusMkt || null,   // which market the A+ mark is on (win / tot)
     }));
 
@@ -669,6 +670,10 @@ class Component extends DCLogic {
     const extra = R.extra || {};
     const CIRC = 2 * Math.PI * 22;
 
+    // C_MLB_REVIEW_PREREGISTER.md: 13 journal rows (date|home|away) that carry the other doubleheader game's score,
+    // measured against MLB StatsAPI by game_pk (research PROPOSAL_MLB_DOUBLEHEADER_KEY.md). A stopgap until decision D4:
+    // their score and marks read "Result under review"; the locked journal is not touched.
+    const RESULT_UNDER_REVIEW = new Set(["2026-07-07|SLN|MIL", "2026-07-11|PIT|MIL", "2026-07-17|BOS|TBA", "2026-07-18|CLE|PIT", "2026-07-19|NYA|LAN", "2026-07-22|BOS|BAL", "2026-07-28|CIN|CLE", "2026-08-17|CIN|SLN", "2026-08-29|NYA|BOS", "2026-08-29|SFN|ARI", "2026-09-04|CLE|DET", "2026-09-22|NYA|TBA", "2026-09-25|BOS|CHN"]);
     // Build result tail from journalByDate for today
     const todayDate = dateForSel.today;
     const todayJournal = journalByDate[todayDate] || [];
@@ -700,6 +705,11 @@ class Component extends DCLogic {
       if (hasResult) {
         const wc = jEntry.winCorrect;
         const tc2 = jEntry.totCorrect;
+        const _review = boardIsJournal && RESULT_UNDER_REVIEW.has(`${t._date}|${t.home}|${t.away}`);
+        if (_review) {
+          resultTail = { scoreStr: he ? 'תוצאה בבדיקה' : 'Result under review', winOk: false, winMiss: false, winLabel: '·', winColor: '#8791ab',
+                         totOk: false, totMiss: false, totPush: false, totLabel: '·', totColor: '#8791ab', clvStr: jEntry.clvStr || null };
+        } else
         resultTail = {
           scoreStr: jEntry.scoreStr || '—',
           winOk: wc === '1', winMiss: wc === '0',

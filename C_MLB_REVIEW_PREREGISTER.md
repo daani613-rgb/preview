@@ -29,3 +29,19 @@ on its own branch (c-mlb-review-2026-10-22), local only, not pushed.
   - no page error.
   - Screenshots before and after.
 - **Red** before, **green** after.
+
+## Result (2026-10-22 16:58Z)
+- **Static:** 4 FAILED before, ALL TESTS PASS after.
+- **Rendered** (390 px, the date picked through the date input):
+  - 2026-09-22 TBA at NYA "7:05 PM EDT": before "0–2 ✗ winner ✗ total"; after "Result under review · winner · total"
+    (he "תוצאה בבדיקה").
+  - The other rows of the day are unchanged.
+  - Across all 12 affected dates the label appears exactly on the 13 rows (2 on 2026-08-29), and nowhere else.
+  - No page error.
+- **Screenshots:** research ux_2026-10-22/shots/mlb_review_{before,after}_{en,he}_390 (files mlb_review_*.png).
+- **Left as is:**
+  - the row's CLV figure (a totals CLV from its odds snapshots; on a doubleheader day the snapshots can belong to
+    either game, D4);
+  - the "Was an A+ call" tag.
+- **The list is fixed** (13 keys from the StatsAPI check). A doubleheader settled wrongly after today would not be
+  caught. That is why this is a stopgap, until D4.
