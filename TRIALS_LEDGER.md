@@ -341,3 +341,15 @@ None registered. Each is added with its own pre-registration commit, after the s
 | E162 | 2.6 | TEN | distance of the line from the close by hours before start | OddsPapi historical, Pinnacle, the 367 journal fixtures | registered; waits for the key | research PREREG_2_6_TIMING_MARKET.md | |
 | E163 | 2.6 | TEN | direction of the favourite's move by horizon and price bin | same | registered; waits for the key | research PREREG_2_6_TIMING_MARKET.md | |
 | E164 | 2.6 | MLB | timing | none without a billed fixture call | not runnable | research PREREG_2_6_TIMING_MARKET.md | not runnable: no OddsPapi fixture ids stored |
+
+## Block B of the overnight order: Pinnacle MLB 2016 (PREREG_B_MLB2016_PINNACLE.md, research), registered 2026-10-22 before any number
+
+| id | family | engine | idea | data | status | registered in | result |
+|---|---|---|---|---|---|---|---|
+| E165 | B | MLB | engine against Pinnacle, close and open | MLB 2016 (exploration), CRAN pinnacle.data | registered (PREREG_B) | research PREREG_B_MLB2016_PINNACLE.md | |
+| E166 | B | MLB | blend weight w against the close | same | registered (PREREG_B) | research PREREG_B_MLB2016_PINNACLE.md | |
+| E167 | B | MLB | favourite and longshot by band, at the close | same | registered (PREREG_B) | research PREREG_B_MLB2016_PINNACLE.md | |
+| E168 | B | MLB | early season (April) against the rest | same | registered (PREREG_B) | research PREREG_B_MLB2016_PINNACLE.md | |
+| E169 | B | MLB | favourite's move from open to close by open-price band | same | registered (PREREG_B) | research PREREG_B_MLB2016_PINNACLE.md | |
+| E170 | B | MLB | high stage against the market | same | registered (PREREG_B) | research PREREG_B_MLB2016_PINNACLE.md | |
+| E171 | B | TEN | E115, A+ under 1.40, ATP rows | none (no ATP prices) | not runnable | research PREREG_B_MLB2016_PINNACLE.md | not runnable: tennis-data.co.uk blocked (D1) |
