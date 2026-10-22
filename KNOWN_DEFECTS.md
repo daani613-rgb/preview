@@ -2,6 +2,128 @@
 
 Recorded 2026-10-09. Each item is a known defect left in place on purpose. Nothing here changes behavior.
 
+## Status (measured 2026-10-22, from the code and the commits at origin/main, not from the text)
+
+Counts over items 1 to 115: **closed 74**, **open 39**, **undecidable 0**, **record only 2** (11 and 19, decided 2026-10-22 overnight; 49 decided open by measurement). Item 115, and the later entries of 103, 105, 106, 110 and 114, exist only in this local copy (not yet on origin/main). Record-only items (a known behaviour kept on purpose) are marked "(record only)". Method: four read-only checks of the code and commit history, with five claims re-checked by hand (items 31, 36, 56, 104, 115). Per-item tables: the research repository, kd_2026-10-22/.
+
+| item | status | evidence (commit, on main, file:line at origin/main) | reason |
+|---|---|---|---|
+| 1 | closed | nfl-engine 301a161, yes; preview_build/gen_nfl_data.py:118-131 | Ties are broken by date, time, away and home after the games still to play. |
+| 2 | open | no fix commit; preview mlb/app.js:567-568, mlb/index.html:206-207 | Today's slate note still shows on the Yesterday view. Fixed locally 2026-10-22 on kd-002-2026-10-22 (pending push, D7); 30-day replay passed. |
+| 3 | open | baseball-engine totals/totals_predict.py:197, :262; totals/totals_log.csv has 2,752 lines with `no_market` | The old path still writes "no_market"; the log rows are unchanged. |
+| 4 | open | baseball-engine totals/totals_clv_journal.py:29-31, 34-44; called at totals/predictions_journal.py:226 without try/except | An empty start time still raises ValueError inside upsert. Reproduced 2026-10-22 with the engine's code; draft declaration (research PREREG_DRAFT_KD4_KD60.md). |
+| 5 | open | tennis-engine clv_journal.csv: 59 of 367 rows have empty start_iso, not voided | A data defect, still there. |
+| 6 | open | tennis-engine collect_tennis.py:136, :171 | The journal start time is frozen at the first write. |
+| 7 | open | nfl-engine nfl_pinnacle_close.py:57-69; nfl_build.py:534-535 | The close is measured against the scheduled kickoff, not the actual one. |
+| 8 | closed | nba-engine a977540, 0ebcf2e, f5ba06d, yes; preview_build/gen_nba_data.py:255-264; 71a084a (item 18) | Fields with no source are gone from the tiles. |
+| 9 | open | baseball-engine stages.py:44-50; predict_baseball.py:62 | classify_stage has no look-ahead guard of its own. |
+| 10 | closed | baseball-engine 330d1e8, yes; games_2024.csv, games_2025.csv in the tree; predict_baseball.py:24 | The chain runs 2010-2026 with no gap. |
+| 11 | record only | baseball-engine baseball_log.csv at origin/main: 42 rows, all chain_version 2010_2023+2026, none 2010_2026_full (decided 2026-10-22 overnight) | The situation recorded has not happened yet: the log holds one chain. |
+| 12 | closed | baseball-engine 330d1e8, yes; log_baseball.py:21-23 | FIELDS matches the header. |
+| 13 | closed | nba-engine a4929a2, yes; .github/workflows/daily.yml:44 | The key is set in the Build dashboard step. |
+| 14 | closed | preview edfc4a8, yes; nba/app.js:598, :600, nba/index.html:114, :835; nba-engine gen_nba_data.py:491-493 | No featured card without a featured game. |
+| 15 | closed | nba-engine a4929a2, yes; preview_build/gen_nba_data.py:143-149, :263-264 | Band matched by numeric bounds. The item's "Remaining" part is still open: dashboard.py:226 rounds before _band_for. |
+| 16 | closed | nba-engine 7254266, yes; dashboard.py:227, 601; dashboard.html:849, 853-854; gen_nba_data.py:221-223 | Both pages read the is_aplus flag. |
+| 17 | open | nba-engine preview_build/gen_nba_data.py:427-434 (cubes `data: []`); note fixed a4929a2 (:421-422) | The three day cubes are still never built. |
+| 18 | closed | nba-engine 71a084a, yes; dashboard.py:141-187; dashboard.html:488, :698 | Expected total connected, dead branch removed. |
+| 19 | record only | (decided 2026-10-22 overnight) | A pattern worth copying, not a defect. |
+| 20 | closed | tennis-engine 565cb5e, yes; gen_tennis_data.py:118-124; tennis_dashboard.html:408; tennis_dashboard.py:167; preview d46b0ca, yes; tennis/app.js:772 | The pages use the engine's A+ flag. |
+| 21 | closed | preview d46b0ca, yes; tennis/app.js:820, :836 | Results found by date and names. |
+| 22 | closed | tennis-engine 565cb5e, yes; gen_tennis_data.py:290-293; preview tennis/app.js:1001 | An empty slate no longer raises IndexError. |
+| 23 | closed | tennis-engine 5f5eb0e, yes; gen_tennis_data.py:353 | The month key is YYYY-MM. |
+| 24 | closed | preview ea8f97e, yes; tennis/app.js:322-328 | The kicker follows the featured card. |
+| 25 | closed | preview ea8f97e, yes; tennis/app.js:329-338, :1026 | PAUSED shown during the pause. |
+| 26 | closed | preview ea8f97e, yes; tennis/app.js:372, :342, :345 | CLV no longer labelled or plotted in games. |
+| 27 | closed | tennis-engine 5f5eb0e, yes; tennis_dashboard.html:456 | The classic card shows one number. |
+| 28 | closed | preview ea8f97e, yes; tennis/app.js:872-873 | No price: no claim of "in line". |
+| 29 | closed | preview ea8f97e, yes; tennis/app.js:874-878 | Big gaps are no longer "in line". |
+| 30 | closed | tennis-engine 5f5eb0e, yes; tennis_dashboard.html:466-472 | Negative gaps are no longer "in line". |
+| 31 | closed | preview ea8f97e, yes; preview tennis/app.js:723 `rf.engPick != null ? rf.engPick : null` | The fallback of 72 is gone. |
+| 32 | closed | preview ea8f97e, yes; tennis/app.js:1004 `featEdgeTarget: ... : ''` | With no edge there is no count-up target; it used to be 0. |
+| 33 | closed | preview ea8f97e, yes; tennis/app.js:841 `mktA: hasMktH ? 100 - t.mktH : null` | The away market share no longer falls back to 50. |
+| 34 | closed | tennis-engine 5f5eb0e, yes; preview_build/gen_tennis_data.py:581 `round(pick_elo) if pick_elo else None` | Elo 0 is no longer published. |
+| 35 | closed | tennis-engine 5f5eb0e, yes; gen_tennis_data.py:31, :440-441, :490 | The typed 1500 and the matches-10 default were removed. |
+| 36 | open | no fix commit; tennis-engine tennis_dashboard.py:17 `PLATT_A, PLATT_B = 0.903, 0.001` | The constants are still there with no producing script (unused and not shown). |
+| 37 | open | no fix commit; tennis_dashboard.py:28 `ACCURACY = {"overall": 63.7, ...}` (published as null) | The numbers with no producing script are still in the code (not published). Fixed locally 2026-10-22 on kd-037-2026-10-22 (pending push, D7); page byte-identical, replay 30/30. |
+| 38 | closed | preview ea8f97e, yes; tennis/app.js:372 and :416 | The constant-dash KPI tile is gone. |
+| 39 | closed | tennis-engine 5f5eb0e, yes; gen_tennis_data.py:172 | The Normal-approximation ladder was removed. |
+| 40 | closed | preview d46b0ca, yes; `git grep howBullets origin/main -- tennis/` finds nothing | The howBullets block was deleted. |
+| 41 | closed | tennis-engine 5f5eb0e, yes; tennis_frozen.py:64; gen_tennis_data.py:101; tennis_dashboard.py:55 | The price comes from the row with the same date and both players. |
+| 42 | closed | tennis-engine 5f5eb0e, yes; gen_tennis_data.py:650-651, :242, :281; tennis_dashboard.html:490 | The Brier shown is the binary score (the journal stores the two-class sum). |
+| 43 | closed | nfl-engine 301a161, yes; nfl_build.py:171-175, :314 | A game with no frozen pre-game row carries no model fields. |
+| 44 | closed | nfl-engine 301a161, yes; preview_build/gen_nfl_data.py:126-129 | Games still to play come first on the board. |
+| 45 | closed | preview 2c22d7a, yes; nfl/app.js:420 | The featured-card title was corrected. |
+| 46 | closed | nfl-engine 301a161, yes; nfl_build.py:227; gen_nfl_data.py:53-54; nfl_template.html:450-451 | Both pages read one list, week.aplus_open. |
+| 47 | closed | nfl-engine 301a161, yes; nfl_template.html:312 | A tie is no longer read as wrong. |
+| 48 | open | preview 2c22d7a, yes (nfl/app.js:746-753); nfl-engine 27f72a4, yes (nfl_build.py:322-338); still at nfl_template.html:425-441 | The classic page still has no live season record. |
+| 49 | open | gh API, scheduled runs 2026-10-08 to 2026-10-21 (research kd_2026-10-22/item49_runs_2026-10-08_to_21.md): MLB 66 of 98, NFL 26 of 28; NBA 14 of 14 (1 failed), tennis 42/42, WC daily 14/14, goals 28/28 | Decided by measurement 2026-10-22 overnight: missed runs remain for MLB and NFL. |
+| 50 | closed | tennis-engine 5f5eb0e, yes; gen_tennis_data.py:308; preview tennis/app.js:752 | The English 'Today' fallback was removed. |
+| 51 | closed | tennis-engine 5f5eb0e, yes; tennis_dashboard.html:456; tennis_dashboard.py:54 | Both pages show p_home; conf_cal is not shown. |
+| 52 | closed | tennis-engine 5f5eb0e, yes (gen_tennis_data.py:287-293); preview ea8f97e, yes (tennis/app.js:322-328) | The featured card follows the NFL rule. |
+| 53 | closed | baseball-engine 96c2a97, yes; baseball_daily.py:100-134, :225 | Started games take their frozen row or carry no model fields. |
+| 54 | closed | baseball-engine 96c2a97 and f0c4100, yes; totals/predictions_journal.py:195 | The FIP display block is frozen at first pitch. |
+| 55 | open (record only) | no fix commit; worldcup-engine predictions_log.csv:16 | The row written after kickoff is still in the log, unmarked (record-only item). |
+| 56 | open | no fix commit; baseball-engine totals/predictions_journal.py:91-92 | The doubleheader key is unchanged; the missing postseason rows were not backfilled. 2026-10-22: checked against StatsAPI by game_pk, 13/18 doubleheader rows hold the other game's score; 19/20 PENDING never settle; draft declaration (D4). |
+| 57 | open | no fix commit; baseball_daily.py:111-112 | Before first pitch today_all shows a recomputed value, not the frozen one. |
+| 58 | open | no fix commit; baseball-engine .gitignore:17 `totals/today_totals.json` | today_totals.json is not kept in git, so it cannot be measured. |
+| 59 | open | no fix commit; baseball_daily.py:141 | "Today" is still the runner's UTC date. |
+| 60 | open | nba-engine 6c9af15, yes (TRACK, dashboard.py:487-497); CALIB at dashboard.py:479, :489 | CALIB still includes reconstructed 2026-27 games. |
+| 61 | open (record only) | no fix; nba-engine dashboard.py:199 `keep = set(seasons[-2:])`; label preview c494f07, yes | The two-season window is still in the code (record-only item; only the label was added). |
+| 62 | open (record only) | no fix; nba-engine dashboard.py:477; gen_nba_data.py:70 | The five-season window moves a whole season at a time (record only). |
+| 63 | closed | nfl-engine e436ba1, yes, nfl_template.html:304, 309; preview cdf7f5a, yes, nfl/app.js:457, 566 | Decided A+ games read "was an A+ call" from the frozen row. |
+| 64 | closed | nfl-engine e436ba1, yes, nfl_template.html:488; preview cdf7f5a, yes, nfl/app.js:246 | The Teams tab was removed. |
+| 65 | open | no fix; baseball-engine preview_build/gen_mlb_data.py:426-427 | The board marks winner A+ from win_verdict; win_call is not read. |
+| 66 | open | no fix; nba-engine preview_build/gen_nba_data.py:477-482 | Results-view games have no A+ field. |
+| 67 | closed | tennis-engine 5f5eb0e, yes; tennis_frozen.py:74; gen_tennis_data.py:111; tennis_dashboard.py:51 | Started matches shown from their journal row or left out. |
+| 68 | closed | tennis-engine 5f5eb0e, yes; tennis_dashboard.html:538, 541 | Date and flag printed only when the label differs. |
+| 69 | closed | baseball-engine 7ed43fc, yes; totals/market_snapshot.py:30, 54-68, 232; predictions_journal.py:181 | A price comes only from the same not-yet-started game. |
+| 70 | closed | baseball-engine 7ed43fc, yes; totals/predictions_journal.py:177-186, 232-233 | Market fields written only while not started. |
+| 71 | open | no fix; baseball-engine preview_build/gen_mlb_data.py:427 | tot_verdict == 'aplus' still gives the A+ state. |
+| 72 | open | no fix; baseball-engine gen_mlb_data.py:83, 440; preview mlb/app.js:18 | The number shown is pure Elo while the guide says it accounts for the starter. |
+| 73 | open | no fix; baseball-engine baseball_dashboard.py:313 vs gen_mlb_data.py:390-403, :491 | The pages use different totals lines. |
+| 74 | closed | nfl-engine 27f72a4, yes, nfl_build.py:167-191; preview b25d907, yes, nfl/app.js:464, 560 | A game counts as started at kickoff and is shown from its frozen row. |
+| 75 | closed | nfl-engine 27f72a4, yes, nfl_template.html:440; preview b25d907, yes, nfl/app.js:231, 257, 264 | Both pages say the CLV reading is scheduled for 29.11. |
+| 76 | closed | nfl-engine 27f72a4, yes; nfl_build.py:327-338; nfl_template.html:435 | totals_n computed from the frozen rows. |
+| 77 | open | no fix; preview nfl/app.js:511, :582-586 | The value tag names no side or team. |
+| 78 | closed | daani613-rgb.github.io 6be0831, yes; index.html:103, 144 | The hub reads each engine's published app.js. |
+| 79 | open | CTA fixed preview 2caa10a, yes; rest at preview hub.app.js:229, :257, :29 | "Two-way calls on every tournament match", "In season" pill and the five-file fetch remain. |
+| 80 | closed | tennis-engine ce8016c, yes; gen_tennis_data.py:117-129 | Preview "value" follows the classic rule. |
+| 81 | closed | tennis-engine ce8016c, yes; gen_tennis_data.py:329-335; preview tennis/app.js:376 | One mean CLV per match with n. |
+| 82 | open | name join fixed ce8016c, yes; rest: gen_tennis_data.py:513; tennis_dashboard.html:360-361 vs :456 | The "By surface" label and the Platt sentence remain while the raw p is shown. |
+| 83 | open | no fix; tennis-engine tennis_dashboard.html:494-496, :260, :691 | Unsettled rows read "Not played yet"; no pause notice on the classic page. Text fixed locally 2026-10-22 on kd-083-2026-10-22, pause notice on c-tennis-pause-2026-10-22 (pending push); replay passed. Root cause of the 19 rows measured (±1 day window); draft declaration (D6). |
+| 84 | closed | nba-engine c6c996f, yes, gen_nba_data.py:275-315; preview c494f07, yes | Today's tiles built from PICKS by phase. |
+| 85 | open | no fix for the rest; nba-engine dashboard.html:301 (KPI "5,829" typed) | The classic KPI strip is still hand-typed. |
+| 86 | open | label preview c494f07, yes; nba-engine dashboard.py:507 `datetime.date.today()` | "Today" is still the runner's UTC date. |
+| 87 | closed | worldcup-engine c8fb789, yes; gen_worldcup_data.py:866; board_template.html:1017; preview worldcup/app.js:8, 475, 477 | Holdout block gone; "Tournament ended" shown. |
+| 88 | closed | preview 8533ec9, yes; nba-engine 50b7672, yes, gen_nba_data.py:179-180 | Dates are dd.mm / dd.mm.yyyy. |
+| 89 | closed | preview 45e951f, yes, assets/bidi.js:2-5; nfl-engine 3582637, yes; tennis-engine bd99844, yes; daani613-rgb.github.io 558435a, yes | An LRM precedes a leading minus. |
+| 90 | open | no fix; preview mlb/index.html:93, nba/index.html:68, nfl/index.html:71 | English-only headers in the Hebrew view. Fixed locally 2026-10-22 on kd-090-2026-10-22 (pending push, D7); replay P4 300/300. |
+| 91 | open | preview nba/app.js:331, :766; mlb/app.js:789; worldcup/app.js:1119; nfl/app.js:736 | The "collecting" placeholders and the NFL Brier dash are still in the code. |
+| 92 | open | 45e951f, yes (assets/a11y.css:3); preview nfl/index.html:290 still renders the teams chip | Tap targets fixed; the NFL chip remains; the overlap and cut names can only be judged on screen. Chip removed locally 2026-10-22 on kd-092-2026-10-22 (pending push, D7); replay P3 60/60. |
+| 93 | closed | 0f408ab, yes; preview mlb/app.js:586, :718, :842 | Without a price there is no market row, tag or Edge. |
+| 94 | closed | c494f07, yes; preview nba/app.js:835 | "No open A+ call" with games on the board. |
+| 95 | closed | 8533ec9, yes; preview nfl/app.js:291; nfl-engine nfl_template.html:466-467 | The Hebrew view no longer shows "Honest note." |
+| 96 | closed | 8533ec9, yes | The old claim row is gone. |
+| 97 | closed | 87c11ff, yes; preview hub.app.js:286-287 | "See open calls" or "No open calls right now". |
+| 98 | open (record only) | tennis-engine clv_journal.csv:256, 271-273; blank_default_clv.py:20-21 | The data is unchanged; the item calls it "Done" because the rows are left on purpose and counted nowhere (record only). |
+| 99 | closed | a8d8712, yes; preview worldcup/app.js:481, :545 | Header reads "A+ RECORD · THE TOURNAMENT". |
+| 100 | closed | worldcup-engine fb9c900, yes; worldcup_dashboard.html:261, :283 | dd.mm in both languages. |
+| 101 | closed | baseball-engine af5b39e, yes (baseball_dashboard.html:671, :790); preview c3a7962, yes (mlb/app.js:265) | Stamps and void reason print dd.mm.yyyy. |
+| 102 | closed | c3a7962, yes; preview tennis/app.js:321, :341, :386 | The HOLDOUT header is replaced by the journal's figures. |
+| 103 | closed | worldcup-engine 30358a4, yes; gen_worldcup_data.py:913; preview 2c0519a, yes | The unread keys are off the payload; the update text (e8d8726) is not on main. |
+| 104 | open | fix not on main (8a6187d preview, 8fc774e root); preview hub.app.js:29, root index.html:144 | Both hubs still download all five app.js. |
+| 105 | closed | baseball-engine 75dda0f, yes; aplus_record.py; baseball_dashboard.py:367-370; preview mlb liveRecord 30/18 | The MLB A+ record comes from the frozen journal; the update text (e4ff1a5) is not on main. |
+| 106 | closed | baseball-engine b714aaa (measurement), yes; baseball_dashboard.py:399; gen_mlb_data.py:40 | Both pages read one holdout.json. |
+| 107 | closed | nba-engine c7a89b1, 08d08fa (measurement), yes | Cell figure measured against the raw probability (item 112). |
+| 108 | closed | 73c33c1, yes; preview assets/a11y.css:4-5 | Cards left out of the inline-flex rule. |
+| 109 | closed | 14f04ca, yes; preview tennis/index.html:247 | Wrap and ellipsis fixes on main. |
+| 110 | open | fix not on main (baee656); preview nfl/index.html:216 | The bar label is unchanged on main. |
+| 111 | closed | nfl-engine 3d13105, yes; gaps_check.py; nfl_build.py:510-514; daily.yml:31 | The NFL gap check exists and runs. |
+| 112 | closed | nba-engine 9d5f89f, yes; dashboard.py:114 | Stages from earlier games only. |
+| 113 | open | nba-engine 4a4a5e5, 9e9a37b, yes; validate_stages.py:15, holdout_test.py:27, backtest_playoffs.py:29 still call classify_stage(..., asof=d) | Claims and slogan corrected; three scripts still give leaked figures (kept on purpose). |
+| 114 | closed | nba-engine 5efbc4f (measurement), yes; dashboard.py:536 | 0 of 2,644 affected; the update entry exists only locally. |
+| 115 | open | tennis-engine run_live.py:41 `atp.sort(reverse=True)` (7fec1e4); entry only local (6cb0d51) | Unfixed; run_live.py is protected. |
+
 ## 1. NFL board: tie-break on the tile ranking
 - Where: nfl-engine `preview_build/gen_nfl_data.py`, lines 114-118 (at nfl-engine 9176ed1): `tile_priority` (line 114), `others.sort(key=tile_priority, reverse=True)` (line 117), `top_games = aplus_games + others[:3]` (line 118).
 - What: the board ranks the non-A+ games by a combined score of value and form stage (2 points if the winner or the total is in the value zone, plus the stage). A tie in that score is broken by the original order of the list, because the sort is stable.
@@ -318,6 +440,36 @@ One line per defect. Status: fixed locally 2026-10-12 (pending push), or open.
 - **54.** MLB journal: `p_display`, `fip_edge` and `p_over_fip` are refreshed on every run with no start guard (`totals/predictions_journal.py:166-177` and `:216-227`; the start guard covers `tot_verdict` only). Of 1,311 decided journal games, 650 had a model field change after first pitch; `p_display` changed in 536, and the value now shown is closer to the result in 328 and farther in 208 (z = 5.2). The classic MLB card's engine bar, the "pitcher-aware" line and the per-game Match-Brier use these fields (`baseball_dashboard.html:501`, `:569-575`, `:630-632`). Example: 2026-09-25 BAL @ NYA, last value before first pitch 0.48, shown now 0.578. `p_home`, pick, A+ and the ✓/✗ verdict did not change. Fixed locally 2026-10-12 (pending push): the FIP display block is frozen at first pitch beside `tot_verdict`; 656 rows restored from the git history with `fip_restore_note` (648 decided); Match-Brier comes from the stored frozen values only, mean on the 536 games 0.2393 before, 0.2410 after (worse, as pre-registered); test_leak_guards.py B and C.
 - **55.** World Cup: one row of `predictions_log.csv` was first written after kickoff: Spain v Cape Verde, 2026-06-15, written 18:14Z, last pre-match price 15:59Z. At that commit the result was still NA in `international_results.csv`, as it was for all 104 rows, so the result did not reach the ratings. 90 rows are proven before kickoff by the last pre-match price; 13 have no price series and their kickoff is not in the repository. Open (record only).
 - **56.** MLB: 19 postseason games of 2026-09-29 to 2026-10-06 have no journal row: the gameType filter accepted the postseason types only from 2026-10-07. With the 18 second games of doubleheaders (they share the key `date|home|away` with the first game) they are the 37 decided games with no frozen pre-game record that the new gap counter shows (`gaps_check.py`, `totals/gaps.csv`). Open (record only; the doubleheader key is not changed).
+  - **Added 2026-10-22 15:15Z (research PROPOSAL_MLB_DOUBLEHEADER_KEY.md, checked against MLB StatsAPI by game_pk):**
+    - **The finding:** 13 of the 18 settled journal rows on doubleheader keys hold the score of the day's *other* game,
+      not their own.
+    - **The mechanism:** settle looks up by date|home|away only (totals/predictions_journal.py:329). The first final
+      game of the day settles the shared row, and a DONE row is never settled again.
+    - **6 of the 13 are totals A+ calls** shown in the journal view with the other game's verdict. If re-graded on
+      their own game, all 6 flip:
+      - right to wrong: 07-11 PIT-MIL and 07-22 BOS-BAL;
+      - wrong to right: 07-19 NYA-LAN, 08-29 NYA-BOS, 09-04 CLE-DET and 09-22 NYA-TBA.
+    - **totalsDir** would read 681 of 1,320, not 682 [derived].
+    - **Not changed:** liveRecord, because all 13 rows are silent on the winner.
+    - **The rows themselves are not touched:** they are in the locked journal.
+    - **The fix:** proposed (key and settle by game_pk). It waits for approval (decision D4).
+  - **Added 2026-10-22 15:25Z: the root is postponed games** (the same research file).
+    - **The finding:** 19 of the 20 PENDING journal rows will never settle as the code stands:
+      - 9 were postponed and played in a later doubleheader;
+      - 5 were made up as single games, each with a second settled row under the same game_pk;
+      - 1 was cancelled;
+      - 4 are postseason games with no data in StatsAPI.
+    - **What a reader sees:** 11 of the 19 are totals A+ calls, shown in the journal view as unresolved.
+    - **The fix must also:**
+      - settle a postponed game's own row on its make-up date, by game_pk;
+      - void cancelled or unneeded games, with a reason.
+  - **Added 2026-10-22 16:11Z:** of the 6 totals A+ flips, 4 are certain (the line was locked in the row's creation run). 2 are uncertain (09-04 CLE-DET and 09-22 NYA-TBA, locked in a later run whose entry order is not stored).
+  - **Added 2026-10-22 17:00Z: the published records recounted by game_pk** (research MLB_RECOUNT_BY_GAMEPK_2026-10-22.md):
+    - all winner calls: 735/1,320 to 737/1,320, all 8 changes certain;
+    - A+ (win): 18/30, unchanged;
+    - totals A+: 413/760 to 415/760, 4 changes certain and 2 uncertain.
+    - Every interval overlaps the published one.
+    - **A stopgap is ready** on preview branch c-mlb-review-2026-10-22: "Result under review" on the 13 rows (D15).
 - **57.** MLB: what is shown must equal what was checked. The journal locks `p_home` at its first write, one to two days before the game, while `today_all.json` keeps recomputing until first pitch, so a "today" tile moves at first pitch from the recomputed value to the frozen one (2026-10-12 LAN @ MIL: 0.562 before, 0.534 after). The rule to apply: a game that has a journal row shows that row's frozen value from the moment the row exists, not a recomputed value that is replaced at first pitch. When the journal locks is a question about the rating rule and is not changed without asking. Open.
 - **58.** MLB: the "today" tiles' totals values come from `totals/today_totals.json`, rebuilt every run and not kept in git, so whether they are recomputed after first pitch cannot be measured. To do: keep the file in git, then measure it the way `today_all.json` was measured (item 53). Open.
 - **59.** MLB: "today" in the pipeline is the runner's UTC date (`datetime.date.today()` in `baseball_daily.py`), so an evening game in US Eastern time drops off the "today" board once UTC passes midnight, while it is still being played (CLE @ TBA of 2026-10-12, first pitch 00:00Z on 10-13, was not in `today_all.json` of the 01:07Z run on 10-13). Open (record only).
@@ -348,6 +500,15 @@ One line per defect. Status: fixed locally 2026-10-12 (pending push), or open.
 - **81.** Tennis CLV: classic "mean CLV -0.1%", preview hero "-0.47" (cumulative sum) labelled "CLV · winner market", chart header "-0.47 games" (wrong unit, green while negative); per-match "+0.9%" vs "+0.009". Fixed 2026-10-13 in stop 2 (pushed, verified live): one number on both pages, the mean per match, -0.16% with n=304; the cumulative sum is gone.
 - **82.** Tennis: name joins are case-sensitive ("Botic Van de Zandschulp" vs "Botic van de Zandschulp"), so the rating falls back to 1500 and the match score to 44. Classic "By surface" shows raw surface Elo under a "blended 60/40" label (Sinner 2276 vs 2298). Guide says the Engine bar is Platt-calibrated, "ECE halved"; the code shows the raw probability. Name join fixed 2026-10-13 in stop 2 (pushed, verified live: Van de Zandschulp 1821.9); the "By surface" label and the Platt sentence in the guide stay open. Open.
 - **83.** Tennis: 19 journal rows never settled read "Not played yet" and "open positions 19" on classic and as red "✗" on the preview. "Today" on 10-13 shows the 10-11 slate. Classic has no pause notice ("Updated: 20261011"). Open.
+  - **Added 2026-10-22 15:38Z: why the 19 never settle** (research TENNIS_UNSETTLED_2026-10-22.md, read only).
+    - **The settlement window:** ±1 day around the journal date (collect_tennis.py:211-213).
+    - **8 rows** are Canada Masters matches that TML records two days later (08-04/05 against 08-02/03), so the
+      window never sees them. On every settled row the gap is 0 or 1 day.
+    - **7 rows** have no TML 2026 match by player ids.
+    - **4 rows** match only another meeting of the pair.
+    - **5 of the 19 are A+ calls.**
+    - **Proposed:** settle within the tournament, and void rows not found after the event ends. The journal is not
+      touched.
 - **84.** NBA preview never reads PICKS (`gen_nba_data.py:22-30`): in season the Signals tab will show the last six decided games in the present tense, and the empty message "no NBA games today" on game days. Must be read before 2026-10-20. Fixed locally 2026-10-13 in stop 1 (pending push): the preview reads PICKS; before tip-off "Before the game", after it the frozen row, decided with its score; "no NBA games today" only with no games.
 - **85.** NBA: false method texts. "The engine hugs the diagonal, slightly conservative at the high end": overconfident in every band (60-70: 64.7 vs 62.7; 85+: 88.2 vs 85.0), and classic puts a fixed check mark on every band. "Elo picks, rest calibrates": the probability is pure Elo. Classic KPI strip "85/76/85/5,829/+10pp" is typed HTML. NEXT stage 4 is last season's form. Partly fixed locally 2026-10-13 in stop 1 (pending push): "slightly conservative" and "rest calibrates" removed from the preview. Still open: the classic KPI strip, the classic fixed check marks, stage 4 of the next game.
 - **86.** NBA: from 2026-10-20 `seasons[-2:]` drops 2024-25 and the label becomes "the last 1 seasons" (`app.js:15` handles k==2 only); "today" is the runner's UTC date (`dashboard.py:505`), so at 03:05Z back-to-back flags and stage asof run a day ahead of ET. Partly fixed locally 2026-10-13 in stop 1 (pending push): the window wording follows the number of seasons ("the last season, 2025-26" from 20.10). Still open: "today" by the runner's UTC date.
@@ -407,3 +568,14 @@ One line per defect. Status: fixed locally 2026-10-12 (pending push), or open.
   The NBA classic page's slogan "The engine predicts, the stage explains, calibration proves." / "המנוע מנבא, השלב מסביר, והכיול מוכיח." loses its stage part (2026-10-20, decision of Samuel): the stage does not explain the result in NBA. It appears on that page only; NFL and MLB do not carry it. Open.
 - **114.** NBA, display only, not urgent: today's card shows the pick's stage as of today (`dashboard.py` line 536, `asof=today`). If a run happens after another game of the same day is final and in the games file, that team's stage would include that result. The journal freezes its stage before tip-off, so nothing recorded is affected. Not measured. Open.
 
+
+## 2026-10-20 (night): items not tied to a clock
+
+- **111.** NFL had no automatic gap check. Added (nfl-engine/NFL_GAPS_PREREGISTER.md): `gaps_check.py`, every started game of the season against nfl_predictions.csv and its commit history (no row, no kickoff time, not committed, committed after kickoff) -> gaps.csv, report only, as in the other engines; checkout fetch-depth 0. Red then green (8 of 8); real data 0 of 93. Fixed locally (pending push).
+- **114.** Measured (nba-engine/ITEM114_PREREGISTER.md): the pick's series holds only the pick's own games, so another game of the day can never change the card's stage: 0 of 2,644 on 2025-26 (control with the game itself: 985). Closed, no code.
+- **106.** Measured (baseball-engine/ITEM106_MEASURE.md): both pages read the same holdout.json from one step of each run; the numbers were equal on every reading; the two times of 2026-10-13 were two runs read side by side. Closed, no code.
+- **110.** Fixed locally (ITEM110_PREREGISTER.md, pending push): a bar label follows its segment's width (code hidden, then the percentage, in NFL, NBA and MLB; tennis name, 3-letter code, percentage); scan.js `barCut`. Red on live NFL/NBA at 390 and tennis at 390/1024, green locally. MLB had no cards: not checked. Sub-item (3), World Cup classic.html: checked 2026-10-20, 33 cards, 0. Closed.
+- **105.** Wrong figure on live pages: the MLB A+ record was counted from the log (`baseball_log.csv`, the game-day decision), not from the frozen journal. Shown: 26 of 39 (66.7%) on the classic page (counting the log since before the journal existed), the Command Center (since 2026-10-07) and the root hub (since 2026-10-13); right: 18 of 30 (60.0%). The two sources differ from the game of 2026-06-20 on (16 A+ in the log only, 4 in the journal only). Fixed locally 2026-10-20 (baseball-engine/ITEM105_MEASURE.md, decision of Samuel): one source, `aplus_record.py`, reads the journal; the classic TRACK and its list of calls and the payload's liveRecord read it; the root hub and status.json follow through liveRecord with no change of their own; the log stays as an internal record. Red 26 of 39 in every reader, green 18 of 30 in every reader, English and Hebrew. Pending push (engine part).
+- **103.** Recon (ITEM103_MEASURE.md): the tennis keys rkOverallAll and rkSurface are read by visible cubes and stay (the 2026-10-13 note that they were never read was wrong); MLB journalByDate is not split (decision of Samuel, 2026-10-20). The World Cup keys results_dates and completed_tiles, read by nothing, leave the payload (worldcup-engine/ITEM103_WC_PREREGISTER.md): line 2 330 KB to 161 KB (gzip 31 KB to 18 KB), the text of every tab equal before and after. Fixed locally, pending push (after the hubs).
+- NFL dispersion (nfl-engine/NFL_DISPERSION_PREREGISTER.md, measurement only): against outcomes the one-slope fit is b 0.93 to 0.97, below 1, in every season; no measurable gain (all intervals contain 0); with p' A+ only loses calls. Waiting for a decision.
+- **115.** Tennis, `tennis-engine/run_live.py:41` (origin 7fec1e4): `atp.sort(reverse=True)` sorts tuples (activity, tournamentId, tournamentName) with no key, the pattern that failed the NBA run of 2026-10-21 14:39Z (`gen_nba_data.py:508`, fixed in 06bdfe6). It fails only when two ATP tournaments have the same activity (live + upcoming + future fixtures) and their ids cannot be compared (one `tournamentId` missing, so None against a number, or ids of two types), or the ids are equal and a name is missing; then `TypeError` and the live run stops. Not seen so far; the function runs only on a live run that is allowed to call OddsPapi (paused through 2026-11-29). Found 2026-10-21 by a scan of the six repos for that pattern (205 Python files; the only other hits sort strings). `run_live.py` is a protected file: not fixed. The fix, when allowed, is a key on the activity alone (`key=lambda x: x[0]`). Open.

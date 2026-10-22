@@ -3,9 +3,10 @@
 // --slow: CPU 4x slower, 1.6 Mbps down / 750 kbps up, 150 ms round trip. Browser: env CHROME_BIN (any Chromium).
 // Per load: FCP (paint timing), DOMContentLoaded, load, bytes over the wire (Network.loadingFinished), three.js bytes
 // and the time its first request starts; a screenshot 6 s after load for the visual check.
+// The Chrome profile is made under $CHROME_PROFILES (default ~/prediction-engines-work/work/chrome-profiles, never /tmp)
+// and removed at the end of every run, also when the run fails or is stopped by a signal.
 import { spawn } from 'node:child_process';
-import { mkdtempSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 
 const argv = process.argv.slice(2); const SLOW = argv[0] === '--slow'; if (SLOW) argv.shift();
@@ -13,11 +14,21 @@ const [base, outdir, runsS, widthsS, ...paths] = argv;
 const runs = +runsS, widths = widthsS.split(',').map(Number);
 const BIN = process.env.CHROME_BIN || (process.env.HOME + '/Library/Caches/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-mac-arm64/chrome-headless-shell');
 const port = 9300 + Math.floor(Math.random() * 500);
-const proc = spawn(BIN, [`--remote-debugging-port=${port}`, `--user-data-dir=${mkdtempSync(join(tmpdir(), 'perf-'))}`,
+const PROFILES = process.env.CHROME_PROFILES || join(process.env.HOME, 'prediction-engines-work', 'work', 'chrome-profiles');
+mkdirSync(PROFILES, { recursive: true });
+const profile = mkdtempSync(join(PROFILES, 'perf-'));
+const proc = spawn(BIN, [`--remote-debugging-port=${port}`, `--user-data-dir=${profile}`,
   '--no-first-run', '--disable-gpu-sandbox', '--use-angle=metal', 'about:blank'], { stdio: 'ignore' });
+const exited = new Promise(r => proc.once('exit', r));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+let ws = null;
+const removeProfile = () => { try { rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch {} };
+for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP', 'SIGALRM']) process.on(sig, () => { try { ws && ws.close(); } catch {} try { proc.kill('SIGKILL'); } catch {} removeProfile(); process.exit(128); });
+let code = 0;
+try {
 let ver; for (let i = 0; i < 50; i++) { try { ver = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json(); break; } catch { await sleep(200); } }
-const ws = new WebSocket(ver.webSocketDebuggerUrl);
+if (!ver) throw new Error('Chromium did not answer on ' + port);
+ws = new WebSocket(ver.webSocketDebuggerUrl);
 await new Promise(r => ws.addEventListener('open', r, { once: true }));
 let id = 0; const pend = new Map(); const listeners = [];
 ws.addEventListener('message', ev => { const m = JSON.parse(ev.data); if (m.id && pend.has(m.id)) { pend.get(m.id)(m); pend.delete(m.id); } else listeners.forEach(f => f(m)); });
@@ -62,4 +73,13 @@ for (const w of widths) for (const p of paths) for (let k = 0; k < runs; k++) {
   await send('Target.closeTarget', { targetId });
 }
 console.log(JSON.stringify(out));
-ws.close(); proc.kill();
+} catch (e) {
+  code = 1; console.error('perf failed: ' + (e && e.message || e));
+} finally {
+  try { ws && ws.close(); } catch {}
+  try { proc.kill(); } catch {}
+  await Promise.race([exited, sleep(5000)]);
+  try { proc.kill('SIGKILL'); } catch {}
+  removeProfile();
+}
+process.exit(code);
