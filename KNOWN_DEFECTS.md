@@ -123,6 +123,7 @@ Counts over items 1 to 115: **closed 74**, **open 39**, **undecidable 0**, **rec
 | 113 | open | nba-engine 4a4a5e5, 9e9a37b, yes; validate_stages.py:15, holdout_test.py:27, backtest_playoffs.py:29 still call classify_stage(..., asof=d) | Claims and slogan corrected; three scripts still give leaked figures (kept on purpose). |
 | 114 | closed | nba-engine 5efbc4f (measurement), yes; dashboard.py:536 | 0 of 2,644 affected; the update entry exists only locally. |
 | 115 | open | tennis-engine run_live.py:41 `atp.sort(reverse=True)` (7fec1e4); entry only local (6cb0d51) | Unfixed; run_live.py is protected. |
+| 116 | open | baseball-engine baseball_daily.py:113 (freeze_started; protected) | Needs approval before Opening Day 2027. |
 
 ## 1. NFL board: tie-break on the tile ranking
 - Where: nfl-engine `preview_build/gen_nfl_data.py`, lines 114-118 (at nfl-engine 9176ed1): `tile_priority` (line 114), `others.sort(key=tile_priority, reverse=True)` (line 117), `top_games = aplus_games + others[:3]` (line 118).
@@ -579,3 +580,14 @@ One line per defect. Status: fixed locally 2026-10-12 (pending push), or open.
 - **103.** Recon (ITEM103_MEASURE.md): the tennis keys rkOverallAll and rkSurface are read by visible cubes and stay (the 2026-10-13 note that they were never read was wrong); MLB journalByDate is not split (decision of Samuel, 2026-10-20). The World Cup keys results_dates and completed_tiles, read by nothing, leave the payload (worldcup-engine/ITEM103_WC_PREREGISTER.md): line 2 330 KB to 161 KB (gzip 31 KB to 18 KB), the text of every tab equal before and after. Fixed locally, pending push (after the hubs).
 - NFL dispersion (nfl-engine/NFL_DISPERSION_PREREGISTER.md, measurement only): against outcomes the one-slope fit is b 0.93 to 0.97, below 1, in every season; no measurable gain (all intervals contain 0); with p' A+ only loses calls. Waiting for a decision.
 - **115.** Tennis, `tennis-engine/run_live.py:41` (origin 7fec1e4): `atp.sort(reverse=True)` sorts tuples (activity, tournamentId, tournamentName) with no key, the pattern that failed the NBA run of 2026-10-21 14:39Z (`gen_nba_data.py:508`, fixed in 06bdfe6). It fails only when two ATP tournaments have the same activity (live + upcoming + future fixtures) and their ids cannot be compared (one `tournamentId` missing, so None against a number, or ids of two types), or the ids are equal and a name is missing; then `TypeError` and the live run stops. Not seen so far; the function runs only on a live run that is allowed to call OddsPapi (paused through 2026-11-29). Found 2026-10-21 by a scan of the six repos for that pattern (205 Python files; the only other hits sort strings). `run_live.py` is a protected file: not fixed. The fix, when allowed, is a key on the activity alone (`key=lambda x: x[0]`). Open.
+
+## 2026-10-22 (evening): item 116 (found while building D4)
+
+- **116.** MLB, the freeze gate (`baseball_daily.freeze_started`, baseball_daily.py:113; protected) finds a started
+  game's frozen journal row by `date|home|away`.
+  - Since D4 (D4_MLB_GAMEPK_PREREGISTER.md, the dated deviation), a doubleheader's second game is keyed
+    `pk|<game_pk>`. The gate does not find that row, and its `game_datetime` check rejects game 1's row. So after
+    game 2 starts, its model values are dropped from today's view: a safe failure, not a leak.
+  - Before D4, the same lookup could take game 1's values for game 2.
+  - **The fix:** look the row up by game_pk first, then by `date|home|away`. It touches a protected gate, so it needs
+    Samuel's approval before Opening Day 2027.
