@@ -23,3 +23,18 @@ local only.
   - Enter on the focused language toggle switches the language (html lang or the visible toggle text changes);
   - no page error.
 - **Red** before, **green** after.
+
+## Result (2026-10-22 15:30Z)
+- **Red, before** (en and he, 390 px):
+  - 7 pointer controls not focusable; 1 Tab stop;
+  - Enter on the language toggle does nothing;
+  - no page error.
+- **Green, after:**
+  - 0 not focusable; 8 Tab stops;
+  - Enter on the toggle switches the language (en: עב to EN; he: EN to עב);
+  - no page error.
+- **What is left:** after the switch the focus does not stay on the toggle. The page re-renders, and focus returns to
+  the body. Recorded; not fixed here.
+- **Look:** the screenshots before (the live page) and after (this branch) are the same to the eye
+  (research ux_2026-10-22/shots/hub_kbd_{before,after}_en_390.png). They are not byte-identical, because of the
+  animated background.
