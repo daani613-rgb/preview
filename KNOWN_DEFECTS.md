@@ -9,9 +9,9 @@ Counts over items 1 to 115: **closed 74**, **open 39**, **undecidable 0**, **rec
 | item | status | evidence (commit, on main, file:line at origin/main) | reason |
 |---|---|---|---|
 | 1 | closed | nfl-engine 301a161, yes; preview_build/gen_nfl_data.py:118-131 | Ties are broken by date, time, away and home after the games still to play. |
-| 2 | open | no fix commit; preview mlb/app.js:567-568, mlb/index.html:206-207 | Today's slate note still shows on the Yesterday view. |
+| 2 | open | no fix commit; preview mlb/app.js:567-568, mlb/index.html:206-207 | Today's slate note still shows on the Yesterday view. Fixed locally 2026-10-22 on kd-002-2026-10-22 (pending push, D7); 30-day replay passed. |
 | 3 | open | baseball-engine totals/totals_predict.py:197, :262; totals/totals_log.csv has 2,752 lines with `no_market` | The old path still writes "no_market"; the log rows are unchanged. |
-| 4 | open | baseball-engine totals/totals_clv_journal.py:29-31, 34-44; called at totals/predictions_journal.py:226 without try/except | An empty start time still raises ValueError inside upsert. |
+| 4 | open | baseball-engine totals/totals_clv_journal.py:29-31, 34-44; called at totals/predictions_journal.py:226 without try/except | An empty start time still raises ValueError inside upsert. Reproduced 2026-10-22 with the engine's code; draft declaration (research PREREG_DRAFT_KD4_KD60.md). |
 | 5 | open | tennis-engine clv_journal.csv: 59 of 367 rows have empty start_iso, not voided | A data defect, still there. |
 | 6 | open | tennis-engine collect_tennis.py:136, :171 | The journal start time is frozen at the first write. |
 | 7 | open | nfl-engine nfl_pinnacle_close.py:57-69; nfl_build.py:534-535 | The close is measured against the scheduled kickoff, not the actual one. |
@@ -44,7 +44,7 @@ Counts over items 1 to 115: **closed 74**, **open 39**, **undecidable 0**, **rec
 | 34 | closed | tennis-engine 5f5eb0e, yes; preview_build/gen_tennis_data.py:581 `round(pick_elo) if pick_elo else None` | Elo 0 is no longer published. |
 | 35 | closed | tennis-engine 5f5eb0e, yes; gen_tennis_data.py:31, :440-441, :490 | The typed 1500 and the matches-10 default were removed. |
 | 36 | open | no fix commit; tennis-engine tennis_dashboard.py:17 `PLATT_A, PLATT_B = 0.903, 0.001` | The constants are still there with no producing script (unused and not shown). |
-| 37 | open | no fix commit; tennis_dashboard.py:28 `ACCURACY = {"overall": 63.7, ...}` (published as null) | The numbers with no producing script are still in the code (not published). |
+| 37 | open | no fix commit; tennis_dashboard.py:28 `ACCURACY = {"overall": 63.7, ...}` (published as null) | The numbers with no producing script are still in the code (not published). Fixed locally 2026-10-22 on kd-037-2026-10-22 (pending push, D7); page byte-identical, replay 30/30. |
 | 38 | closed | preview ea8f97e, yes; tennis/app.js:372 and :416 | The constant-dash KPI tile is gone. |
 | 39 | closed | tennis-engine 5f5eb0e, yes; gen_tennis_data.py:172 | The Normal-approximation ladder was removed. |
 | 40 | closed | preview d46b0ca, yes; `git grep howBullets origin/main -- tennis/` finds nothing | The howBullets block was deleted. |
@@ -63,7 +63,7 @@ Counts over items 1 to 115: **closed 74**, **open 39**, **undecidable 0**, **rec
 | 53 | closed | baseball-engine 96c2a97, yes; baseball_daily.py:100-134, :225 | Started games take their frozen row or carry no model fields. |
 | 54 | closed | baseball-engine 96c2a97 and f0c4100, yes; totals/predictions_journal.py:195 | The FIP display block is frozen at first pitch. |
 | 55 | open (record only) | no fix commit; worldcup-engine predictions_log.csv:16 | The row written after kickoff is still in the log, unmarked (record-only item). |
-| 56 | open | no fix commit; baseball-engine totals/predictions_journal.py:91-92 | The doubleheader key is unchanged; the missing postseason rows were not backfilled. |
+| 56 | open | no fix commit; baseball-engine totals/predictions_journal.py:91-92 | The doubleheader key is unchanged; the missing postseason rows were not backfilled. 2026-10-22: checked against StatsAPI by game_pk, 13/18 doubleheader rows hold the other game's score; 19/20 PENDING never settle; draft declaration (D4). |
 | 57 | open | no fix commit; baseball_daily.py:111-112 | Before first pitch today_all shows a recomputed value, not the frozen one. |
 | 58 | open | no fix commit; baseball-engine .gitignore:17 `totals/today_totals.json` | today_totals.json is not kept in git, so it cannot be measured. |
 | 59 | open | no fix commit; baseball_daily.py:141 | "Today" is still the runner's UTC date. |
@@ -90,16 +90,16 @@ Counts over items 1 to 115: **closed 74**, **open 39**, **undecidable 0**, **rec
 | 80 | closed | tennis-engine ce8016c, yes; gen_tennis_data.py:117-129 | Preview "value" follows the classic rule. |
 | 81 | closed | tennis-engine ce8016c, yes; gen_tennis_data.py:329-335; preview tennis/app.js:376 | One mean CLV per match with n. |
 | 82 | open | name join fixed ce8016c, yes; rest: gen_tennis_data.py:513; tennis_dashboard.html:360-361 vs :456 | The "By surface" label and the Platt sentence remain while the raw p is shown. |
-| 83 | open | no fix; tennis-engine tennis_dashboard.html:494-496, :260, :691 | Unsettled rows read "Not played yet"; no pause notice on the classic page. |
+| 83 | open | no fix; tennis-engine tennis_dashboard.html:494-496, :260, :691 | Unsettled rows read "Not played yet"; no pause notice on the classic page. Text fixed locally 2026-10-22 on kd-083-2026-10-22, pause notice on c-tennis-pause-2026-10-22 (pending push); replay passed. Root cause of the 19 rows measured (±1 day window); draft declaration (D6). |
 | 84 | closed | nba-engine c6c996f, yes, gen_nba_data.py:275-315; preview c494f07, yes | Today's tiles built from PICKS by phase. |
 | 85 | open | no fix for the rest; nba-engine dashboard.html:301 (KPI "5,829" typed) | The classic KPI strip is still hand-typed. |
 | 86 | open | label preview c494f07, yes; nba-engine dashboard.py:507 `datetime.date.today()` | "Today" is still the runner's UTC date. |
 | 87 | closed | worldcup-engine c8fb789, yes; gen_worldcup_data.py:866; board_template.html:1017; preview worldcup/app.js:8, 475, 477 | Holdout block gone; "Tournament ended" shown. |
 | 88 | closed | preview 8533ec9, yes; nba-engine 50b7672, yes, gen_nba_data.py:179-180 | Dates are dd.mm / dd.mm.yyyy. |
 | 89 | closed | preview 45e951f, yes, assets/bidi.js:2-5; nfl-engine 3582637, yes; tennis-engine bd99844, yes; daani613-rgb.github.io 558435a, yes | An LRM precedes a leading minus. |
-| 90 | open | no fix; preview mlb/index.html:93, nba/index.html:68, nfl/index.html:71 | English-only headers in the Hebrew view. |
+| 90 | open | no fix; preview mlb/index.html:93, nba/index.html:68, nfl/index.html:71 | English-only headers in the Hebrew view. Fixed locally 2026-10-22 on kd-090-2026-10-22 (pending push, D7); replay P4 300/300. |
 | 91 | open | preview nba/app.js:331, :766; mlb/app.js:789; worldcup/app.js:1119; nfl/app.js:736 | The "collecting" placeholders and the NFL Brier dash are still in the code. |
-| 92 | open | 45e951f, yes (assets/a11y.css:3); preview nfl/index.html:290 still renders the teams chip | Tap targets fixed; the NFL chip remains; the overlap and cut names can only be judged on screen. |
+| 92 | open | 45e951f, yes (assets/a11y.css:3); preview nfl/index.html:290 still renders the teams chip | Tap targets fixed; the NFL chip remains; the overlap and cut names can only be judged on screen. Chip removed locally 2026-10-22 on kd-092-2026-10-22 (pending push, D7); replay P3 60/60. |
 | 93 | closed | 0f408ab, yes; preview mlb/app.js:586, :718, :842 | Without a price there is no market row, tag or Edge. |
 | 94 | closed | c494f07, yes; preview nba/app.js:835 | "No open A+ call" with games on the board. |
 | 95 | closed | 8533ec9, yes; preview nfl/app.js:291; nfl-engine nfl_template.html:466-467 | The Hebrew view no longer shows "Honest note." |
