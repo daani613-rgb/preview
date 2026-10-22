@@ -209,21 +209,21 @@ Thresholds (02_MASTER_PLAN.md section 2):
 | E074 | 2.4 | TEN | other stage bounds (exploration seasons only) | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
 | E075 | 2.4 | TEN | stage against the market | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
 | E076 | 2.4 | NBA | monotonicity of accuracy and calibration by stage (no A+ stage) | 2010-11 to 2018-19 | planned, waits for approval | this commit | |
-| E077 | 2.5 | NFL | blend weight w on exploration seasons | market exploration data only | planned, waits for approval | this commit | |
-| E078 | 2.5 | NFL | act only beyond X points of disagreement (X fixed first) | market exploration data only | planned, waits for approval | this commit | |
-| E079 | 2.5 | NFL | abstain rule (World Cup style) | market exploration data only | planned, waits for approval | this commit | |
-| E080 | 2.5 | NBA | blend weight w on exploration seasons | market exploration data only | planned, waits for approval | this commit | |
-| E081 | 2.5 | NBA | act only beyond X points of disagreement (X fixed first) | market exploration data only | planned, waits for approval | this commit | |
-| E082 | 2.5 | NBA | abstain rule (World Cup style) | market exploration data only | planned, waits for approval | this commit | |
-| E083 | 2.5 | MLB | blend weight w on exploration seasons | market exploration data only | planned, waits for approval | this commit | |
-| E084 | 2.5 | MLB | act only beyond X points of disagreement (X fixed first) | market exploration data only | planned, waits for approval | this commit | |
-| E085 | 2.5 | MLB | abstain rule (World Cup style) | market exploration data only | planned, waits for approval | this commit | |
-| E086 | 2.5 | TEN | blend weight w on exploration seasons | market exploration data only | planned, waits for approval | this commit | |
-| E087 | 2.5 | TEN | act only beyond X points of disagreement (X fixed first) | market exploration data only | planned, waits for approval | this commit | |
-| E088 | 2.5 | TEN | abstain rule (World Cup style) | market exploration data only | planned, waits for approval | this commit | |
-| E089 | 2.5 | WC | blend weight w on exploration seasons | market exploration data only | planned, waits for approval | this commit | |
-| E090 | 2.5 | WC | act only beyond X points of disagreement (X fixed first) | market exploration data only | planned, waits for approval | this commit | |
-| E091 | 2.5 | WC | abstain rule (World Cup style) | market exploration data only | planned, waits for approval | this commit | |
+| E077 | 2.5 | NFL | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E078 | 2.5 | NFL | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E079 | 2.5 | NFL | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E080 | 2.5 | NBA | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E081 | 2.5 | NBA | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E082 | 2.5 | NBA | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E083 | 2.5 | MLB | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E084 | 2.5 | MLB | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E085 | 2.5 | MLB | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E086 | 2.5 | TEN | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E087 | 2.5 | TEN | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E088 | 2.5 | TEN | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E089 | 2.5 | WC | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E090 | 2.5 | WC | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
+| E091 | 2.5 | WC | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | |
 | E092 | 2.6 | NFL | timing: hours before start against distance to close | stored data in exploration seasons only | planned, waits for approval | this commit | |
 | E093 | 2.6 | MLB | timing: hours before start against distance to close | stored data in exploration seasons only | planned, waits for approval | this commit | |
 | E094 | 2.6 | TEN | timing: hours before start against distance to close | stored data in exploration seasons only | planned, waits for approval | this commit | |
