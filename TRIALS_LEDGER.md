@@ -313,3 +313,21 @@ None registered. Each is added with its own pre-registration commit, after the s
 | C10 | E115 | TEN | Slam x logit p coefficient | TML from 2026-11-30, live | registered; progress after AO 2027; decisive at 773 Slam matches or 2028-12-31 | research 88504b4 | |
 | CP1-CP8 | E051, E071, E113, E115 | TEN | against Pinnacle: log loss and CLV (Holm over 8) | tennis journal from 2026-11-30 | registered; read with C07-C10 | research 88504b4 | |
 
+
+**Change to confirm_b.py between the check run and the reading (C04 to C06 code), recorded 2026-10-22:**
+- **Order:**
+  1. The pre-registration was committed (research 88504b4).
+  2. confirm_b.py was written and run once in --check mode, which prints counts and assertions, no score.
+  3. One line was deleted.
+  4. The script was committed (research 8516585).
+  5. The single reading was made (research 9359ed8).
+- **The version before the deletion was never committed.** It was reconstructed by putting the line back in place.
+- **The exact diff** (research analysis/confirm_b_line_removal/line.diff):
+  ```
+  @@ -79,6 +79,7 @@
+       m = L.Elo(E.K, E.HCA, 1 - E.SEASON_REGRESSION); prev = None; last = {}; rows = []; mine = []
+  +    gid = list(E.pd.read_csv if False else [])  # placeholder (pandas frame carries no GAME_ID after load_games)
+  ```
+  The line assigns an empty list to a name that nothing reads (`X if False else []` never evaluates X).
+- **Proof:** the --check output of the reconstructed version and of 8516585 are byte-identical (sha256 a66978098371b62c,
+  both). It is the same text as the original check run.
