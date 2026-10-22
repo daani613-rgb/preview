@@ -193,22 +193,22 @@ Thresholds (02_MASTER_PLAN.md section 2):
 | E058 | 2.3 | WC | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md | E7 Massey: variant-live -0.0056 [-0.0111,+0.0003] z -1.89, not promoted (PREREG_2_3 results) |
 | E059 | 2.3 | WC | player-based rating | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md | not runnable: no player data for internationals (PREREG_2_3) |
 | E060 | 2.3 | WC | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md | E9 ensemble: variant-live -0.0132 [-0.0166,-0.0097] z -7.43, CANDIDATE (z <= -3.9) (PREREG_2_3 results) |
-| E061 | 2.4 | NFL | stage beyond probability (logistic on p and stage) | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E062 | 2.4 | NFL | monotonicity of accuracy and calibration by stage | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E063 | 2.4 | NFL | stage as a calibration correction | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E064 | 2.4 | NFL | other stage bounds (exploration seasons only) | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E065 | 2.4 | NFL | stage against the market | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E066 | 2.4 | MLB | stage beyond probability (logistic on p and stage) | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E067 | 2.4 | MLB | monotonicity of accuracy and calibration by stage | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E068 | 2.4 | MLB | stage as a calibration correction | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E069 | 2.4 | MLB | other stage bounds (exploration seasons only) | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E070 | 2.4 | MLB | stage against the market | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E071 | 2.4 | TEN | stage beyond probability (logistic on p and stage) | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E072 | 2.4 | TEN | monotonicity of accuracy and calibration by stage | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E073 | 2.4 | TEN | stage as a calibration correction | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E074 | 2.4 | TEN | other stage bounds (exploration seasons only) | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E075 | 2.4 | TEN | stage against the market | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
-| E076 | 2.4 | NBA | monotonicity of accuracy and calibration by stage (no A+ stage) | 2010-11 to 2018-19 | planned, waits for approval | this commit | |
+| E061 | 2.4 | NFL | stage beyond probability (logistic on p and stage) | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E062 | 2.4 | NFL | monotonicity of accuracy and calibration by stage | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E063 | 2.4 | NFL | stage as a calibration correction | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E064 | 2.4 | NFL | other stage bounds (exploration seasons only) | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E065 | 2.4 | NFL | stage against the market | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E066 | 2.4 | MLB | stage beyond probability (logistic on p and stage) | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E067 | 2.4 | MLB | monotonicity of accuracy and calibration by stage | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E068 | 2.4 | MLB | stage as a calibration correction | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E069 | 2.4 | MLB | other stage bounds (exploration seasons only) | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E070 | 2.4 | MLB | stage against the market | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E071 | 2.4 | TEN | stage beyond probability (logistic on p and stage) | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E072 | 2.4 | TEN | monotonicity of accuracy and calibration by stage | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E073 | 2.4 | TEN | stage as a calibration correction | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E074 | 2.4 | TEN | other stage bounds (exploration seasons only) | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E075 | 2.4 | TEN | stage against the market | outcome exploration seasons; market where stored | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
+| E076 | 2.4 | NBA | monotonicity of accuracy and calibration by stage (no A+ stage) | 2010-11 to 2018-19 | registered (PREREG_2_4) | research PREREG_2_4_STAGES.md | |
 | E077 | 2.5 | NFL | blend weight w on exploration seasons | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | w* 0.00 [0.00,0.01]: no information beyond the price (PREREG_2_5 results) |
 | E078 | 2.5 | NFL | act only beyond X points of disagreement (X fixed first) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | X .05 n555 return -0.068 z-1.67; X .10 n317 -0.068 z-1.15; margin 3.5%: none (PREREG_2_5 results) |
 | E079 | 2.5 | NFL | abstain rule (World Cup style) | market exploration data only | registered (PREREG_2_5) | research PREREG_2_5_BLEND.md | >=0.62 n950 engine-market +0.0292 z+4.06: market better (PREREG_2_5 results) |
