@@ -879,7 +879,7 @@ class Component extends DCLogic {
       dispHow: tab === 'how' ? 'block' : 'none',
       otherLang: he ? 'EN' : 'עב',
       scrimDir: he ? 'left' : 'right',
-      toggleLang: () => this.setState(s => ({ lang: s.lang === 'he' ? 'en' : 'he' })),
+      toggleLang: () => this.setState(s => { const l = s.lang === 'he' ? 'en' : 'he'; try { document.documentElement.lang = l; document.documentElement.dir = l === 'he' ? 'rtl' : 'ltr'; } catch (e) {} return { lang: l }; }),   // html lang/dir follow the switch (C_LANGDIR_PREREGISTER)
       view: V,
       dispLive: V === 'live' ? 'block' : 'none',
       dispState: V !== 'live' ? 'block' : 'none',

@@ -291,7 +291,7 @@ class Component extends DCLogic {
       goGuide: () => { const el = document.getElementById('engines-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
       onKey: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } },
       otherLang: this.state.lang === 'he' ? 'EN' : 'עב',
-      toggleLang: () => this.setState(s => ({ lang: s.lang === 'he' ? 'en' : 'he' })),
+      toggleLang: () => this.setState(s => { const l = s.lang === 'he' ? 'en' : 'he'; try { document.documentElement.lang = l; document.documentElement.dir = l === 'he' ? 'rtl' : 'ltr'; } catch (e) {} return { lang: l }; }),   // html lang/dir follow the switch (C_LANGDIR_PREREGISTER)
     };
   }
 }
