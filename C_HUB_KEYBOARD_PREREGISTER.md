@@ -51,3 +51,9 @@ local only.
 ## Result of the focus follow-up (16:23Z)
 - **Red:** enter.focused false in en and he.
 - **Green:** true in en and he. The language switches; 8 Tab stops and 0 unreachable controls, unchanged; no page error.
+
+## Moved (16:24Z): the focus restore is now in onKey, not in toggleLang
+- **Why:** a dry-run merge showed a conflict in hub.app.js:294 with branch c-langdir, which changes toggleLang too.
+- **What changed:** onKey (:292) now restores focus to the new .langbtn after a keyboard Enter or Space on the toggle,
+  and toggleLang is back to origin/main's line. A mouse click no longer moves focus, which is the better behaviour.
+- **Re-tested:** enter.focused true in en and he; 8 stops; 0 unreachable; no page error.
