@@ -464,6 +464,12 @@ One line per defect. Status: fixed locally 2026-10-12 (pending push), or open.
       - settle a postponed game's own row on its make-up date, by game_pk;
       - void cancelled or unneeded games, with a reason.
   - **Added 2026-10-22 16:11Z:** of the 6 totals A+ flips, 4 are certain (the line was locked in the row's creation run). 2 are uncertain (09-04 CLE-DET and 09-22 NYA-TBA, locked in a later run whose entry order is not stored).
+  - **Added 2026-10-22 17:00Z: the published records recounted by game_pk** (research MLB_RECOUNT_BY_GAMEPK_2026-10-22.md):
+    - all winner calls: 735/1,320 to 737/1,320, all 8 changes certain;
+    - A+ (win): 18/30, unchanged;
+    - totals A+: 413/760 to 415/760, 4 changes certain and 2 uncertain.
+    - Every interval overlaps the published one.
+    - **A stopgap is ready** on preview branch c-mlb-review-2026-10-22: "Result under review" on the 13 rows (D15).
 - **57.** MLB: what is shown must equal what was checked. The journal locks `p_home` at its first write, one to two days before the game, while `today_all.json` keeps recomputing until first pitch, so a "today" tile moves at first pitch from the recomputed value to the frozen one (2026-10-12 LAN @ MIL: 0.562 before, 0.534 after). The rule to apply: a game that has a journal row shows that row's frozen value from the moment the row exists, not a recomputed value that is replaced at first pitch. When the journal locks is a question about the rating rule and is not changed without asking. Open.
 - **58.** MLB: the "today" tiles' totals values come from `totals/today_totals.json`, rebuilt every run and not kept in git, so whether they are recomputed after first pitch cannot be measured. To do: keep the file in git, then measure it the way `today_all.json` was measured (item 53). Open.
 - **59.** MLB: "today" in the pipeline is the runner's UTC date (`datetime.date.today()` in `baseball_daily.py`), so an evening game in US Eastern time drops off the "today" board once UTC passes midnight, while it is still being played (CLE @ TBA of 2026-10-12, first pitch 00:00Z on 10-13, was not in `today_all.json` of the 01:07Z run on 10-13). Open (record only).
