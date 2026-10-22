@@ -148,51 +148,51 @@ Thresholds (02_MASTER_PLAN.md section 2):
 | E013 | 2.2 | WC | engine log loss and Brier against the market no-vig | 2026 journal (Pinnacle) | registered (PREREG_2_2) | this commit | early +0.0230 z+1.06; close +0.0415 z+1.69 (PREREG_2_2 results) |
 | E014 | 2.2 | WC | 50/50 blend against the market | 2026 journal (Pinnacle) | registered (PREREG_2_2) | this commit | 0.8282 vs 0.8223: worse (PREREG_2_2 results) |
 | E015 | 2.2 | WC | A+ against the rest | 2026 journal (Pinnacle) | registered (PREREG_2_2) | this commit | calls +0.0039 z+0.14; silent +0.0417 (PREREG_2_2 results) |
-| E016 | 2.3 | NFL | Elo with MOV and autocorrelation term | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E017 | 2.3 | NFL | K by season phase | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E018 | 2.3 | NFL | home advantage by team and venue | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E019 | 2.3 | NFL | between-season regression | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E020 | 2.3 | NFL | Glicko-2 | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E021 | 2.3 | NFL | Bradley-Terry / ridge logistic | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E022 | 2.3 | NFL | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E023 | 2.3 | NFL | player-based rating | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E024 | 2.3 | NFL | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E025 | 2.3 | NBA | Elo with MOV and autocorrelation term | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E026 | 2.3 | NBA | K by season phase | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E027 | 2.3 | NBA | home advantage by team and venue | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E028 | 2.3 | NBA | between-season regression | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E029 | 2.3 | NBA | Glicko-2 | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E030 | 2.3 | NBA | Bradley-Terry / ridge logistic | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E031 | 2.3 | NBA | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E032 | 2.3 | NBA | player-based rating | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E033 | 2.3 | NBA | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E034 | 2.3 | MLB | Elo with MOV and autocorrelation term | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E035 | 2.3 | MLB | K by season phase | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E036 | 2.3 | MLB | home advantage by team and venue | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E037 | 2.3 | MLB | between-season regression | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E038 | 2.3 | MLB | Glicko-2 | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E039 | 2.3 | MLB | Bradley-Terry / ridge logistic | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E040 | 2.3 | MLB | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E041 | 2.3 | MLB | player-based rating | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E042 | 2.3 | MLB | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E043 | 2.3 | TEN | Elo with MOV and autocorrelation term | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E044 | 2.3 | TEN | K by season phase | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E045 | 2.3 | TEN | home advantage by team and venue | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E046 | 2.3 | TEN | between-season regression | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E047 | 2.3 | TEN | Glicko-2 | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E048 | 2.3 | TEN | Bradley-Terry / ridge logistic | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E049 | 2.3 | TEN | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E050 | 2.3 | TEN | player-based rating | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E051 | 2.3 | TEN | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E052 | 2.3 | WC | Elo with MOV and autocorrelation term | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E053 | 2.3 | WC | K by season phase | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E054 | 2.3 | WC | home advantage by team and venue | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E055 | 2.3 | WC | between-season regression | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E056 | 2.3 | WC | Glicko-2 | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E057 | 2.3 | WC | Bradley-Terry / ridge logistic | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E058 | 2.3 | WC | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E059 | 2.3 | WC | player-based rating | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
-| E060 | 2.3 | WC | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | planned, waits for approval | this commit | |
+| E016 | 2.3 | NFL | Elo with MOV and autocorrelation term | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E017 | 2.3 | NFL | K by season phase | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E018 | 2.3 | NFL | home advantage by team and venue | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E019 | 2.3 | NFL | between-season regression | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E020 | 2.3 | NFL | Glicko-2 | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E021 | 2.3 | NFL | Bradley-Terry / ridge logistic | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E022 | 2.3 | NFL | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E023 | 2.3 | NFL | player-based rating | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E024 | 2.3 | NFL | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E025 | 2.3 | NBA | Elo with MOV and autocorrelation term | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E026 | 2.3 | NBA | K by season phase | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E027 | 2.3 | NBA | home advantage by team and venue | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E028 | 2.3 | NBA | between-season regression | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E029 | 2.3 | NBA | Glicko-2 | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E030 | 2.3 | NBA | Bradley-Terry / ridge logistic | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E031 | 2.3 | NBA | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E032 | 2.3 | NBA | player-based rating | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md | not runnable: no historical NBA player availability (PREREG_2_3) |
+| E033 | 2.3 | NBA | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E034 | 2.3 | MLB | Elo with MOV and autocorrelation term | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E035 | 2.3 | MLB | K by season phase | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E036 | 2.3 | MLB | home advantage by team and venue | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E037 | 2.3 | MLB | between-season regression | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E038 | 2.3 | MLB | Glicko-2 | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E039 | 2.3 | MLB | Bradley-Terry / ridge logistic | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E040 | 2.3 | MLB | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E041 | 2.3 | MLB | player-based rating | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E042 | 2.3 | MLB | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E043 | 2.3 | TEN | Elo with MOV and autocorrelation term | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E044 | 2.3 | TEN | K by season phase | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E045 | 2.3 | TEN | home advantage by team and venue | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md | not runnable: no venue or home-country field in TML (PREREG_2_3) |
+| E046 | 2.3 | TEN | between-season regression | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E047 | 2.3 | TEN | Glicko-2 | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E048 | 2.3 | TEN | Bradley-Terry / ridge logistic | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E049 | 2.3 | TEN | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E050 | 2.3 | TEN | player-based rating | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E051 | 2.3 | TEN | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E052 | 2.3 | WC | Elo with MOV and autocorrelation term | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E053 | 2.3 | WC | K by season phase | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E054 | 2.3 | WC | home advantage by team and venue | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E055 | 2.3 | WC | between-season regression | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E056 | 2.3 | WC | Glicko-2 | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E057 | 2.3 | WC | Bradley-Terry / ridge logistic | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E058 | 2.3 | WC | Massey or Colley | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
+| E059 | 2.3 | WC | player-based rating | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md | not runnable: no player data for internationals (PREREG_2_3) |
+| E060 | 2.3 | WC | ensemble with weights from exploration seasons | outcome exploration seasons (SEASON_SPLIT) | registered (PREREG_2_3) | research PREREG_2_3_RATINGS.md |  |
 | E061 | 2.4 | NFL | stage beyond probability (logistic on p and stage) | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
 | E062 | 2.4 | NFL | monotonicity of accuracy and calibration by stage | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
 | E063 | 2.4 | NFL | stage as a calibration correction | outcome exploration seasons; market where stored | planned, waits for approval | this commit | |
