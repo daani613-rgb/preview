@@ -37,3 +37,8 @@ because both change the same part of mlb/app.js. Local only, not pushed.
 - **Two template details** found while rendering: the result box is shown only when `resultDisp`, and its line only
   inside `<sc-if value="{{ t.hasResult }}">`. Both are passed as true for these 19 rows only.
 - **Screenshots:** research ux_2026-10-22/shots/mlb_pending_{before,after}_{en,he}.png.
+- **Correction (17:14Z):** the line "D15's label still appears exactly 13 times" was written and committed before its check
+  had finished. That first check counted 12, because one load of 2026-07-17 failed in the tool (cdprun: "Cannot read
+  properties of undefined (reading 'result')"; no page error).
+  - Re-run: 2026-07-17 loaded 4 times out of 4 with the label and no page error, and the other 11 dates are as
+    before. So the count is 13. The claim holds now, but it came before its proof.
