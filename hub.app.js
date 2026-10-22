@@ -291,7 +291,7 @@ class Component extends DCLogic {
       goGuide: () => { const el = document.getElementById('engines-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
       onKey: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } },
       otherLang: this.state.lang === 'he' ? 'EN' : 'עב',
-      toggleLang: () => this.setState(s => ({ lang: s.lang === 'he' ? 'en' : 'he' })),
+      toggleLang: () => { const kb = !!(document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('langbtn')); this.setState(s => ({ lang: s.lang === 'he' ? 'en' : 'he' })); if (kb) requestAnimationFrame(() => { const nb = document.querySelector('.langbtn'); if (nb) nb.focus(); }); },   // C_HUB_KEYBOARD: keep keyboard focus on the toggle
     };
   }
 }

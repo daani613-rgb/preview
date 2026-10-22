@@ -47,3 +47,7 @@ local only.
   - Red: false now. Green: true after.
   - Also: the language still switches, there is no page error, and the stops and unreachable counts are unchanged
     (8, 0).
+
+## Result of the focus follow-up (16:23Z)
+- **Red:** enter.focused false in en and he.
+- **Green:** true in en and he. The language switches; 8 Tab stops and 0 unreachable controls, unchanged; no page error.
