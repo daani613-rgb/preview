@@ -673,6 +673,9 @@ class Component extends DCLogic {
     // C_MLB_REVIEW_PREREGISTER.md: 13 journal rows (date|home|away) that carry the other doubleheader game's score,
     // measured against MLB StatsAPI by game_pk (research PROPOSAL_MLB_DOUBLEHEADER_KEY.md). A stopgap until decision D4:
     // their score and marks read "Result under review"; the locked journal is not touched.
+    // C_MLB_PENDING_PREREGISTER.md: 19 PENDING rows that will never settle (postponed, cancelled or not needed;
+    // research PROPOSAL_MLB_DOUBLEHEADER_KEY.md). A stopgap until D4: past-tense tag and a "no result" line.
+    const NO_RESULT_ROWS = new Set(["2026-06-18|ATL|SFN", "2026-06-21|CHN|TOR", "2026-06-22|NYN|CHN", "2026-06-25|SLN|ARI", "2026-07-10|PIT|MIL", "2026-07-17|CLE|PIT", "2026-07-18|NYA|LAN", "2026-07-21|BOS|BAL", "2026-07-21|NYA|PIT", "2026-07-27|CIN|CLE", "2026-07-28|NYN|ATL", "2026-09-22|BAL|TOR", "2026-09-26|BOS|CHN", "2026-09-27|NYA|BAL", "2026-10-08|NYA|TBA", "2026-10-09|MIL|SDN", "2026-10-16|CLE|TBA", "2026-10-16|LAN|MIL", "2026-10-20|TBA|CLE"]);
     const RESULT_UNDER_REVIEW = new Set(["2026-07-07|SLN|MIL", "2026-07-11|PIT|MIL", "2026-07-17|BOS|TBA", "2026-07-18|CLE|PIT", "2026-07-19|NYA|LAN", "2026-07-22|BOS|BAL", "2026-07-28|CIN|CLE", "2026-08-17|CIN|SLN", "2026-08-29|NYA|BOS", "2026-08-29|SFN|ARI", "2026-09-04|CLE|DET", "2026-09-22|NYA|TBA", "2026-09-25|BOS|CHN"]);
     // Build result tail from journalByDate for today
     const todayDate = dateForSel.today;
@@ -683,7 +686,8 @@ class Component extends DCLogic {
     const tiles = raw.map(t => {
       const ex = extra[t.id] || {};
       // decided or not, the A+ tag names its market; a decided one speaks in the past tense (STOP2_PREREGISTER.md)
-      const _dec = boardIsJournal ? !!t._played : !!(journalById[t.id] && journalById[t.id].played);
+      const _noRes = boardIsJournal && NO_RESULT_ROWS.has(`${t._date}|${t.home}|${t.away}`);
+      const _dec = boardIsJournal ? (!!t._played || _noRes) : !!(journalById[t.id] && journalById[t.id].played);
       const _mktW = t.aplusMkt === 'tot' ? (he ? 'טוטאל' : 'total') : (he ? 'מנצח' : 'winner');
       const st = t.state === 'aplus'
         ? { ...styleFor(t.state), badgeText: (_dec ? (he ? 'הייתה קריאת A+' : 'Was an A+ call') : 'A+') + ' · ' + _mktW }
@@ -702,6 +706,10 @@ class Component extends DCLogic {
         : journalById[t.id];
       const hasResult = jEntry && jEntry.played;
       let resultTail = null;
+      if (_noRes) {
+        resultTail = { scoreStr: he ? 'אין תוצאה: המשחק נדחה או בוטל' : 'No result: game postponed or cancelled', winOk: false, winMiss: false,
+                       winLabel: '·', winColor: '#8791ab', totOk: false, totMiss: false, totPush: false, totLabel: '·', totColor: '#8791ab', clvStr: null };
+      }
       if (hasResult) {
         const wc = jEntry.winCorrect;
         const tc2 = jEntry.totCorrect;
@@ -746,9 +754,9 @@ class Component extends DCLogic {
               : (he ? 'שקט · אין מחיר שוק' : 'Quiet · no market price'))
           : (t.state === 'aplus' ? ((_dec ? (he ? 'הייתה קריאת A+' : 'Was an A+ call') : (he ? 'קריאת A+' : 'A+ call')) + ' · ' + _mktW) : (he ? 'ערך' : 'Value')),
         toggle: () => this.toggleTile(t.id),
-        hasResult,
+        hasResult: hasResult || _noRes,   // _noRes rows show their 'no result' line (C_MLB_PENDING_PREREGISTER)
         resultTail,
-        resultDisp: hasResult ? 'block' : 'none',
+        resultDisp: (hasResult || _noRes) ? 'block' : 'none',   // _noRes: C_MLB_PENDING_PREREGISTER
         resultLabel: L.resultLabel,
         winCorrectLabel: L.winCorrectLabel,
         totCorrectLabel: L.totCorrectLabel,

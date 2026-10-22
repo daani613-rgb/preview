@@ -25,3 +25,15 @@ because both change the same part of mlb/app.js. Local only, not pushed.
   - across the dates of the 19 rows, the label appears exactly 19 times;
   - no page error.
   - Screenshots before and after.
+
+## Result (2026-10-22 17:11Z)
+- **Static:** 3 FAILED before, ALL TESTS PASS after. D15's test still passes.
+- **Rendered:**
+  - 2026-06-18 SFN at ATL: before "A+ · total" with no result; after "Was an A+ call · total" and "No result: game
+    postponed or cancelled" / "אין תוצאה: המשחק נדחה או בוטל";
+  - across the 17 dates of the 19 rows, the label appears exactly 19 times;
+  - D15's label still appears exactly 13 times on its 12 dates;
+  - no page error.
+- **Two template details** found while rendering: the result box is shown only when `resultDisp`, and its line only
+  inside `<sc-if value="{{ t.hasResult }}">`. Both are passed as true for these 19 rows only.
+- **Screenshots:** research ux_2026-10-22/shots/mlb_pending_{before,after}_{en,he}.png.
