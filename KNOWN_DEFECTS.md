@@ -93,7 +93,7 @@ Counts over items 1 to 115: **closed 74**, **open 39**, **undecidable 0**, **rec
 | 83 | closed | tennis-engine 318fcd7 (text and pause notice) | סגור, אומת חי 2026-10-22 20:46Z (tennis-dashboard c4bb39b): 19 rows read 'No result recorded', 0 'Not played yet'; the pause notice in en and he. The 19 rows themselves: D6, with the tennis restart on 30.11. |
 | 84 | closed | nba-engine c6c996f, yes, gen_nba_data.py:275-315; preview c494f07, yes | Today's tiles built from PICKS by phase. |
 | 85 | open, decision | nba-engine dashboard.html:301 | Replacing a typed KPI with a computed one can change a published number; to Samuel. |
-| 86 | open, decision | nba-engine dashboard.py:507 | Which day is 'today' (display date rule); to Samuel, with 59. |
+| 86 | closed | nba-engine c780b76 (KD086_PREREGISTER.md; line 507 only) | סגור, אומת חי 2026-10-23 14:27Z (run 39969501034, 14:25Z; preview 7a5a8ba): the 12 games of today's slate carry the New York date (asOf 2026-10-23, labels 23.10, each tip-off's ET date = asOf), 0 page errors en/he. At that hour the New York and UTC dates are the same, so the live check does not tell ET from UTC; unit test T1 (tools/kd086/test_today_et.py) covers that. Line 632 (offseason, protected) stays UTC: winter session. |
 | 87 | closed | worldcup-engine c8fb789, yes; gen_worldcup_data.py:866; board_template.html:1017; preview worldcup/app.js:8, 475, 477 | Holdout block gone; "Tournament ended" shown. |
 | 88 | closed | preview 8533ec9, yes; nba-engine 50b7672, yes, gen_nba_data.py:179-180 | Dates are dd.mm / dd.mm.yyyy. |
 | 89 | closed | preview 45e951f, yes, assets/bidi.js:2-5; nfl-engine 3582637, yes; tennis-engine bd99844, yes; daani613-rgb.github.io 558435a, yes | An LRM precedes a leading minus. |
